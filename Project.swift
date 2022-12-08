@@ -9,5 +9,13 @@ let project = Project.app(name: "ReJordIOS",
                           additionalTargets: [],
                           dependencies: [
                             .external(name: "RxSwift"),
-                            .external(name: "SnapKit")
+                            .external(name: "RxFlow"),
+                            .external(name: "RxDataSources"),
+                            .external(name: "ReactorKit"),
+                            .external(name: "Kingfisher"),
+                            .external(name: "NeedleFoundation"),
+                            .external(name: "Moya"),
+                            .external(name: "Alamofire"),
+                            .external(name: "SnapKit"),
+                            .external(name: "SwiftyJSON")
                           ])
