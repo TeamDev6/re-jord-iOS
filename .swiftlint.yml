@@ -1,2 +1,10 @@
 excluded:
   - Tuist/Dependencies
+
+disabled_rules:
+  - trailing_whitespace
+  - colon
+  - trailing_newline
+  - vertical_whitespace
+  - trailing_comma
+  - line_length
