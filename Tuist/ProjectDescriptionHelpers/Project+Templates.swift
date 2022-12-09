@@ -8,30 +8,51 @@ extension Project {
     let projectName = name
     let iOS_target = "15.0"
     
-    return Project(name: name,
-                   organizationName: "reJordiOS",
-                   packages: [
-                   ],
-                   targets: [
-                    Target(name: projectName,
-                           platform: .iOS,
-                           product: .app,
-                           bundleId: bundleId,
-                           deploymentTarget: .iOS(targetVersion: iOS_target, devices: .iphone),
-                           infoPlist: .default,
-                           sources: ["Targets/\(projectName)/Sources/**"],
-                           resources: ["Targets/\(projectName)/Resources/**"],
-                           scripts: [],
-                           dependencies: dependencies
-                          )
-                   ],
-                   schemes: [
-                    Scheme(name: "\(projectName)-Debug"),
-                    Scheme(name: "\(projectName)-Release"),
-                    Scheme(name: "\(projectName)-Alpha"),
-                   ],
-                   additionalFiles: [],
-                   resourceSynthesizers: []
+    let infoPlist: [String: InfoPlist.Value] = [
+      "CFBundleShortVersionString": "1.0",
+      "CFBundleVersion": "1",
+      "UILaunchStoryboardName": "LaunchScreen",
+      "NSAppTransportSecurity" : ["NSAllowsArbitraryLoads":true],
+      "UISupportedInterfaceOrientations" : ["UIInterfaceOrientationPortrait"],
+      "UIUserInterfaceStyle": "Light",
+      "UIApplicationSceneManifest" : [
+        "UIApplicationSupportsMultipleScenes":true,
+        "UISceneConfigurations": [
+          "UIWindowSceneSessionRoleApplication":[[
+            "UISceneConfigurationName":"Default Configuration",
+            "UISceneDelegateClassName":"$(PRODUCT_MODULE_NAME).SceneDelegate"
+          ]]
+        ]
+      ]
+    ]
+    
+    
+    
+    return Project(
+      name: name,
+      organizationName: "reJordiOS",
+      packages: [
+      ],
+      targets: [
+        Target(name: projectName,
+               platform: .iOS,
+               product: .app,
+               bundleId: bundleId,
+               deploymentTarget: .iOS(targetVersion: iOS_target, devices: .iphone),
+               infoPlist: .extendingDefault(with: infoPlist),
+               sources: ["Targets/\(projectName)/Sources/**"],
+               resources: ["Targets/\(projectName)/Resources/**"],
+               scripts: [],
+               dependencies: dependencies
+              )
+      ],
+      schemes: [
+        Scheme(name: "\(projectName)-Debug"),
+        Scheme(name: "\(projectName)-Release"),
+        Scheme(name: "\(projectName)-Alpha"),
+      ],
+      additionalFiles: [],
+      resourceSynthesizers: []
     )
   }
 }

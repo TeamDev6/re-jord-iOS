@@ -18,9 +18,6 @@ class MainViewController: UIViewController {
   override func viewDidLoad() {
     self.view.backgroundColor = .gray
     
-    self.view.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
-    }
   }
   
 }
