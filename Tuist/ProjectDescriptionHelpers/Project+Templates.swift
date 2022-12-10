@@ -8,7 +8,6 @@ extension Project {
     name: String,
     platform: Platform,
     iOSTargetVersion: String,
-    additionalTargets: [String],
     dependencies: [TargetDependency]
   ) -> Project {
     

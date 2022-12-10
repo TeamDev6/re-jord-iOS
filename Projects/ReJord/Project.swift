@@ -11,7 +11,6 @@ let project = Project.app(
   name: projectName,
   platform: .iOS,
   iOSTargetVersion: targetVersion,
-  additionalTargets: [],
   dependencies: [
     .external(name: "RxSwift"),
     .external(name: "RxFlow"),
@@ -23,6 +22,6 @@ let project = Project.app(
     .external(name: "Alamofire"),
     .external(name: "SnapKit"),
     .external(name: "SwiftyJSON"),
-    .project(target: "ReJordUI", path: .relativeToCurrentFile("../ReJordUI"))
+    TargetDependency.Project.ReJordUI
   ]
 )

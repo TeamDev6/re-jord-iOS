@@ -21,15 +21,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-    
-        let mainFlow = MainFlow()
+//    
+//        let mainFlow = MainFlow()
+//        
+//        self.coordinator.coordinate(flow: mainFlow, with: MainStepper())
         
-        self.coordinator.coordinate(flow: mainFlow, with: MainStepper())
-        
-        Flows.use(mainFlow, when: .created) { root in
-            self.window?.rootViewController = root
-            self.window?.makeKeyAndVisible()
-        }
+//        Flows.use(mainFlow, when: .created) { root in
+//            self.window?.rootViewController = root
+//            self.window?.makeKeyAndVisible()
+//        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) { }

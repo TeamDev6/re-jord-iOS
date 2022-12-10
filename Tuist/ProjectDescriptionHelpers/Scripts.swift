@@ -20,7 +20,7 @@ if which swiftlint > /dev/null; then
 else
     echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
 fi
-""", name: "SwiftLintString")
+""", name: "SwiftLintString", basedOnDependencyAnalysis: false)
   
   static let SwiftLintShell = TargetScript.pre(
     path: .relativeToRoot("Scripts/SwiftLintRunScript.sh"),

@@ -11,7 +11,7 @@ import ProjectDescriptionHelpers
 // MARK: - Project
 
 private let projectName = "ReJordUI"
-private let iOSTargetVersion = "14.0"
+private let iOSTargetVersion = "15.0"
 
 let infoPlist: [String: InfoPlist.Value] = [
     "UILaunchScreen": [:]
