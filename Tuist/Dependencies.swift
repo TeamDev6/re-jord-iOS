@@ -11,7 +11,7 @@ let dependencies = Dependencies(
     .package(url: "https://github.com/ReactorKit/ReactorKit.git", from: "3.2.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.4.1"),
     .package(url: "https://github.com/uber/needle.git", from: "0.21.0"),
-    .package(url: "https://github.com/Moya/Moya.git", .branch("master")),
+    .package(url: "https://github.com/naldal/Moya.git", .branch("master")),
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.4"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.6.0"),
     .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
