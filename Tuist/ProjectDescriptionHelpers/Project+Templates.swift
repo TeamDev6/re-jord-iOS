@@ -1,54 +1,153 @@
 import ProjectDescription
 
 extension Project {
-  public static func app(name: String, platform: Platform, additionalTargets: [String], dependencies: [TargetDependency]) -> Project {
-    let bundleId = "com.reJord.bbuyo"
-    let projectName = name
-    let iOSTarget = "15.0"
-    let infoPlist: [String: InfoPlist.Value] = [
-      "CFBundleShortVersionString": "1.0",
-      "CFBundleVersion": "1",
-      "UILaunchStoryboardName": "LaunchScreen",
-      "NSAppTransportSecurity": ["NSAllowsArbitraryLoads": true],
-      "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
-      "UIUserInterfaceStyle": "Light",
-      "UIApplicationSceneManifest": [
-        "UIApplicationSupportsMultipleScenes": true,
-        "UISceneConfigurations": [
-          "UIWindowSceneSessionRoleApplication": [[
-            "UISceneConfigurationName": "Default Configuration",
-            "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
-          ]]
-        ]
-      ]
-    ]
+  
+  private static let organizationName = "team.reJord"
+  
+  public static func app(
+    name: String,
+    platform: Platform,
+    iOSTargetVersion: String,
+    dependencies: [TargetDependency]
+  ) -> Project {
+    
+    let infoPlist: [String: InfoPlist.Value] = Dictionary.reJordInfoPlist
+    
+    let targets = makeAppTargets(
+      name: name,
+      platform: platform,
+      iOSTargetVersion: iOSTargetVersion,
+      infoPlist: infoPlist,
+      targetScript: [.SwiftLintShell],
+      dependencies: dependencies
+    )
+    
     return Project(
       name: name,
-      organizationName: "reJordiOS",
-      packages: [
-      ],
-      targets: [
-        Target(name: projectName,
-               platform: .iOS,
-               product: .app,
-               bundleId: bundleId,
-               deploymentTarget: .iOS(targetVersion: iOSTarget, devices: .iphone),
-               infoPlist: .extendingDefault(with: infoPlist),
-               sources: ["Targets/\(projectName)/Sources/**"],
-               resources: ["Targets/\(projectName)/Resources/**"],
-               scripts: [.SwiftLintShell],
-               dependencies: dependencies
-              )
-      ],
+      organizationName: organizationName,
+      packages: [],
+      targets: targets,
       schemes: [
-        Scheme(name: "\(projectName)-Debug"),
-        Scheme(name: "\(projectName)-Release"),
-        Scheme(name: "\(projectName)-Alpha")
+        Scheme(name: "\(name)-Debug"),
+        Scheme(name: "\(name)-Release"),
+        Scheme(name: "\(name)-Alpha")
       ],
       additionalFiles: [],
       resourceSynthesizers: []
     )
   }
+  
+  public static func frameworkWithDemoApp(
+    name: String,
+    platform: Platform,
+    iOSTargetVersion: String,
+    infoPlist: [String: InfoPlist.Value] = [:],
+    dependencies: [TargetDependency] = []) -> Project {
+      var targets = makeFrameworkTargets(
+        name: name,
+        platform: platform,
+        iOSTargetVersion: iOSTargetVersion,
+        dependencies: dependencies
+      )
+      targets.append(
+        contentsOf: makeAppTargets(
+          name: "\(name)DemoApp",
+          platform: platform,
+          iOSTargetVersion: iOSTargetVersion,
+          infoPlist: infoPlist,
+          targetScript: [],
+          dependencies: [.target(name: name)]
+        )
+      )
+
+      return Project(
+        name: name,
+        organizationName: organizationName,
+        targets: targets
+      )
+    }
+  
+  public static func framework(
+    name: String,
+    platform: Platform,
+    iOSTargetVersion: String,
+    dependencies: [TargetDependency] = []) -> Project {
+      let targets = makeFrameworkTargets(
+        name: name,
+        platform: platform,
+        iOSTargetVersion: iOSTargetVersion,
+        dependencies: dependencies
+      )
+      return Project(
+        name: name,
+        organizationName: organizationName,
+        targets: targets
+      )
+    }
+  
 }
 
-
+private extension Project {
+  
+  static func makeFrameworkTargets(name: String, platform: Platform, iOSTargetVersion: String, dependencies: [TargetDependency] = []) -> [Target] {
+    let sources = Target(name: name,
+                         platform: platform,
+                         product: .framework,
+                         bundleId: "team.dev6.\(name)",
+                         deploymentTarget: .iOS(targetVersion: iOSTargetVersion, devices: [.iphone]),
+                         infoPlist: .default,
+                         sources: ["Sources/**"],
+                         resources: ["Resources/**"],
+                         dependencies: dependencies)
+    let tests = Target(name: "\(name)Tests",
+                       platform: platform,
+                       product: .unitTests,
+                       bundleId: "team.dev6.\(name)Tests",
+                       infoPlist: .default,
+                       sources: ["Tests/**"],
+                       resources: [],
+                       dependencies: [
+                        .target(name: name),
+                        .external(name: "RxTest")
+                       ])
+    return [sources, tests]
+  }
+  
+  static func makeAppTargets(
+    name: String,
+    platform: Platform,
+    iOSTargetVersion: String,
+    infoPlist: [String: InfoPlist.Value] = [:],
+    targetScript: [TargetScript],
+    dependencies: [TargetDependency] = []
+  ) -> [Target] {
+    let platform: Platform = platform
+    
+    let mainTarget = Target(
+      name: name,
+      platform: platform,
+      product: .app,
+      bundleId: "team.dev6.\(name)",
+      deploymentTarget: .iOS(targetVersion: iOSTargetVersion, devices: [.iphone]),
+      infoPlist: .extendingDefault(with: infoPlist),
+      sources: ["Sources/**"],
+      resources: ["Resources/**"],
+      scripts: targetScript,
+      dependencies: dependencies
+    )
+    
+    let testTarget = Target(
+      name: "\(name)Tests",
+      platform: platform,
+      product: .unitTests,
+      bundleId: "team.dev6.Tests",
+      infoPlist: .default,
+      sources: ["Tests/**"],
+      dependencies: [
+        .target(name: "\(name)"),
+        .external(name: "RxTest")
+      ])
+    return [mainTarget, testTarget]
+  }
+  
+}
