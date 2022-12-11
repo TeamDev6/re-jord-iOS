@@ -24,6 +24,10 @@ open class SignUpTextField: UITextField {
     fatalError("init(coder:) has not been implemented")
   }
   
+  open override func textRect(forBounds bounds: CGRect) -> CGRect {
+      return bounds.insetBy(dx: 10.0, dy: 10.0)
+  }
+  
   private func setup(placeholderText: String) {
     self.setPlaceHolder(text: placeholderText, color: .black)
     self.setTextFieldOptions(
@@ -33,5 +37,8 @@ open class SignUpTextField: UITextField {
       align: .left,
       keyboardType: .alphabet
     )
+    self.setShadowAndBorder(shadowColor: .gray, borderColor: .gray)
+    self.layer.cornerRadius = 8.0
+    
   }
 }

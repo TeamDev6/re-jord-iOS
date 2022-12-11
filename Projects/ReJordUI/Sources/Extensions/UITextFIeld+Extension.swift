@@ -29,4 +29,15 @@ extension UITextField {
       attributes: [NSAttributedString.Key.foregroundColor : color]
     )
   }
+  
+  func setShadowAndBorder(shadowColor: UIColor, borderColor: UIColor) {
+    self.layer.shadowColor = shadowColor.cgColor
+    self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+    self.layer.shadowRadius = 5.0
+    self.layer.shadowOpacity = 1.0
+    self.layer.masksToBounds = false
+    
+    self.layer.borderColor = borderColor.cgColor
+    self.layer.borderWidth = 1.0
+  }
 }

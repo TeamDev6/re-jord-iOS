@@ -20,8 +20,8 @@ final class SignUpViewController: UIViewController, Layoutable {
     $0.backgroundColor = .white
   }
   private let logoView = UIView()
-  private let waringLabel = WarningLabel(text: "RE:욜드에 오신 것을 환영합니다!")
-  private let tempTextField = SignUpTextField(placeholderText: "this is placeholder text")
+  private let waringLabel = WarningLabel(text: "RE:욜드에\n오신 것을 환영합니다!")
+  private let tempTextField = SignUpTextField(placeholderText: "Placeholder")
   
   
   
@@ -53,6 +53,7 @@ final class SignUpViewController: UIViewController, Layoutable {
     self.tempTextField.setComponent(baseView: baseView) { make in
       make.top.equalTo(self.waringLabel.snp.bottom).offset(20)
       make.leading.equalTo(self.waringLabel)
+      make.trailing.equalToSuperview().inset(29)
     }
   }
   
