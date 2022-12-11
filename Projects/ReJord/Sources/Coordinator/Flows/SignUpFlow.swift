@@ -23,7 +23,7 @@ class SignUpFlow: Flow {
   
   init() {
     self.signUpViewController = SignUpViewController()
-    self.signUpReactor = SignUpReactor()
+    self.signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
   }
   
   // MARK: - Root ViewController

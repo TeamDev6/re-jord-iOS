@@ -17,7 +17,7 @@ extension UIView {
     case update
   }
   
-  public func setComponent(baseView: UIView, snpConstraints: @escaping (ConstraintMaker) -> Void, snpType: SnpType = .make) {
+  public func setComponent(baseView: UIView, snpConstraints: @escaping (_ make: ConstraintMaker) -> Void, snpType: SnpType = .make) {
     baseView.addSubview(self)
     switch snpType {
     case .make:
@@ -27,5 +27,6 @@ extension UIView {
     case .update:
       self.snp.updateConstraints(snpConstraints)
     }
+    
   }
 }

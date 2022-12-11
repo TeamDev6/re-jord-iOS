@@ -27,10 +27,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     
     let signUpFlow = SignUpFlow()
+    let reactor = SignUpReactor(repository: SignUpRepositoryImplement())
     
     self.coordinator.coordinate(
       flow: signUpFlow,
-      with: SignUpReactor()
+      with: reactor
     )
     
     Flows.use(signUpFlow, when: .created) { root in

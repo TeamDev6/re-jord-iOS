@@ -17,7 +17,7 @@ final class SignUpReactor: Reactor {
   // MARK: - Reactor
   
   enum Action {
-    
+    case signUpAction
   }
   
   enum Mutation {
@@ -28,18 +28,36 @@ final class SignUpReactor: Reactor {
     
   }
   
-  // MARK: - Private Properties
+  // MARK: - Properties
   
   var initialState: State = State()
-  var errorListener: PublishRelay = PublishRelay<ReJordError>()
+  private var errorListener: PublishRelay = PublishRelay<ReJordError>()
+  private let usecase: SignUpUsecase
+  
   
   // MARK: - Life Cycle
   
-  init() {
-    
+  init(repository: SignUpRepository) {
+    print("initiii")
+    usecase = SignUpUsecase(repository: repository)
   }
   
   deinit {
+    print("SignUpReactor is deinit")
+  }
+
+  
+  // MARK: - Reactor Action
+  
+  func mutate(action: Action) -> Observable<Mutation> {
+    switch action {
+    case .signUpAction:
+      self.usecase.signUp()
+      return .empty()
+    }
+  }
+  
+  func reduce(state: State, mutation: Mutation) -> State {
     
   }
   

@@ -6,8 +6,8 @@
 //  Copyright © 2022 team.reJord. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-public protocol Layoutable {
+public protocol Layoutable where Self: UIViewController {
   func configurateUI()
 }
