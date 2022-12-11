@@ -19,10 +19,11 @@ extension UIFont {
     case thinItalic = "ThinItalic"
   }
   
-  public static func setFont(font: Roboto, fontSize: CGFloat) -> UIFont {
+  public static func roboto(font: Roboto, fontSize: CGFloat) -> UIFont {
     let robotoBase = "Roboto-"
     print("debug ~> \(robotoBase + font.rawValue), size ~> \(fontSize)")
-    return UIFont(name: "Roboto-Medium", size: fontSize)!
+//    return UIFont(name: "Roboto-Medium", size: fontSize)!
+    return UIFont(name: "AppleSDGothicNeo-medium", size: fontSize)!
   }
   
 }

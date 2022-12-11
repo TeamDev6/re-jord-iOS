@@ -25,8 +25,8 @@ open class WarningLabel: UILabel {
   }
   
   private func setupLabel(labelText: String) {
-    self.font = UIFont.setFont(font: .medium, fontSize: 16)
-    self.textColor = .red
+    self.font = .roboto(font: .medium, fontSize: 24)
+    self.textColor = .black
     self.text = labelText
   }
   

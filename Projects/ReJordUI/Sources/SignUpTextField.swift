@@ -11,16 +11,27 @@ import SnapKit
 
 open class SignUpTextField: UITextField {
   
+  convenience public init(placeholderText text: String) {
+    self.init(frame: CGRect.zero)
+    self.setup(placeholderText: text)
+  }
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
-    self.setup()
   }
   
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func setup() {
-    self.backgroundColor = .red
+  private func setup(placeholderText: String) {
+    self.setPlaceHolder(text: placeholderText, color: .black)
+    self.setTextFieldOptions(
+      textColor: .black,
+      backgroundColor: .white,
+      font: .roboto(font: .medium, fontSize: 14),
+      align: .left,
+      keyboardType: .alphabet
+    )
   }
 }

@@ -9,6 +9,5 @@
 import RxFlow
 
 enum ReJordSteps: Step {
-  /// 회원가입 화면으로 이동
   case signUpIsRequired
 }
