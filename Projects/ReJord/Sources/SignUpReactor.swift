@@ -31,7 +31,7 @@ final class SignUpReactor: Reactor {
   // MARK: - Private Properties
   
   var initialState: State = State()
-  
+  var errorListener: PublishRelay = PublishRelay<ReJordError>()
   
   // MARK: - Life Cycle
   

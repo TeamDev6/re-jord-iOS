@@ -22,6 +22,7 @@ let project = Project.app(
     .external(name: "Alamofire"),
     .external(name: "SnapKit"),
     .external(name: "SwiftyJSON"),
+    .external(name: "Then"),
     TargetDependency.Project.ReJordUI
   ]
 )
