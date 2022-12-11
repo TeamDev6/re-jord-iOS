@@ -12,13 +12,17 @@ import ReJordUI
 import RxFlow
 import Then
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: UIViewController, Layoutable {
   
   // MARK: - Componenets
   
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
+  
+  private let waringLabel = WarningLabel(text: "this is rejord modulated label test")
+  
+  
   
   // MARK: - Life Cycle
   
@@ -33,9 +37,12 @@ final class SignUpViewController: UIViewController {
   
   // MARK: - Configuration UI
   
-  private func configurateUI() {
+  func configurateUI() {
     self.baseView.setComponent(baseView: self.view) { make in
       make.edges.equalToSuperview()
+    }
+    self.waringLabel.setComponent(baseView: baseView) { make in
+      make.centerX.centerY.equalToSuperview()
     }
   }
   
