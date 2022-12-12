@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import Moya
 
 final class SignUpRepositoryImplement: SignUpRepository {
-  func signUp() {
-    // sign up server action
-    print("sign up server action")
+  
+  func signUp(userId: String, userPassword: String) {
+    print("userid ~> \(userId), userpwd ~> \(userPassword)")
+    
+    // network here
+    MoyaProvider<ReJordAPI>().request(.userSignUp(id: userId, pwd: userPassword), callbackQueue: .global()) { result in
+      print(result)
+    }
   }
 }

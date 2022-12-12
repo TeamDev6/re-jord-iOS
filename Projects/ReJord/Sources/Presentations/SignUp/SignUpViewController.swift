@@ -31,9 +31,19 @@ final class SignUpViewController: UIViewController, Layoutable, View {
   private let logoView = UIView()
   private let waringLabel = WarningLabel(text: "RE:욜드에\n오신 것을 환영합니다!")
 
-  private let idInputView = SignUpInputView(upperLabelText: "Label", inputType: .withButton)
-  private let passwordInputView = SignUpInputView(upperLabelText: "Password", inputType: .withSecure)
-  private let passwordConfirmInputView = SignUpInputView(upperLabelText: "Password", inputType: .withSecure)
+  private let idInputView = SignUpInputView(
+    upperLabelText: "Label",
+    inputType: .withButton
+  )
+  private let passwordInputView = SignUpInputView(
+    upperLabelText: "Password",
+    inputType: .withSecure
+  )
+  private let passwordConfirmInputView = SignUpInputView(
+    upperLabelText: "PasswordConfirm",
+    inputType: .withSecure
+  )
+  
   private let signUpButton = UIButton().then {
     $0.backgroundColor = .gray
   }
@@ -45,7 +55,15 @@ final class SignUpViewController: UIViewController, Layoutable, View {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.configurateUI()
-    self.reactor = SignUpReactor(repository: SignUpRepositoryImplement())
+  }
+  
+  init(reactor: SignUpReactor) {
+    super.init(nibName: nil, bundle: nil)
+    self.reactor = reactor
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
   
   deinit {
@@ -56,34 +74,36 @@ final class SignUpViewController: UIViewController, Layoutable, View {
   // MARK: - Configuration UI
   
   func configurateUI() {
-    self.baseView.setComponent(baseView: self.view) { make in
+    self.baseView.snpLayout(baseView: self.view) { make in
       make.edges.equalToSuperview()
     }
-    self.logoView.setComponent(baseView: baseView) { make in
+    self.logoView.snpLayout(baseView: baseView) { make in
       make.top.equalToSuperview()
       make.height.equalTo(124)
     }
-    self.waringLabel.setComponent(baseView: baseView) { make in
+    self.waringLabel.snpLayout(baseView: baseView) { make in
       make.top.equalTo(self.logoView.snp.bottom)
       make.leading.equalToSuperview().inset(29)
     }
-    self.idInputView.setComponent(baseView: baseView) { make in
+    
+    self.idInputView.snpLayout(baseView: baseView) { make in
       make.top.equalTo(self.waringLabel.snp.bottom).offset(20)
       make.leading.equalTo(self.waringLabel)
       make.trailing.equalToSuperview().inset(29)
       make.height.equalTo(100)
     }
-    self.passwordInputView.setComponent(baseView: baseView) { make in
+    self.passwordInputView.snpLayout(baseView: baseView) { make in
       make.top.equalTo(self.idInputView.snp.bottom)
       make.leading.trailing.equalTo(self.idInputView)
       make.height.equalTo(100)
     }
-    self.passwordConfirmInputView.setComponent(baseView: baseView) { make in
+    self.passwordConfirmInputView.snpLayout(baseView: baseView) { make in
       make.top.equalTo(self.passwordInputView.snp.bottom)
       make.leading.trailing.equalTo(self.idInputView)
       make.height.equalTo(100)
     }
-    self.signUpButton.setComponent(baseView: baseView) { make in
+    
+    self.signUpButton.snpLayout(baseView: baseView) { make in
       make.bottom.equalToSuperview().inset(50)
       make.leading.trailing.equalToSuperview()
       make.height.equalTo(60)
@@ -101,6 +121,8 @@ final class SignUpViewController: UIViewController, Layoutable, View {
         self?.reactor?.action.onNext(.signUpAction)
       })
       .disposed(by: self.disposeBag)
+    
+//    self.idInputView.rx.text
       
       
   }

@@ -9,5 +9,5 @@
 import Foundation
 
 protocol SignUpRepository {
-  func signUp()
+  func signUp(userId: String, userPassword: String)
 }

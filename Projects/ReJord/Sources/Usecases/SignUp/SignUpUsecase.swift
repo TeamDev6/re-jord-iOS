@@ -18,9 +18,8 @@ final class SignUpUsecase {
   
   //
   
-  func signUp() {
-    print("sign up usecase sign up")
-    self.repository.signUp()
+  func signUp(userId id: String, userPassword password: String) {
+    self.repository.signUp(userId: id, userPassword: password)
   }
   
   

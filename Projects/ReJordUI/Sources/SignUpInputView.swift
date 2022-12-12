@@ -25,6 +25,7 @@ open class SignUpInputView: UIView {
   private let signUpTextField = SignUpTextField(placeholderText: "placeholder")
   private let upperLabel = UILabel().then { (label: UILabel) in
     label.font = UIFont(font: ReJordUIFontFamily.Roboto.medium, size: 16)
+    label.sizeToFit()
   }
   private var duplicateInspectionButton: UIButton = {
     let button = UIButton().then { (button: UIButton) in
@@ -70,27 +71,28 @@ open class SignUpInputView: UIView {
   // MARK: - Configure UI
   
   public func configurateUI(inputType: SignUpInputType) {
-    baseView.setComponent(baseView: self) { make in
+    baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
     }
-    self.upperLabel.setComponent(baseView: self.baseView) { make in
+    self.upperLabel.snpLayout(baseView: self.baseView, snpType: .remake) { make in
       make.top.leading.equalToSuperview()
     }
     switch inputType {
     case .withButton:
-      self.duplicateInspectionButton.setComponent(baseView: self.baseView) { make in
+      self.duplicateInspectionButton.snpLayout(baseView: self.baseView) { make in
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.height.equalTo(40)
         make.width.equalTo(101)
         make.trailing.equalToSuperview()
       }
-      self.signUpTextField.setComponent(baseView: self.baseView) { make in
+      self.signUpTextField.snpLayout(baseView: self.baseView) { make in
         make.centerY.equalTo(self.duplicateInspectionButton)
         make.leading.equalToSuperview()
         make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-27)
       }
     case .withSecure:
-      self.signUpTextField.setComponent(baseView: self.baseView) { make in
+      self.signUpTextField.snpLayout(baseView: self.baseView) { make in
+        make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.leading.equalToSuperview()
         make.trailing.equalToSuperview()
       }

@@ -22,8 +22,9 @@ class SignUpFlow: Flow {
   // MARK: - Life Cycle
   
   init() {
-    self.signUpViewController = SignUpViewController()
-    self.signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
+    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
+    self.signUpViewController = SignUpViewController(reactor: signUpReactor)
+    self.signUpReactor = signUpReactor
   }
   
   // MARK: - Root ViewController

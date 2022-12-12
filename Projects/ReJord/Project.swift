@@ -1,7 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-
 // MARK: - Project
 
 private let projectName = "ReJord"
@@ -26,3 +25,4 @@ let project = Project.app(
     TargetDependency.Project.ReJordUI
   ]
 )
+
