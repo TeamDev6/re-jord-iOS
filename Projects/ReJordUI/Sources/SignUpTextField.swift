@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 public enum ImageLocateType {
   case left
@@ -15,6 +17,12 @@ public enum ImageLocateType {
 }
 
 open class SignUpTextField: UITextField {
+  
+  
+  // MARK: - Private Properties
+  
+  let disposeBag = DisposeBag()
+  
   
   // MARK: - Life Cycle
   
