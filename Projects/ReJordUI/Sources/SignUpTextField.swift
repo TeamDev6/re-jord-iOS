@@ -35,6 +35,12 @@ open class SignUpTextField: UITextField {
       return bounds.insetBy(dx: 10.0, dy: 10.0)
   }
   
+  open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+    var padding = super.rightViewRect(forBounds: bounds)
+    padding.origin.x -= 12
+    return padding
+  }
+  
   // MARK: - Set up
   
   private func setup(placeholderText: String) {
@@ -55,6 +61,7 @@ open class SignUpTextField: UITextField {
     case .right:
       self.rightView = image
       self.rightViewMode = .always
+      
     case .left:
       self.leftView = image
       self.leftViewMode = .always

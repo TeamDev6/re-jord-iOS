@@ -29,9 +29,7 @@ open class SignUpInputView: UIView {
   }
   private var duplicateInspectionButton: UIButton = {
     let button = UIButton().then { (button: UIButton) in
-      button.layer.cornerRadius = 16
-      button.backgroundColor = .gray
-      button.setTitle("Button", for: .normal)
+      button.setButtonProperties(cornerRadius: 20, backgroundColor: .black, text: "중복체크", textColor: .white, font: UIFont(font: ReJordUIFontFamily.Roboto.medium, size: 16)!)
     }
     return button
   }()

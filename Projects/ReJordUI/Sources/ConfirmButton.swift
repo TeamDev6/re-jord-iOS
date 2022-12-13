@@ -1,18 +1,18 @@
 //
-//  WarningLabel.swift
+//  ConfirmButton.swift
 //  ReJordUI
 //
-//  Created by 송하민 on 2022/12/11.
+//  Created by 송하민 on 2022/12/13.
 //  Copyright © 2022 team.reJord. All rights reserved.
 //
 
 import UIKit
 
-open class WarningLabel: UILabel {
+open class ConfirmButton: UIButton {
   
   convenience public init(text: String) {
     self.init(frame: CGRect.zero)
-    self.setupLabel(labelText: text)
+    self.setupButton(titleText: text)
   }
   
   override public init(frame: CGRect) {
@@ -23,11 +23,8 @@ open class WarningLabel: UILabel {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func setupLabel(labelText: String) {
-    self.font = UIFont(font: ReJordUIFontFamily.Roboto.bold, size: 14)
-    self.textColor = .black
-    self.text = labelText
-    self.numberOfLines = 2
+  private func setupButton(titleText: String) {
+    self.setButtonProperties(cornerRadius: 7, backgroundColor: .gray, text: titleText, textColor: .white, font: UIFont(font: ReJordUIFontFamily.Roboto.bold, size: 20)!)
   }
   
 }

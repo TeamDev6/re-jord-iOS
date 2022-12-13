@@ -32,21 +32,19 @@ final class SignUpViewController: UIViewController, Layoutable, View {
   private let waringLabel = WarningLabel(text: "RE:욜드에\n오신 것을 환영합니다!")
 
   private let idInputView = SignUpInputView(
-    upperLabelText: "Label",
+    upperLabelText: "아이디",
     inputType: .withButton
   )
   private let passwordInputView = SignUpInputView(
-    upperLabelText: "Password",
+    upperLabelText: "비밀번호",
     inputType: .withSecure
   )
   private let passwordConfirmInputView = SignUpInputView(
-    upperLabelText: "PasswordConfirm",
+    upperLabelText: "비밀번호 확인",
     inputType: .withSecure
   )
   
-  private let signUpButton = UIButton().then {
-    $0.backgroundColor = .gray
-  }
+  private let signUpButton = ConfirmButton(text: "가입하기")
   
   
   
@@ -105,8 +103,8 @@ final class SignUpViewController: UIViewController, Layoutable, View {
     
     self.signUpButton.snpLayout(baseView: baseView) { make in
       make.bottom.equalToSuperview().inset(50)
-      make.leading.trailing.equalToSuperview()
-      make.height.equalTo(60)
+      make.leading.trailing.equalToSuperview().inset(20)
+      make.height.equalTo(47)
     }
   }
   
