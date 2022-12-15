@@ -15,7 +15,7 @@ import RxFlow
 import Then
 import ReactorKit
 
-final class SignUpViewController: UIViewController, Layoutable, View {
+class SignUpViewController: UIViewController, Layoutable, View {
   
   
   // MARK: - Private Properties
@@ -29,7 +29,10 @@ final class SignUpViewController: UIViewController, Layoutable, View {
     $0.backgroundColor = .white
   }
   private let logoView = UIView()
-  private let waringLabel = WarningLabel(text: ReJordUIStrings.welcomeToVisitRejord, font: .roboto(fontType: .bold, fontSize: 24))
+  private let waringLabel = WarningLabel(
+    text: ReJordUIStrings.welcomeToVisitRejord,
+    font: .roboto(fontType: .bold, fontSize: 24)
+  )
   private let idInputView = SignUpInputView(
     upperLabelText: ReJordUIStrings.id,
     inputType: .withButton
@@ -118,10 +121,7 @@ final class SignUpViewController: UIViewController, Layoutable, View {
         self?.reactor?.action.onNext(.signUpAction)
       })
       .disposed(by: self.disposeBag)
-    
-//    self.idInputView.rx.text
-      
-      
+ 
   }
 
 }

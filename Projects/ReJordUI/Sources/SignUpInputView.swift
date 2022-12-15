@@ -47,7 +47,7 @@ open class SignUpInputView: UIView {
     self.init(frame: CGRect.zero)
     self.setTextUpperLabel(upperText: text)
     if inputType == .withSecure {
-      self.setImageIcon(image: UIImage(asset: ReJordUIAsset.secureGlanceOff)!)
+      self.setImageIcon(image: .image(name: "secureGlanceOff"))
       self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction)
     } else if inputType == .withButton {
       self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpIdRestriction)

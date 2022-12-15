@@ -10,9 +10,9 @@ import UIKit
 
 open class WarningLabel: UILabel {
   
-  convenience public init(text: String, font: UIFont) {
+  convenience public init(text: String, font: UIFont, color: UIColor = .black) {
     self.init(frame: CGRect.zero)
-    self.setupLabel(labelText: text)
+    self.setupLabel(labelText: text, font: font, color: color)
   }
   
   override public init(frame: CGRect) {
@@ -23,9 +23,9 @@ open class WarningLabel: UILabel {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func setupLabel(labelText: String) {
-    self.font = .roboto(fontType: .bold, fontSize: 14)
-    self.textColor = .black
+  private func setupLabel(labelText: String, font: UIFont, color: UIColor) {
+    self.font = font
+    self.textColor = color
     self.text = labelText
     self.numberOfLines = 2
   }
