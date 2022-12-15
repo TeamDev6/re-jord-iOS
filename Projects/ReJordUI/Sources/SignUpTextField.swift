@@ -26,7 +26,7 @@ open class SignUpTextField: UITextField {
   
   // MARK: - Life Cycle
   
-  convenience public init(placeholderText text: String) {
+  convenience public init(placeholderText text: String = "") {
     self.init(frame: CGRect.zero)
     self.setup(placeholderText: text)
   }
@@ -52,16 +52,23 @@ open class SignUpTextField: UITextField {
   // MARK: - Set up
   
   private func setup(placeholderText: String) {
-    self.setPlaceHolder(text: placeholderText, color: .black)
+    self.setSignUpPlaceholder(newPlaceHolder: placeholderText)
     self.setTextFieldOptions(
       textColor: .black,
       backgroundColor: .white,
-      font: .roboto(font: .medium, fontSize: 16),
+      font: .roboto(fontType: .medium, fontSize: 16),
       align: .left,
       keyboardType: .alphabet
     )
     self.setShadowAndBorder(shadowColor: .gray, borderColor: .gray)
     self.layer.cornerRadius = 8.0
+  }
+  
+  public func setSignUpPlaceholder(newPlaceHolder: String) {
+    self.setPlaceHolder(
+      text: newPlaceHolder,
+      font: .roboto(fontType: .medium, fontSize: 13)
+    )
   }
   
   public func setupWithImage(image: UIImageView, side: ImageLocateType = .right) {
@@ -74,6 +81,6 @@ open class SignUpTextField: UITextField {
       self.leftView = image
       self.leftViewMode = .always
     }
-    
   }
+  
 }

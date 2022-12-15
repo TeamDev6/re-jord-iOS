@@ -10,7 +10,7 @@ import UIKit
 
 open class WarningLabel: UILabel {
   
-  convenience public init(text: String) {
+  convenience public init(text: String, font: UIFont) {
     self.init(frame: CGRect.zero)
     self.setupLabel(labelText: text)
   }
@@ -24,7 +24,7 @@ open class WarningLabel: UILabel {
   }
   
   private func setupLabel(labelText: String) {
-    self.font = UIFont(font: ReJordUIFontFamily.Roboto.bold, size: 14)
+    self.font = .roboto(fontType: .bold, fontSize: 14)
     self.textColor = .black
     self.text = labelText
     self.numberOfLines = 2

@@ -24,12 +24,18 @@ open class SignUpInputView: UIView {
   }
   private let signUpTextField = SignUpTextField(placeholderText: "placeholder")
   private let upperLabel = UILabel().then { (label: UILabel) in
-    label.font = UIFont(font: ReJordUIFontFamily.Roboto.medium, size: 16)
+    label.font = .roboto(fontType: .medium, fontSize: 16)
     label.sizeToFit()
   }
   private var duplicateInspectionButton: UIButton = {
     let button = UIButton().then { (button: UIButton) in
-      button.setButtonProperties(cornerRadius: 20, backgroundColor: .black, text: "중복체크", textColor: .white, font: UIFont(font: ReJordUIFontFamily.Roboto.medium, size: 16)!)
+      button.setButtonProperties(
+        cornerRadius: 20,
+        backgroundColor: .black,
+        text: ReJordUIStrings.checkDuplicate,
+        textColor: .white,
+        font: .roboto(fontType: .medium, fontSize: 16)
+      )
     }
     return button
   }()
@@ -42,6 +48,9 @@ open class SignUpInputView: UIView {
     self.setTextUpperLabel(upperText: text)
     if inputType == .withSecure {
       self.setImageIcon(image: UIImage(asset: ReJordUIAsset.secureGlanceOff)!)
+      self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction)
+    } else if inputType == .withButton {
+      self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpIdRestriction)
     }
     self.configurateUI(inputType: inputType)
   }
@@ -77,19 +86,22 @@ open class SignUpInputView: UIView {
     }
     switch inputType {
     case .withButton:
-      self.duplicateInspectionButton.snpLayout(baseView: self.baseView) { make in
+      self.duplicateInspectionButton.snpLayout(baseView: self.baseView) { [weak self] make in
+        guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.height.equalTo(40)
         make.width.equalTo(101)
         make.trailing.equalToSuperview()
       }
-      self.signUpTextField.snpLayout(baseView: self.baseView) { make in
+      self.signUpTextField.snpLayout(baseView: self.baseView) { [weak self] make in
+        guard let self else { return }
         make.centerY.equalTo(self.duplicateInspectionButton)
         make.leading.equalToSuperview()
         make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-27)
       }
     case .withSecure:
-      self.signUpTextField.snpLayout(baseView: self.baseView) { make in
+      self.signUpTextField.snpLayout(baseView: self.baseView) { [weak self] make in
+        guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.leading.equalToSuperview()
         make.trailing.equalToSuperview()

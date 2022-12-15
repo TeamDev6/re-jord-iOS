@@ -29,22 +29,21 @@ final class SignUpViewController: UIViewController, Layoutable, View {
     $0.backgroundColor = .white
   }
   private let logoView = UIView()
-  private let waringLabel = WarningLabel(text: "RE:욜드에\n오신 것을 환영합니다!")
-
+  private let waringLabel = WarningLabel(text: ReJordUIStrings.welcomeToVisitRejord, font: .roboto(fontType: .bold, fontSize: 24))
   private let idInputView = SignUpInputView(
-    upperLabelText: "아이디",
+    upperLabelText: ReJordUIStrings.id,
     inputType: .withButton
   )
   private let passwordInputView = SignUpInputView(
-    upperLabelText: "비밀번호",
+    upperLabelText: ReJordUIStrings.password,
     inputType: .withSecure
   )
   private let passwordConfirmInputView = SignUpInputView(
-    upperLabelText: "비밀번호 확인",
+    upperLabelText: ReJordUIStrings.confirmPassword,
     inputType: .withSecure
   )
   
-  private let signUpButton = ConfirmButton(text: "가입하기")
+  private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
   
   
   

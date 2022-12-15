@@ -1,1 +1,13 @@
-"asdfasdf"="ㅁㅁㅁ";
+"welcome_to_visit_rejord"="RE:욜드에\n오신 것을 환영합니다!";
+"ID"="아이디";
+"Password"="비밀번호";
+"Confirm_Password"="비밀번호 확인";
+"SignUp"="가입하기";
+"Check_Duplicate"="중복체크";
+"Withdrawal"="탈퇴하기";
+"SignUpIdRestriction"="5~20자 영문 소문자, 숫자를 사용하세요.";
+"SignUpPasswordRestriction"="8~20자 영문 소문자, 숫자를 사용하세요";
+
+// MARK: - Warning
+"waringFontMissing"="Warning! the Roboto font is missing. Be sure the font willing to use is exist on your assets";
+

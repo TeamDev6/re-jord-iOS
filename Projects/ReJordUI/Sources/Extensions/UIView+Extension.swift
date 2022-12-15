@@ -17,7 +17,8 @@ extension UIView {
     case update
   }
   
-  public func snpLayout(baseView: UIView, snpType: SnpType = .make, snpConstraints: @escaping (_ make: ConstraintMaker) -> Void) { 
+  public func snpLayout(baseView: UIView?, snpType: SnpType = .make, snpConstraints: @escaping (_ make: ConstraintMaker) -> Void) {
+    guard let baseView else { return }
     baseView.addSubview(self)
     switch snpType {
     case .make:
