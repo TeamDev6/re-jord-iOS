@@ -23,7 +23,7 @@ open class SignUpInputView: UIView {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
-  private var signUpTextField: SignUpTextFieldView?
+  public var signUpTextField: SignUpTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
     label.sizeToFit()

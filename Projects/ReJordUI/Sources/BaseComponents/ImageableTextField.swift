@@ -7,20 +7,49 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class ImageableTextField: UITextField {
+@objc protocol ImageableTextFieldDelegate: AnyObject {
+  @objc optional func value(text: String?)
+}
+
+open class ImageableTextField: UITextField {
   
-  override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+  
+  // MARK: - Delegate
+  
+  weak var imageableDelegate: ImageableTextFieldDelegate?
+  
+  
+  // MARK: - Life Cycle
+  
+  open override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
     var textRect = super.leftViewRect(forBounds: bounds)
     textRect.origin.x += leftPadding
     return textRect
   }
 
-  override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+  open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
     var textRect = super.rightViewRect(forBounds: bounds)
     textRect.origin.x -= rightPadding
     return textRect
   }
+  
+  init() {
+    super.init(frame: CGRect.zero)
+    self.addTarget(self, action: #selector(test(_:)), for: .editingChanged)
+  }
+  
+  required public init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  @objc func test(_ textField: UITextField) {
+    self.imageableDelegate?.value?(text: self.text)
+  }
+  
+  // MARK: - Left/Right Image
   
   var leftImage: UIImage? {
     didSet {
@@ -45,6 +74,7 @@ class ImageableTextField: UITextField {
   internal var rightPadding: CGFloat = 0
   
   private func updateView() {
+    
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
     
@@ -63,4 +93,36 @@ class ImageableTextField: UITextField {
     }
   }
   
+}
+
+
+class ImageableTextFieldDelegateProxy: DelegateProxy<ImageableTextField, ImageableTextFieldDelegate>, DelegateProxyType, ImageableTextFieldDelegate {
+  
+  static func registerKnownImplementations() {
+    self.register { (viewController) -> ImageableTextFieldDelegateProxy in
+      ImageableTextFieldDelegateProxy(parentObject: viewController, delegateProxy: self)
+    }
+  }
+  
+  
+  static func currentDelegate(for object: ImageableTextField) -> ImageableTextFieldDelegate? {
+    return object.imageableDelegate
+  }
+  
+  static func setCurrentDelegate(_ delegate: ImageableTextFieldDelegate?, to object: ImageableTextField) {
+    object.imageableDelegate = delegate
+  }
+}
+
+extension Reactive where Base == ImageableTextField {
+  var imageableDelegate: DelegateProxy<ImageableTextField, ImageableTextFieldDelegate> {
+    return ImageableTextFieldDelegateProxy.proxy(for: self.base)
+  }
+
+  var value: Observable<String?> {
+    return imageableDelegate.methodInvoked(#selector(ImageableTextFieldDelegate.value(text:)))
+      .map { param in
+        return param[1] as? String? ?? ""
+      }
+  }
 }

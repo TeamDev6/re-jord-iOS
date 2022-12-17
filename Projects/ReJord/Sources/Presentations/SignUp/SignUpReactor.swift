@@ -19,16 +19,21 @@ final class SignUpReactor: Reactor, Stepper {
   // MARK: - Reactor
   
   enum Action {
+    case idValueInserted(value: String?)
+    case passwordValueInserted(value: String?)
+    case passwordConfirmValueInserted(value: String?)
     case signUpAction
   }
   
   enum Mutation {
-    
+    case idSet(id: String?)
+    case passwordSet(passowrd: String?)
   }
   
   struct State {
     let idValue: String = ""
     let passwordValue: String = ""
+    let passwordIsNotEqual: Bool = false
   }
   
   // MARK: - Properties
@@ -57,11 +62,23 @@ final class SignUpReactor: Reactor, Stepper {
     case .signUpAction:
       self.userSignUp()
       return .empty()
+    case .idValueInserted(value: let value):
+      return .just(.idSet(id: value))
+    case .passwordValueInserted(value: let value):
+      return .just(.passwordSet(passowrd: value))
+    case .passwordConfirmValueInserted(value: let _):
+      return .empty()
     }
   }
   
   func reduce(state: State, mutation: Mutation) -> State {
+    switch mutation {
     
+    case .idSet(id: let id):
+      <#code#>
+    case .passwordSet(passowrd: let passowrd):
+      <#code#>
+    }
   }
   
   // MARK: - Private Functions

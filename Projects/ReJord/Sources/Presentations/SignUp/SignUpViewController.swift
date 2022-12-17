@@ -123,6 +123,27 @@ class SignUpViewController: UIViewController, Layoutable, View {
       })
       .disposed(by: self.disposeBag)
  
+    self.idInputView.signUpTextField?.baseTextField.rx.text
+      .asDriver()
+      .drive(onNext: { [weak self] idText in
+        self?.reactor?.action.onNext(.idValueInserted(value: idText))
+      })
+      .disposed(by: self.disposeBag)
+    
+    self.passwordInputView.signUpTextField?.baseTextField.rx.text
+      .asDriver()
+      .drive(onNext: { [weak self] passwordText in
+        self?.reactor?.action.onNext(.passwordValueInserted(value: passwordText))
+      })
+      .disposed(by: self.disposeBag)
+    
+    self.passwordConfirmInputView.signUpTextField?.baseTextField.rx.text
+      .asDriver()
+      .drive(onNext: { [weak self] passwordConfirmText in
+        self?.reactor?.action.onNext(.passwordConfirmValueInserted(value: passwordConfirmText))
+      })
+      .disposed(by: self.disposeBag)
+      
   }
 
 }

@@ -22,7 +22,7 @@ open class SignUpTextFieldView: UIView {
   
   // MARK: - Compoenent
   
-  let baseTextField = ImageableTextField()
+  public let baseTextField = ImageableTextField()
   
   
   // MARK: - Life Cycle
