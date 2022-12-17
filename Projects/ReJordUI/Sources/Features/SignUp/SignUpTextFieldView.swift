@@ -26,7 +26,7 @@ open class SignUpTextFieldView: UIView {
   
   // MARK: - Compoenent
   
-  let baesTextField = ImageableTextField()
+  let baseTextField = ImageableTextField()
   
   
   // MARK: - Life Cycle
@@ -35,7 +35,7 @@ open class SignUpTextFieldView: UIView {
   init(placeholderText text: String = "", image: UIImage) {
     super.init(frame: .zero)
     self.setup(placeholderText: text, rightImage: image)
-    self.configurateUI()
+    self.setLayout()
   }
   
   required public init?(coder: NSCoder) {
@@ -47,7 +47,7 @@ open class SignUpTextFieldView: UIView {
   
   private func setup(placeholderText: String, rightImage image: UIImage) {
     self.setSignUpPlaceholder(newPlaceHolder: placeholderText, placeHolderColor: .gray)
-    self.baesTextField.setTextFieldOptions(
+    self.baseTextField.setTextFieldOptions(
       textColor: .black,
       backgroundColor: .white,
       font: .roboto(fontType: .medium, fontSize: 16),
@@ -55,19 +55,21 @@ open class SignUpTextFieldView: UIView {
       keyboardType: .alphabet
     )
     self.layer.borderWidth = 2
-    self.baesTextField.rightImage = image
+    self.layer.cornerRadius = 8.0
+    self.baseTextField.rightPadding = 20
+    self.baseTextField.rightImage = image
   }
   
   public func setSignUpPlaceholder(newPlaceHolder: String, placeHolderColor: UIColor) {
-    self.baesTextField.setPlaceHolder(
+    self.baseTextField.setPlaceHolder(
       text: newPlaceHolder,
       color: placeHolderColor,
       font: .roboto(fontType: .medium, fontSize: 13)
     )
   }
   
-  private func configurateUI() {
-    self.baesTextField.snpLayout(baseView: self) { make in
+  private func setLayout() {
+    self.baseTextField.snpLayout(baseView: self) { make in
       make.top.bottom.equalToSuperview()
       make.leading.equalToSuperview().inset(13)
       make.width.height.equalToSuperview()

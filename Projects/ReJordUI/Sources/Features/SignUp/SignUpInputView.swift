@@ -38,6 +38,7 @@ open class SignUpInputView: UIView {
         font: .roboto(fontType: .medium, fontSize: 16)
       )
     }
+    button.layer.zPosition = 1
     return button
   }()
   
@@ -84,6 +85,7 @@ open class SignUpInputView: UIView {
     }
     switch inputType {
     case .withButton:
+      
       self.duplicateInspectionButton.snpLayout(baseView: self.baseView) { [weak self] make in
         guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
@@ -98,6 +100,7 @@ open class SignUpInputView: UIView {
         make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-7)
         make.height.equalTo(47)
       }
+      
     case .withSecure:
       self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }

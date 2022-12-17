@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.configurateUI()
+    self.setLayout()
   }
   
   init(reactor: SignUpReactor) {
@@ -73,7 +73,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   // MARK: - Configuration UI
   
-  func configurateUI() {
+  func setLayout() {
     self.baseView.snpLayout(baseView: self.view) { make in
       make.edges.equalToSuperview()
       make.width.height.equalToSuperview()

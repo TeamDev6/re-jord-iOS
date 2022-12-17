@@ -15,9 +15,9 @@ class ImageableTextField: UITextField {
     textRect.origin.x += leftPadding
     return textRect
   }
-  
+
   override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
-    var textRect = super.leftViewRect(forBounds: bounds)
+    var textRect = super.rightViewRect(forBounds: bounds)
     textRect.origin.x -= rightPadding
     return textRect
   }
@@ -27,16 +27,16 @@ class ImageableTextField: UITextField {
       updateView()
     }
   }
-  var rightImage: UIImage? {
+  internal var rightImage: UIImage? {
     didSet {
       updateView()
     }
   }
   
-  var leftPadding: CGFloat = 0
-  var rightPadding: CGFloat = 40
+  internal var leftPadding: CGFloat = 0
+  internal var rightPadding: CGFloat = 0
   
-  func updateView() {
+  private func updateView() {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
     
@@ -49,6 +49,7 @@ class ImageableTextField: UITextField {
       rightViewMode = UITextField.ViewMode.always
       rightView = imageView
       imageView.image = image
+      
     }
   
   }

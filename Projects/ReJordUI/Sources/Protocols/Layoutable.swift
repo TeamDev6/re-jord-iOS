@@ -9,5 +9,6 @@
 import UIKit
 
 public protocol Layoutable where Self: UIViewController {
-  func configurateUI()
+  func setLayout()
 }
+
