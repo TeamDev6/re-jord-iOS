@@ -27,9 +27,17 @@ class ImageableTextField: UITextField {
       updateView()
     }
   }
-  internal var rightImage: UIImage? {
+  var rightImage: UIImage? {
     didSet {
       updateView()
+    }
+  }
+  
+  var tapGesture: UITapGestureRecognizer? {
+    didSet {
+      if rightImage != nil {
+        updateView()
+      }
     }
   }
   
@@ -49,8 +57,10 @@ class ImageableTextField: UITextField {
       rightViewMode = UITextField.ViewMode.always
       rightView = imageView
       imageView.image = image
-      
+      guard let tapGesture else { return }
+      imageView.isUserInteractionEnabled = true
+      imageView.addGestureRecognizer(tapGesture)
     }
-  
   }
+  
 }

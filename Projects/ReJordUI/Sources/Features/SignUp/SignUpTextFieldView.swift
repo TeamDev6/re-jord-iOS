@@ -11,17 +11,13 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public enum ImageLocateType {
-  case left
-  case right
-}
-
 open class SignUpTextFieldView: UIView {
   
   
   // MARK: - Private Properties
   
-  let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
+  private let tapGestrue = UITapGestureRecognizer()
   
   
   // MARK: - Compoenent
@@ -32,9 +28,9 @@ open class SignUpTextFieldView: UIView {
   // MARK: - Life Cycle
   
   
-  init(placeholderText text: String = "", image: UIImage) {
+  init(placeholderText text: String = "", image: UIImage? = nil, textSecure: Bool = false) {
     super.init(frame: .zero)
-    self.setup(placeholderText: text, rightImage: image)
+    self.setup(placeholderText: text, rightImage: image, isSecure: textSecure)
     self.setLayout()
   }
   
@@ -45,7 +41,11 @@ open class SignUpTextFieldView: UIView {
   
   // MARK: - Set up
   
-  private func setup(placeholderText: String, rightImage image: UIImage) {
+  private func setup(placeholderText: String, rightImage image: UIImage?, isSecure: Bool) {
+    if isSecure {
+      self.baseTextField.isSecureTextEntry = true
+      self.baseTextField.tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapAction))
+    }
     self.setSignUpPlaceholder(newPlaceHolder: placeholderText, placeHolderColor: .gray)
     self.baseTextField.setTextFieldOptions(
       textColor: .black,
@@ -56,8 +56,19 @@ open class SignUpTextFieldView: UIView {
     )
     self.layer.borderWidth = 2
     self.layer.cornerRadius = 8.0
-    self.baseTextField.rightPadding = 20
+    self.baseTextField.rightPadding = 30
     self.baseTextField.rightImage = image
+  }
+  
+  @objc func imageTapAction() {
+    if let rightImage = self.baseTextField.rightImage {
+      if rightImage == ReJordUIImages(name: "secureGlanceOff").image {
+        self.baseTextField.rightImage = .image(name: "secureGlanceOn")
+      } else if rightImage == ReJordUIImages(name: "secureGlanceOn").image {
+        self.baseTextField.rightImage = .image(name: "secureGlanceOff")
+      }
+      self.baseTextField.togglePasswordVisibility()
+    }
   }
   
   public func setSignUpPlaceholder(newPlaceHolder: String, placeHolderColor: UIColor) {

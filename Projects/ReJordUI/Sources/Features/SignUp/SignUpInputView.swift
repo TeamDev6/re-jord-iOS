@@ -47,15 +47,17 @@ open class SignUpInputView: UIView {
   
   convenience public init(upperLabelText text: String, inputType: SignUpInputType) {
     self.init(frame: CGRect.zero)
-    self.signUpTextField = SignUpTextFieldView(image: .image(name: "secureGlanceOff"))
+    
     self.upperLabel.text = text
     switch inputType {
     case .withButton:
+      self.signUpTextField = SignUpTextFieldView()
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
         placeHolderColor: .gray
       )
     case .withSecure:
+      self.signUpTextField = SignUpTextFieldView(image: .image(name: "secureGlanceOff"), textSecure: true)
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
         placeHolderColor: .gray
