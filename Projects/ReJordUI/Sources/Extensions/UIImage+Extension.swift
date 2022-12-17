@@ -11,7 +11,6 @@ import UIKit
 extension UIImage {
   
   static func image(name string: String) -> UIImage {
-    let reJordImage = ReJordUIImages(name: string)
-    return UIImage(asset: reJordImage) ?? UIImage()
+    return ReJordUIImages(name: string).image
   }
 }

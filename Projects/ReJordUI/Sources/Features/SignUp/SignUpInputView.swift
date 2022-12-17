@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import RxCocoa
 import Then
 
 public enum SignUpInputType {
@@ -22,7 +23,7 @@ open class SignUpInputView: UIView {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
-  private let signUpTextField = SignUpTextField(placeholderText: "placeholder")
+  private var signUpTextField: SignUpTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
     label.sizeToFit()
@@ -45,13 +46,21 @@ open class SignUpInputView: UIView {
   
   convenience public init(upperLabelText text: String, inputType: SignUpInputType) {
     self.init(frame: CGRect.zero)
-    self.setTextUpperLabel(upperText: text)
-    if inputType == .withSecure {
-      self.setImageIcon(image: .image(name: "secureGlanceOff"))
-      self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction)
-    } else if inputType == .withButton {
-      self.signUpTextField.setSignUpPlaceholder(newPlaceHolder: ReJordUIStrings.signUpIdRestriction)
+    self.signUpTextField = SignUpTextFieldView(image: .image(name: "secureGlanceOff"))
+    self.upperLabel.text = text
+    switch inputType {
+    case .withButton:
+      self.signUpTextField?.setSignUpPlaceholder(
+        newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
+        placeHolderColor: .gray
+      )
+    case .withSecure:
+      self.signUpTextField?.setSignUpPlaceholder(
+        newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
+        placeHolderColor: .gray
+      )
     }
+    
     self.configurateUI(inputType: inputType)
   }
   
@@ -64,24 +73,13 @@ open class SignUpInputView: UIView {
   }
   
   
-  // MARK: - Component Functions
-  
-  private func setImageIcon(image: UIImage) {
-    self.signUpTextField.setupWithImage(image: UIImageView(image: image))
-  }
-  
-  private func setTextUpperLabel(upperText: String) {
-    self.upperLabel.text = upperText
-  }
-  
-  
   // MARK: - Configure UI
   
   public func configurateUI(inputType: SignUpInputType) {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
     }
-    self.upperLabel.snpLayout(baseView: self.baseView, snpType: .remake) { make in
+    self.upperLabel.snpLayout(baseView: self.baseView) { make in
       make.top.leading.equalToSuperview()
     }
     switch inputType {
@@ -93,18 +91,20 @@ open class SignUpInputView: UIView {
         make.width.equalTo(101)
         make.trailing.equalToSuperview()
       }
-      self.signUpTextField.snpLayout(baseView: self.baseView) { [weak self] make in
+      self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
         make.centerY.equalTo(self.duplicateInspectionButton)
         make.leading.equalToSuperview()
-        make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-27)
+        make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-7)
+        make.height.equalTo(47)
       }
     case .withSecure:
-      self.signUpTextField.snpLayout(baseView: self.baseView) { [weak self] make in
+      self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.leading.equalToSuperview()
         make.trailing.equalToSuperview()
+        make.height.equalTo(47)
       }
     }
 

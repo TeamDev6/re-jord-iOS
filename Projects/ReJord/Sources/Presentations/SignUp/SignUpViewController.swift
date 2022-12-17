@@ -76,9 +76,10 @@ class SignUpViewController: UIViewController, Layoutable, View {
   func configurateUI() {
     self.baseView.snpLayout(baseView: self.view) { make in
       make.edges.equalToSuperview()
+      make.width.height.equalToSuperview()
     }
     self.logoView.snpLayout(baseView: baseView) { make in
-      make.top.equalToSuperview()
+      make.width.leading.trailing.top.equalToSuperview()
       make.height.equalTo(124)
     }
     self.waringLabel.snpLayout(baseView: baseView) { make in

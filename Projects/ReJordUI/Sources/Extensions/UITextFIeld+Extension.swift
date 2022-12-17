@@ -23,7 +23,7 @@ extension UITextField {
       self.keyboardType = keyboardType
     }
   
-  internal func setPlaceHolder(text: String = "", color: UIColor = .black, font: UIFont) {
+  internal func setPlaceHolder(text: String = "", color: UIColor, font: UIFont) {
     self.attributedPlaceholder = NSAttributedString(
       string: text,
       attributes: [NSAttributedString.Key.foregroundColor : color,
@@ -33,7 +33,7 @@ extension UITextField {
   
   internal func setShadowAndBorder(shadowColor: UIColor, borderColor: UIColor) {
     self.layer.shadowColor = shadowColor.cgColor
-    self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+    self.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
     self.layer.shadowRadius = 5.0
     self.layer.shadowOpacity = 1.0
     self.layer.masksToBounds = false

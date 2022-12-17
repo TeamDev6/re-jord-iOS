@@ -37,6 +37,8 @@ let project = Project.frameworkWithDemoApp(
   iOSTargetVersion: iOSTargetVersion,
   infoPlist: infoPlist,
   dependencies: [
-    .external(name: "SnapKit")
+    .external(name: "SnapKit"),
+    .external(name: "RxSwift"),
+    .external(name: "RxCocoa")
   ]
 )
