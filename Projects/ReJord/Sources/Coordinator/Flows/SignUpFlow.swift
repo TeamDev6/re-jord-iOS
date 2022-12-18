@@ -9,6 +9,7 @@
 import RxFlow
 import UIKit
 import ReJordUI
+import Moya
 
 class SignUpFlow: Flow {
   
@@ -22,7 +23,7 @@ class SignUpFlow: Flow {
   // MARK: - Life Cycle
   
   init() {
-    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
+    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(networkProvider: MoyaProvider<ReJordAPI>()))
     self.signUpViewController = SignUpViewController(reactor: signUpReactor)
     self.signUpReactor = signUpReactor
   }

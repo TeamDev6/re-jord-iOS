@@ -11,12 +11,21 @@ import Moya
 
 final class SignUpRepositoryImplement: SignUpRepository {
   
+  var provider: MoyaProvider<ReJordAPI>
+  
+  init(networkProvider: MoyaProvider<ReJordAPI>) {
+    self.provider = networkProvider
+  }
+  
   func signUp(userId: String, userPassword: String) {
-    print("userid ~> \(userId), userpwd ~> \(userPassword)")
-    
-    // network here
-    MoyaProvider<ReJordAPI>().request(.userSignUp(id: userId, pwd: userPassword), callbackQueue: .global()) { result in
-      print(result)
-    }
+    self.provider
+      .request(.userSignUp(id: userId, pwd: userPassword), callbackQueue: .global()) { result in
+        switch result {
+        case .success(let data):
+          print(data)
+        case .failure(let error):
+          print(error)
+        }
+      }
   }
 }

@@ -22,18 +22,20 @@ final class SignUpReactor: Reactor, Stepper {
     case idValueInserted(value: String?)
     case passwordValueInserted(value: String?)
     case passwordConfirmValueInserted(value: String?)
-    case signUpAction
+    case signUpAction(id: String, pwd: String)
   }
   
   enum Mutation {
+    case empty
     case idSet(id: String?)
-    case passwordSet(passowrd: String?)
+    case passwordSet(password: String?)
+    case passwordConfirmSet(password: String?)
   }
   
   struct State {
-    let idValue: String = ""
-    let passwordValue: String = ""
-    let passwordIsNotEqual: Bool = false
+    var idValue: String? = ""
+    var passwordValue: String? = ""
+    var passwordIsNotEqual: Bool = false
   }
   
   // MARK: - Properties
@@ -59,32 +61,37 @@ final class SignUpReactor: Reactor, Stepper {
   
   func mutate(action: Action) -> Observable<Mutation> {
     switch action {
-    case .signUpAction:
-      self.userSignUp()
-      return .empty()
     case .idValueInserted(value: let value):
       return .just(.idSet(id: value))
     case .passwordValueInserted(value: let value):
-      return .just(.passwordSet(passowrd: value))
-    case .passwordConfirmValueInserted(value: let _):
+      return .just(.passwordSet(password: value))
+    case .passwordConfirmValueInserted(value: let value):
+      return .just(.passwordConfirmSet(password: value))
+    case .signUpAction(let id, let pwd):
+      self.userSignUp(userId: id, userPassword: pwd)
       return .empty()
     }
   }
   
   func reduce(state: State, mutation: Mutation) -> State {
+    var newState = state
     switch mutation {
-    
+    case .empty:
+      break
     case .idSet(id: let id):
-      <#code#>
-    case .passwordSet(passowrd: let passowrd):
-      <#code#>
+      newState.idValue = id
+    case .passwordSet(password: let password):
+      newState.passwordValue = password
+    case .passwordConfirmSet(password: let passwordConfirm):
+      newState.passwordIsNotEqual = state.passwordValue != passwordConfirm
     }
+    return newState
   }
   
   // MARK: - Private Functions
   
-  private func userSignUp() {
-    self.usecase.signUp(userId: "testID", userPassword: "testPWD")
+  private func userSignUp(userId: String, userPassword: String) {
+    self.usecase.signUp(userId: userId, userPassword: userPassword)
   }
   
 }

@@ -16,8 +16,6 @@ final class SignUpUsecase {
     self.repository = repository
   }
   
-  //
-  
   func signUp(userId id: String, userPassword password: String) {
     self.repository.signUp(userId: id, userPassword: password)
   }
