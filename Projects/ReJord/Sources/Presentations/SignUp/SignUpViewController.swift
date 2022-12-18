@@ -48,12 +48,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
   
-  
-  // MARK: - Private Properites
-  
-  private var currentId: String?
-  private var currentPwd: String?
-  
+
   
   // MARK: - Life Cycle
   
@@ -120,20 +115,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
   // MARK: - Reactor Binding
   
   func bind(reactor: SignUpReactor) {
-    
-    self.reactor?.state
-      .map { $0.idValue }
-      .subscribe(onNext: { [weak self] id in
-        self?.currentId = id
-      })
-      .disposed(by: self.disposeBag)
-    
-    self.reactor?.state
-      .map { $0.passwordValue }
-      .subscribe(onNext: { [weak self] pwd in
-        self?.currentPwd = pwd
-      })
-      .disposed(by: self.disposeBag)
  
     self.idInputView.signUpTextField?.baseTextField.rx.text
       .asDriver()
@@ -159,9 +140,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     self.signUpButton.rx.tap
       .asDriver()
       .drive(onNext: { [weak self] _ in
-        guard let id = self?.currentId,
-              let pwd = self?.currentPwd else { return }
-        self?.reactor?.action.onNext(.signUpAction(id: id, pwd: pwd))
+        self?.reactor?.action.onNext(.signUpAction)
       })
       .disposed(by: self.disposeBag)
       
