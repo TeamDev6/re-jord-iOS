@@ -1,5 +1,5 @@
 excluded:
-  - Tuist/Dependencies
+  - Tuist/Dependencies/**
 
 disabled_rules:
   - trailing_whitespace
