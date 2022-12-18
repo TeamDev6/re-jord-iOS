@@ -22,10 +22,15 @@ extension Project {
       dependencies: dependencies
     )
     
+    let baseSettings: [String: SettingValue] = [
+      "SWIFT_OBJC_BRIDGING_HEADER": "./Sources/\(name)-Bridging-Header.h"
+    ]
+    
     return Project(
       name: name,
       organizationName: organizationName,
       packages: [],
+      settings: .settings(base: baseSettings),
       targets: targets,
       schemes: [
         Scheme(name: "\(name)-Debug"),
@@ -43,6 +48,7 @@ extension Project {
     iOSTargetVersion: String,
     infoPlist: [String: InfoPlist.Value] = [:],
     dependencies: [TargetDependency] = []) -> Project {
+      
       var targets = makeFrameworkTargets(
         name: name,
         platform: platform,
@@ -59,10 +65,15 @@ extension Project {
           dependencies: [.target(name: name)]
         )
       )
+      
+      let baseSettings: [String: SettingValue] = [
+        "SWIFT_OBJC_BRIDGING_HEADER": "./Sources/\(name)DemoApp-Bridging-Header.h"
+      ]
 
       return Project(
         name: name,
         organizationName: organizationName,
+        settings: .settings(base: baseSettings),
         targets: targets
       )
     }
@@ -98,7 +109,9 @@ private extension Project {
                          infoPlist: .default,
                          sources: ["Sources/**"],
                          resources: ["Resources/**"],
+                         headers: Headers.headers(public: FileList(arrayLiteral: "RxCocoa-Swift.h")),
                          dependencies: dependencies)
+    
     let tests = Target(name: "\(name)Tests",
                        platform: platform,
                        product: .unitTests,

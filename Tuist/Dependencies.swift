@@ -15,6 +15,7 @@ let dependencies = Dependencies(
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.4"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.6.0"),
     .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
+    .package(url: "https://github.com/devxoul/Then", from: "3.0.0")
   ],
   platforms: [.iOS]
 )
@@ -33,7 +34,7 @@ public extension TargetDependency {
   static let alamofire: TargetDependency = .external(name: "Alamofire")
   static let snapKit: TargetDependency = .external(name: "SnapKit")
   static let swiftyJSON: TargetDependency = .external(name: "SwiftyJSON")
-  
+  static let Then: TargetDependency = .external(name: "Then")
 }
 
 // MARK: Package
