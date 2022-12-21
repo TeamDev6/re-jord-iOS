@@ -34,7 +34,7 @@ final class SignUpReactor: Reactor, Stepper {
   struct State {
     var idValue: String? = ""
     var passwordValue: String? = ""
-    var passwordIsNotEqual: Bool = false
+    var passwordIsEqual: Bool = false
   }
   
   // MARK: - Properties
@@ -89,7 +89,14 @@ final class SignUpReactor: Reactor, Stepper {
     case .passwordSet(password: let password):
       newState.passwordValue = password
     case .passwordConfirmSet(password: let passwordConfirm):
-      newState.passwordIsNotEqual = state.passwordValue != passwordConfirm
+      guard let password = state.passwordValue,
+            let passwordConfirm = passwordConfirm,
+            !password.isEmpty,
+            !passwordConfirm.isEmpty else {
+        newState.passwordIsEqual = true
+        return newState
+      }
+      newState.passwordIsEqual = password == passwordConfirm
     }
     return newState
   }
