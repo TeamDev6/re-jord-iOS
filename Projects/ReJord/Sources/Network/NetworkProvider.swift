@@ -21,7 +21,7 @@ protocol Networkable {
 class NetworkProvider<Target: TargetType> {
   private var isStubbing = false
   public var provider: MoyaProvider<Target>
-  public let dispatchQueue = DispatchQueue(label: "queue.network.wmwallet", qos: .userInteractive)
+  public let dispatchQueue = DispatchQueue(label: "queue.network.rejord", qos: .userInteractive)
   
   let loggerPlugin = NetworkLoggerPlugin()
   

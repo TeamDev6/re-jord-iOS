@@ -28,11 +28,18 @@ class SignUpViewController: UIViewController, Layoutable, View {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
+  
   private let logoView = UIView()
-  private let waringLabel = WarningLabel(
-    text: ReJordUIStrings.welcomeToVisitRejord,
-    font: .roboto(fontType: .bold, fontSize: 24)
-  )
+  private let vStackView = UIStackView().then { (stackView: UIStackView) in
+    stackView.axis = .vertical
+    stackView.alignment = .fill
+    stackView.distribution = .fill
+  }
+  private let welcomeLabel = UILabel().then { (label: UILabel) in
+    label.text = ReJordUIStrings.welcomeToVisitRejord
+    label.font = .roboto(fontType: .bold, fontSize: 24)
+    label.numberOfLines = 2
+  }
   private let idInputView = SignUpInputView(
     upperLabelText: ReJordUIStrings.id,
     inputType: .withButton
@@ -45,6 +52,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     upperLabelText: ReJordUIStrings.confirmPassword,
     inputType: .withSecure
   )
+  
   
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
   
@@ -70,38 +78,31 @@ class SignUpViewController: UIViewController, Layoutable, View {
     print("SignUpViewcController is deinited")
   }
   
+  // MARK: - Private Function
+  
+  private func makeWarningLabel(warningText: String) -> WarningLabel {
+    return WarningLabel(text: warningText, font: .roboto(fontType: .medium, fontSize: 12), color: .red)
+  }
   
   // MARK: - Configuration UI
   
   func setLayout() {
+    
+    self.setStackArrangesView(subViews: [
+      self.welcomeLabel,
+      self.idInputView,
+      self.passwordInputView,
+      self.passwordConfirmInputView,
+    ])
+    
     self.baseView.snpLayout(baseView: self.view) { make in
       make.edges.equalToSuperview()
       make.width.height.equalToSuperview()
     }
     self.logoView.snpLayout(baseView: baseView) { make in
+      self.logoView.backgroundColor = .gray
       make.width.leading.trailing.top.equalToSuperview()
       make.height.equalTo(124)
-    }
-    self.waringLabel.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.logoView.snp.bottom)
-      make.leading.equalToSuperview().inset(29)
-    }
-    
-    self.idInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.waringLabel.snp.bottom).offset(20)
-      make.leading.equalTo(self.waringLabel)
-      make.trailing.equalToSuperview().inset(29)
-      make.height.equalTo(100)
-    }
-    self.passwordInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.idInputView.snp.bottom)
-      make.leading.trailing.equalTo(self.idInputView)
-      make.height.equalTo(100)
-    }
-    self.passwordConfirmInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.passwordInputView.snp.bottom)
-      make.leading.trailing.equalTo(self.idInputView)
-      make.height.equalTo(100)
     }
     
     self.signUpButton.snpLayout(baseView: baseView) { make in
@@ -109,12 +110,46 @@ class SignUpViewController: UIViewController, Layoutable, View {
       make.leading.trailing.equalToSuperview().inset(20)
       make.height.equalTo(47)
     }
+    
+    self.vStackView.snpLayout(baseView: self.view) { make in
+      self.vStackView.backgroundColor = .blue
+      make.top.equalTo(self.logoView.snp.bottom)
+      make.leading.trailing.equalToSuperview().inset(12)
+      
+      self.welcomeLabel.snp.makeConstraints { make in
+        make.top.equalTo(self.logoView.snp.bottom)
+        make.leading.equalToSuperview()
+      }
+      self.idInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+      self.passwordInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+      self.passwordConfirmInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+    }
+  }
+  
+  private func setStackArrangesView(subViews: [UIView]) {
+    subViews.forEach { view in
+      self.vStackView.addArrangedSubview(view)
+    }
+    guard let warningView = subViews.first else { return }
+    self.vStackView.setCustomSpacing(80, after: warningView )
   }
   
   
   // MARK: - Reactor Binding
   
   func bind(reactor: SignUpReactor) {
+    
+    self.reactor?.state.map { $0.passwordIsEqual }
+      .subscribe(onNext: { equal in
+        print("is equal ? `> \(equal)")
+      })
+      .disposed(by: self.disposeBag)
  
     self.idInputView.signUpTextField?.baseTextField.rx.text
       .asDriver()

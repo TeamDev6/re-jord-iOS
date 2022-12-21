@@ -13,7 +13,6 @@ import RxCocoa
 
 open class SignUpTextFieldView: UIView {
   
-  
   // MARK: - Private Properties
   
   private let disposeBag = DisposeBag()
