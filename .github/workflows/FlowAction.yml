@@ -26,5 +26,5 @@ jobs:
         mention: here
         if_mention: failure,cancelled
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.https://hooks.slack.com/services/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 }}
+        SLACK_WEBHOOK_URL: ${{ secrets.hooks.slack.com/services/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 }}
       if: always()
