@@ -16,7 +16,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Tuist Fetch
-      run: tuist fetch -u
-    - name: Tuist generate
-      run: tuist generate
+    - name: Fastlane build
+      run: fastlane testflight_test
