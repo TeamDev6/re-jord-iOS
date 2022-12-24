@@ -22,6 +22,8 @@ let project = Project.app(
     .external(name: "SnapKit"),
     .external(name: "SwiftyJSON"),
     .external(name: "Then"),
+    .external(name: "FirebaseAnalytics"),
+    .external(name: "FirebaseCrashlytics"),
     TargetDependency.Project.ReJordUI
   ]
 )

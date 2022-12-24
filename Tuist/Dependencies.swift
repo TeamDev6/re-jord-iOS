@@ -15,7 +15,8 @@ let dependencies = Dependencies(
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.4"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.6.0"),
     .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
-    .package(url: "https://github.com/devxoul/Then", from: "3.0.0")
+    .package(url: "https://github.com/devxoul/Then", from: "3.0.0"),
+    .remote(url: "https://github.com/firebase/firebase-ios-sdk", requirement: .upToNextMajor(from: "8.14.0"))
   ],
   platforms: [.iOS]
 )
