@@ -11,10 +11,9 @@ on:
 
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v3
     - name: Fastlane build
-      run: fastlane testflight_test
+      run: fastlane build_current

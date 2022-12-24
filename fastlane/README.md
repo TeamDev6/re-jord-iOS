@@ -15,13 +15,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios just_gym
+### ios build_current
 
 ```sh
-[bundle exec] fastlane ios just_gym
+[bundle exec] fastlane ios build_current
 ```
 
-Gym test
+
 
 ### ios testflight_test
 
@@ -29,7 +29,7 @@ Gym test
 [bundle exec] fastlane ios testflight_test
 ```
 
-TestFlight 에 업로드
+
 
 ----
 

@@ -1,21 +1,27 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
 
 default_platform(:ios)
 
 platform :ios do
+
+  ### Send to Slack ###
+
+  after_all do |lane, options|
+    slack(
+      message: "#{lane} 빌드 성공!",
+      slack_url: "https://hooks.slack.com/services/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",
+      success: true,
+      default_payloads: [:git_branch, :git_author]
+    )
+  end
+  
+  error do |lane, exception, options|
+    slack(
+      message: exception.message,
+      slack_url: "https://hooks.slack.com/services/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",
+      success: false
+    )
+  end
+
 
   ### Helper Defs ###
 
@@ -34,18 +40,16 @@ platform :ios do
   end
 
 
-
-
   ### Lanes ###
+  
+  lane :build_current do
+    build_automatic
+  end
 
-  # Upload a build to TestFlight
   lane :testflight_test do
     # get latest number from Testflight
     latest_build_number=latest_testflight_build_number(
       api_key_path: "fastlane/578LND8DV7.json"
-    )
-    increment_build_number(
-     build_number: latest_build_number + 1
     )
     # build app
     build_automatic
