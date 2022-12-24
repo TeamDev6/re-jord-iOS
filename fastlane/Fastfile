@@ -44,7 +44,6 @@ platform :ios do
     latest_build_number=latest_testflight_build_number(
       api_key_path: "fastlane/578LND8DV7.json"
     )
-    build number + 1
     increment_build_number(
      build_number: latest_build_number + 1
     )
@@ -54,7 +53,7 @@ platform :ios do
     pilot(api_key_path: "fastlane/578LND8DV7.json")
   end
 
-  
+
 
 
 
