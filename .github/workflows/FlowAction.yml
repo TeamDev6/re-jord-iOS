@@ -22,9 +22,9 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
-        fields: repo,commit,message,author
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
         mention: here
         if_mention: failure,cancelled
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.hooks.slack.com/services/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 }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       if: always()
