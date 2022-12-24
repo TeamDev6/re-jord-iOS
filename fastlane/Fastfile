@@ -3,26 +3,6 @@ default_platform(:ios)
 
 platform :ios do
 
-  ### Send to Slack ###
-
-  after_all do |lane, options|
-    slack(
-      message: "#{lane} 빌드 성공!",
-      slack_url: "https://hooks.slack.com/services/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",
-      success: true,
-      default_payloads: [:git_branch, :git_author]
-    )
-  end
-  
-  error do |lane, exception, options|
-    slack(
-      message: exception.message,
-      slack_url: "https://hooks.slack.com/services/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",
-      success: false
-    )
-  end
-
-
   ### Helper Defs ###
 
   def build_automatic
