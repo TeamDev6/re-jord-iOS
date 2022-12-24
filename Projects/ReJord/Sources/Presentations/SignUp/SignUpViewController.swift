@@ -132,6 +132,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
   }
   
+  // TODO: UI 모듈로 뺄 것
   private func setStackArrangesView(subViews: [UIView]) {
     subViews.forEach { view in
       self.vStackView.addArrangedSubview(view)
@@ -140,17 +141,38 @@ class SignUpViewController: UIViewController, Layoutable, View {
     self.vStackView.setCustomSpacing(80, after: warningView )
   }
   
+  // TODO: Util 모듈로 뺄 것
+  private func verifyPasswordRestriction(verifyText: String) -> Bool {
+    guard let regex = try? NSRegularExpression(pattern: "^{9,}[0-9a-zA-Z]*$") else { return false }
+    return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
+  }
+  
   
   // MARK: - Reactor Binding
   
   func bind(reactor: SignUpReactor) {
     
-    self.reactor?.state.map { $0.passwordIsEqual }
-      .subscribe(onNext: { equal in
-        print("is equal ? `> \(equal)")
+    // reactor - state
+    
+    self.reactor?.state.map { $0.passwordValue ?? "" }
+      .subscribe(onNext: { password in
+        print(password)
+        let result = self.verifyPasswordRestriction(verifyText: password)
+        print(result)
       })
       .disposed(by: self.disposeBag)
+    
+    self.reactor?.state.map { $0.passwordIsEqual }
+      .subscribe(onNext: { equal in
+//        print("is equal ? `> \(equal)")
+        
+      })
+      .disposed(by: self.disposeBag)
+    
+    
  
+    // reactor - action
+    
     self.idInputView.signUpTextField?.baseTextField.rx.text
       .asDriver()
       .drive(onNext: { [weak self] idText in
