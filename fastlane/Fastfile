@@ -16,9 +16,48 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    build_app(scheme: "ReJord")
-    upload_to_testflight
+
+  desc "Gym test"
+  lane :just_gym do
+    get_provisioning_profile(
+      adhoc: true,
+      filename: "../re-jord-iOS/Tuist/Signing/ReJord.Debug.mobileprovision"
+    )
+    build_ios_app(
+      export_method: "ad-hoc",
+      configuration: "Debug",
+      silent: true
+    )
+  end 
+
+  desc "TestFlight 에 업로드"
+  # Upload a build to TestFlight
+  lane :testflight_test do
+
+    # get latest number from Testflight
+    latest_build_number=latest_testflight_build_number(
+      api_key_path: "fastlane/578LND8DV7.json"
+    )
+
+    # build number + 1
+    #increment_build_number(
+    #  build_number: latest_build_number + 1
+    #)
+
+    # build app
+
+    get_certificates(
+      development: true,
+      api_key_path: "fastlane/578LND8DV7.json",
+      keychain_path: "./../Tuist/Signing"
+    )
+    build_app
+
+    # upload to Testflight
+    pilot(api_key_path: "fastlane/578LND8DV7.json")
+
   end
+
+
+
 end
