@@ -35,6 +35,12 @@ jobs:
 
     - name: Navigate to repository root
       run: cd $GITHUB_WORKSPACE && ls -al
+
+    - name: Tuist fetch -u
+      run: tuist fetch -u
+
+    - name: Tuist generate
+      run: tuist generate
     
     - name: Testflight Upload
       run: fastlane testflight_upload
