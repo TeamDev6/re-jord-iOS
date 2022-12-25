@@ -32,9 +32,12 @@ jobs:
 
     - name: install Tuist
       run: curl -Ls https://install.tuist.io | bash
-      
+
     - name: Tuist fetch -u
       run: tuist fetch -u
+
+    - name: Tuist mkdir Test Folder
+      run: ls -al && cd Projects && cd ReJordUI && mkdir Tests
 
     - name: Tuist generate
       run: tuist generate
