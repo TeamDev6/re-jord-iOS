@@ -23,6 +23,7 @@ platform :ios do
       silent: false,
       include_bitcode: false,
       scheme: "ReJord-Release",
+      export_team_id: "M3U22RZ325",
       clean: "true"
     )
   end
