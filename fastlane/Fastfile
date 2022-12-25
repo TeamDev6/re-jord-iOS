@@ -19,7 +19,10 @@ platform :ios do
     build_ios_app(
       export_method: "app-store",
       configuration: "Release",
-      silent: true
+      silent: true,
+      workspace: "ReJord.xcworkspace",
+      scheme: "ReJord",
+      clean: "true"
     )
   end
 
@@ -85,11 +88,5 @@ platform :ios do
     # upload to Testflight
     pilot(api_key_path: "fastlane/578LND8DV7.json")
   end
-
-  
-
-
-
-
 
 end
