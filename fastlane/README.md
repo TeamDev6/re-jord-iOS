@@ -15,18 +15,18 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios build_current
+### ios firebase_upload
 
 ```sh
-[bundle exec] fastlane ios build_current
+[bundle exec] fastlane ios firebase_upload
 ```
 
 
 
-### ios testflight_test
+### ios testflight_upload
 
 ```sh
-[bundle exec] fastlane ios testflight_test
+[bundle exec] fastlane ios testflight_upload
 ```
 
 

@@ -5,37 +5,75 @@ platform :ios do
 
   ### Helper Defs ###
 
-  def build_automatic
-    clear_derived_data
+  # build
+
+  def adhoc_Build
+    build_ios_app(
+      export_method: "ad-hoc",
+      configuration: "Alpha",
+      silent: false
+    )
+  end
+
+  def appstore_Build
+    build_ios_app(
+      export_method: "app-store",
+      configuration: "Release",
+      silent: true
+    )
+  end
+
+  # Signing
+  def local_signing
     get_provisioning_profile(
       adhoc: true,
       api_key_path: "fastlane/578LND8DV7.json",
       filename: "../re-jord-iOS/Tuist/Signing/ReJord.Debug.mobileprovision"
     )
-    build_ios_app(
-      export_method: "ad-hoc",
-      configuration: "Debug",
-      silent: false
+  end
+
+  def match_appStore_signing
+    sync_code_signing(
+      type: "appstore",
+      app_identifier: "team.dev6.ReJord",
+      readonly: true
     )
   end
+
+  # build+signing
+
+  def build_with_local_signing
+    clear_derived_data
+    local_signing
+    pure_build
+  end
+  
+  def build_with_match_signing_appstore
+    clear_derived_data
+    match_appStore_signing
+    appstore_Build
+  end
+  
 
 
   ### Lanes ###
   
-  lane :build_current do
-    build_automatic
+  lane :firebase_upload do
+    adhoc_Build
   end
 
-  lane :testflight_test do
+  lane :testflight_upload do
     # get latest number from Testflight
     latest_build_number=latest_testflight_build_number(
       api_key_path: "fastlane/578LND8DV7.json"
     )
     # build app
-    build_automatic
+    build_with_match_signing_appstore
     # upload to Testflight
     pilot(api_key_path: "fastlane/578LND8DV7.json")
   end
+
+  
 
 
 
