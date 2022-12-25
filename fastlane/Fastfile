@@ -20,9 +20,10 @@ platform :ios do
       export_method: "app-store",
       configuration: "Release",
       silent: true,
-      workspace: "ReJord.xcworkspace",
+      workspace: "/ReJord.xcworkspace",
       scheme: "ReJord",
-      clean: "true"
+      clean: "true",
+      output_directory("./build")
     )
   end
 
@@ -75,7 +76,7 @@ platform :ios do
   ### Lanes ###
   
   lane :firebase_upload do
-    adhoc_Build
+    appstore_Build
   end
 
   lane :testflight_upload do
