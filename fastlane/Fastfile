@@ -32,6 +32,14 @@ platform :ios do
     )
   end
 
+  def match_adhoc_signing
+    sync_code_signing(
+      type: "adhoc",
+      app_identifier: "team.dev6.ReJord",
+      readonly: true
+    )
+  end
+
   def match_appStore_signing
     sync_code_signing(
       type: "appstore",

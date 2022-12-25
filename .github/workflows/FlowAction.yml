@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Fastlane build
-      run: fastlane build_current
+      run: fastlane testflight_upload
 
     - name: action-slack
       uses: 8398a7/action-slack@v3
