@@ -17,7 +17,7 @@ platform :ios do
 
   def appstore_Build
     build_ios_app(
-      workspace: "./Workspace.swift",
+      workspace: "../re-jord-iOS/ReJord.xcworkspace",
       export_method: "app-store",
       configuration: "Release",
       silent: false,

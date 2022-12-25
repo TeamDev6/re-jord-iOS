@@ -31,7 +31,7 @@ jobs:
       run: ls -al
     
     - name: ../
-      run: ls -al
+      run: ../ && ls -al
     
     - name: Testflight Upload
       run: fastlane testflight_upload
