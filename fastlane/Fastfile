@@ -44,7 +44,12 @@ platform :ios do
     sync_code_signing(
       type: "appstore",
       app_identifier: "team.dev6.ReJord",
-      readonly: true
+      readonly: true,
+      api_key_path: "fastlane/578LND8DV7.json",
+      username: "cec7777@naver.com",
+      git_url: "https://github.com/naldal/matchRepo",
+      clone_branch_directly: false,
+      git_basic_authorization: "bmFsZGFsOmdocF91UmFOS0trczVrQkVZWFBOY0kxanRrdzgwU3ZTR1U0V21uSDY="
     )
   end
 
