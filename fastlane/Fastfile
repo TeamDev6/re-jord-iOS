@@ -20,7 +20,7 @@ platform :ios do
       export_method: "app-store",
       configuration: "Release",
       silent: true,
-      workspace: "/ReJord.xcworkspace",
+      workspace: "../ReJord.xcworkspace",
       scheme: "ReJord",
       clean: "true"
     )
