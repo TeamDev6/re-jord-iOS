@@ -26,6 +26,9 @@ jobs:
       with:
         key: ${{ secrets.SSH_KEY }}
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: lsal
+      run: ls -al
     
     - name: Testflight Upload
       run: fastlane testflight_upload
