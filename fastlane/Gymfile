@@ -7,4 +7,4 @@
 scheme("ReJord")
 clean(true)
 output_directory("./build")
-workspace("../re-jord-iOS/ReJord.xcworkspace")
+workspace("../ReJord.xcworkspace")
