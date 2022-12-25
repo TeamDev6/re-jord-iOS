@@ -32,6 +32,9 @@ jobs:
     
     - name: ../
       run: cd ../ && ls -al
+
+    - name: Navigate to repository root
+      run: cd $GITHUB_WORKSPACE && ls -al
     
     - name: Testflight Upload
       run: fastlane testflight_upload
