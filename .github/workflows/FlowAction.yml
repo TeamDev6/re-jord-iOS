@@ -27,15 +27,12 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-    - name: lsal
-      run: ls -al
-    
-    - name: ../
-      run: cd ../ && ls -al
-
     - name: Navigate to repository root
       run: cd $GITHUB_WORKSPACE && ls -al
 
+    - name: install Tuist
+      run: curl -Ls https://install.tuist.io | bash
+      
     - name: Tuist fetch -u
       run: tuist fetch -u
 
