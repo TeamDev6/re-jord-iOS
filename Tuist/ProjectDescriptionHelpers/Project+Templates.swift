@@ -152,18 +152,7 @@ private extension Project {
                          headers: Headers.headers(public: FileList(arrayLiteral: "RxCocoa-Swift.h")),
                          dependencies: dependencies)
     
-    let tests = Target(name: "\(name)Tests",
-                       platform: platform,
-                       product: .unitTests,
-                       bundleId: "team.dev6.\(name)Tests",
-                       infoPlist: .default,
-                       sources: ["Tests/**"],
-                       resources: [],
-                       dependencies: [
-                        .target(name: name),
-                        .external(name: "RxTest")
-                       ])
-    return [sources, tests]
+    return [sources]
   }
   
   static func makeAppTargets(
@@ -188,7 +177,19 @@ private extension Project {
       scripts: targetScript,
       dependencies: dependencies
     )
-    return [mainTarget]
+    
+    let testTarget = Target(
+      name: "\(name)Tests",
+      platform: platform,
+      product: .unitTests,
+      bundleId: "team.dev6.Tests",
+      infoPlist: .default,
+      sources: ["Tests/**"],
+      dependencies: [
+        .target(name: "\(name)"),
+        .external(name: "RxTest")
+      ])
+    return [mainTarget, testTarget]
   }
   
 }
