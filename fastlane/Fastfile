@@ -17,12 +17,12 @@ platform :ios do
 
   def appstore_Build
     build_ios_app(
+      workspace: "./Workspace.swift",
       export_method: "app-store",
       configuration: "Release",
-      silent: true,
+      silent: false,
       include_bitcode: false,
-      workspace: "../ReJord.xcworkspace",
-      scheme: "ReJord",
+      scheme: "ReJord-Release",
       clean: "true"
     )
   end

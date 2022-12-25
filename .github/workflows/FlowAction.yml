@@ -29,6 +29,9 @@ jobs:
 
     - name: lsal
       run: ls -al
+    - names: 
+    - name: ../
+      run: ls -al
     
     - name: Testflight Upload
       run: fastlane testflight_upload
