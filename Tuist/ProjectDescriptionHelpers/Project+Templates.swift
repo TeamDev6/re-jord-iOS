@@ -188,19 +188,7 @@ private extension Project {
       scripts: targetScript,
       dependencies: dependencies
     )
-    
-    let testTarget = Target(
-      name: "\(name)Tests",
-      platform: platform,
-      product: .unitTests,
-      bundleId: "team.dev6.Tests",
-      infoPlist: .default,
-      sources: ["Tests/**"],
-      dependencies: [
-        .target(name: "\(name)"),
-        .external(name: "RxTest")
-      ])
-    return [mainTarget, testTarget]
+    return [mainTarget]
   }
   
 }
