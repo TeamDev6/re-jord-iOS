@@ -22,8 +22,7 @@ platform :ios do
       silent: true,
       workspace: "/ReJord.xcworkspace",
       scheme: "ReJord",
-      clean: "true",
-      output_directory("./build")
+      clean: "true"
     )
   end
 
