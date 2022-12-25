@@ -27,12 +27,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-    - name: install tree
-      run: brew install tree
-
-    - name: show tree
-      run: tree
-
     - name: install Tuist
       run: curl -Ls https://install.tuist.io | bash
 
@@ -41,6 +35,9 @@ jobs:
 
     - name: Tuist generate
       run: tuist generate
+
+    - name: ls -al
+      run: ls -al
     
     - name: Testflight Upload
       run: fastlane testflight_upload

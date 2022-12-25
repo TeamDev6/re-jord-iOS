@@ -21,7 +21,9 @@ platform :ios do
       export_method: "app-store",
       configuration: "Release",
       silent: false,
-      include_bitcode: false,
+      include_bitcode: true,
+      include_symbols: true,
+      skip_code: true,
       scheme: "ReJord-Release",
       export_team_id: "M3U22RZ325",
       clean: "true"
