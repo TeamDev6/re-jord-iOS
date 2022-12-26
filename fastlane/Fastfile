@@ -83,12 +83,17 @@ platform :ios do
   lane :testflight_upload do
     # get latest number from Testflight
     latest_build_number=latest_testflight_build_number(
-      api_key_path: "fastlane/578LND8DV7.json"
+      api_key_path: "fastlane/578LND8DV7.json",
+      initial_build_number: 1
     )
+
     # build app
     build_with_match_signing_appstore
     # upload to Testflight
-    pilot(api_key_path: "fastlane/578LND8DV7.json")
+    pilot(
+      api_key_path: "fastlane/578LND8DV7.json",
+      build_number: 5
+    )
   end
 
 end
