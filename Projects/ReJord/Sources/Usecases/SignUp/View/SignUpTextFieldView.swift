@@ -62,7 +62,6 @@ open class SignUpTextFieldView: UIView {
   
   @objc func imageTapAction() {
     if let rightImage = self.baseTextField.rightImage {
-      "secureGlanceOff"
       if rightImage == ReJordUIAsset.secureGlanceOn.image {
         self.baseTextField.rightImage = .image(name: "secureGlanceOn")
       } else if rightImage == ReJordUIAsset.secureGlanceOff.image {

@@ -24,7 +24,7 @@ class SignUpInputView: UIView, View {
   // MARK: - Componenets
   
   private let baseView = UIView().then {
-    $0.backgroundColor = .white
+    $0.backgroundColor = .yellow
   }
   public var signUpTextField: SignUpTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
@@ -44,19 +44,24 @@ class SignUpInputView: UIView, View {
     button.layer.zPosition = 1
     return button
   }()
+  private var commentLabel: UILabel = {
+    let label = UILabel()
+    label.font = .roboto(fontType: .medium, fontSize: 12)
+    return label
+  }()
+
   
   
   // MARK: - DisposeBag
   
   var disposeBag = DisposeBag()
-  var reactor: SignUpReactor?
   
   
   // MARK: - Life Cycle
   
   convenience init(reactor: SignUpReactor, upperLabelText text: String, inputType: SignUpInputType) {
     self.init(frame: CGRect.zero)
-    
+    self.reactor = reactor
     self.upperLabel.text = text
     switch inputType {
     case .id:
@@ -90,6 +95,7 @@ class SignUpInputView: UIView, View {
   func configurateUI(inputType: SignUpInputType) {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
+      make.height.equalTo(100)
     }
     self.upperLabel.snpLayout(baseView: self.baseView) { make in
       make.top.leading.equalToSuperview()
@@ -122,7 +128,60 @@ class SignUpInputView: UIView, View {
     }
   }
   
+  // MARK: - bind
+  
   func bind(reactor: SignUpReactor) {
     
+    self.reactor?.state.map { $0.passwordValue ?? "" }
+      .subscribe(onNext: { password in
+        guard !password.isEmpty else { return }
+        let result = self.verifyPasswordRestriction(verifyText: password)
+        if !result {
+          self.setTextOnCommentLabel(text: "waring!waring!waring!waring!")
+          self.setComment()
+        }
+      })
+      .disposed(by: self.disposeBag)
+    
+    self.reactor?.state.map { $0.passwordIsEqual }
+      .subscribe(onNext: { equalType in
+        switch equalType {
+        case .empty:
+          return
+        case .notEqual:
+          print("no equal")
+        case .equal:
+          print("equal")
+        }
+      })
+      .disposed(by: self.disposeBag)
+    
+  }
+  
+  
+  
+  // MARK: - private functions
+  
+  private func setTextOnCommentLabel(text: String) {
+    self.commentLabel.text = text
+  }
+  
+  private func setComment() {
+    self.commentLabel.snpLayout(baseView: self.baseView) { [weak self] make in
+      guard let self, let signUpTextField = self.signUpTextField else { return }
+      make.top.equalTo(signUpTextField.snp.bottom).offset(5)
+      make.height.equalTo(30)
+      make.leading.equalTo(signUpTextField)
+    }
+    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+      make.height.equalTo(130)
+    }
+  }
+  
+  // 이거 유즈케이스에서 처리해야할거같은데..
+  private func verifyPasswordRestriction(verifyText: String) -> Bool {
+    guard verifyText.count >= 8 else { return false }
+    guard let regex = try? NSRegularExpression(pattern: "^[0-9a-zA-Z]*$") else { return false }
+    return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
   }
 }
