@@ -40,18 +40,39 @@ class SignUpViewController: UIViewController, Layoutable, View {
     label.font = .roboto(fontType: .bold, fontSize: 24)
     label.numberOfLines = 2
   }
-  private let idInputView = SignUpInputView(
-    upperLabelText: ReJordUIStrings.id,
-    inputType: .withButton
-  )
-  private let passwordInputView = SignUpInputView(
-    upperLabelText: ReJordUIStrings.password,
-    inputType: .withSecure
-  )
-  private let passwordConfirmInputView = SignUpInputView(
-    upperLabelText: ReJordUIStrings.confirmPassword,
-    inputType: .withSecure
-  )
+  private lazy var idInputView: SignUpInputView = {
+    guard let reactor = self.reactor else {
+      self.reactor?.action.onNext(.errorOccured)
+      return SignUpInputView(frame: .zero)
+    }
+    return SignUpInputView(
+     reactor: reactor,
+     upperLabelText: ReJordUIStrings.id,
+     inputType: .id
+   )
+  }()
+  private lazy var passwordInputView: SignUpInputView = {
+    guard let reactor = self.reactor else {
+      self.reactor?.action.onNext(.errorOccured)
+      return SignUpInputView(frame: .zero)
+    }
+    return SignUpInputView(
+      reactor: reactor,
+      upperLabelText: ReJordUIStrings.password,
+      inputType: .pwd
+    )
+  }()
+  private lazy var passwordConfirmInputView: SignUpInputView = {
+    guard let reactor = self.reactor else {
+      self.reactor?.action.onNext(.errorOccured)
+      return SignUpInputView(frame: .zero)
+    }
+    return SignUpInputView(
+      reactor: reactor,
+      upperLabelText: ReJordUIStrings.confirmPassword,
+      inputType: .pwdConfirm
+    )
+  }()
   
   
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)

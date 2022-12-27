@@ -56,8 +56,8 @@ open class ImageableTextField: UITextField {
     }
   }
   
-  internal var leftPadding: CGFloat = 0
-  internal var rightPadding: CGFloat = 0
+  public var leftPadding: CGFloat = 0
+  public var rightPadding: CGFloat = 0
   
   private func updateView() {
     

@@ -28,6 +28,7 @@ final class SignUpReactor: Reactor, Stepper {
     case passwordValueInserted(value: String?)
     case passwordConfirmValueInserted(value: String?)
     case signUpAction
+    case errorOccured
   }
   
   enum Mutation {
@@ -76,6 +77,9 @@ final class SignUpReactor: Reactor, Stepper {
       return .just(.passwordConfirmSet(password: value))
     case .signUpAction:
       self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
+      return .empty()
+    case .errorOccured:
+      self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
     }
   }

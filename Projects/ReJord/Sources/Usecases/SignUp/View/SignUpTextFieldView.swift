@@ -62,9 +62,10 @@ open class SignUpTextFieldView: UIView {
   
   @objc func imageTapAction() {
     if let rightImage = self.baseTextField.rightImage {
-      if rightImage == ReJordUIImages(name: "secureGlanceOff").image {
+      "secureGlanceOff"
+      if rightImage == ReJordUIAsset.secureGlanceOn.image {
         self.baseTextField.rightImage = .image(name: "secureGlanceOn")
-      } else if rightImage == ReJordUIImages(name: "secureGlanceOn").image {
+      } else if rightImage == ReJordUIAsset.secureGlanceOff.image {
         self.baseTextField.rightImage = .image(name: "secureGlanceOff")
       }
       self.baseTextField.togglePasswordVisibility()

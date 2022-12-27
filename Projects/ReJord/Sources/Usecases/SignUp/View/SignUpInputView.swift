@@ -14,8 +14,9 @@ import Then
 import ReJordUI
 
 public enum SignUpInputType {
-  case withButton
-  case withSecure
+  case id
+  case pwd
+  case pwdConfirm
 }
 
 class SignUpInputView: UIView, View {
@@ -58,13 +59,13 @@ class SignUpInputView: UIView, View {
     
     self.upperLabel.text = text
     switch inputType {
-    case .withButton:
+    case .id:
       self.signUpTextField = SignUpTextFieldView()
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
         placeHolderColor: .gray
       )
-    case .withSecure:
+    case .pwd, .pwdConfirm:
       self.signUpTextField = SignUpTextFieldView(image: .image(name: "secureGlanceOff"), textSecure: true)
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
@@ -94,8 +95,7 @@ class SignUpInputView: UIView, View {
       make.top.leading.equalToSuperview()
     }
     switch inputType {
-    case .withButton:
-      
+    case .id:
       self.duplicateInspectionButton.snpLayout(baseView: self.baseView) { [weak self] make in
         guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
@@ -111,7 +111,7 @@ class SignUpInputView: UIView, View {
         make.height.equalTo(47)
       }
       
-    case .withSecure:
+    case .pwd, .pwdConfirm:
       self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
