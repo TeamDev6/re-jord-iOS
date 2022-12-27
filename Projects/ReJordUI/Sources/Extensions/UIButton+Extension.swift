@@ -10,7 +10,7 @@ import UIKit
 
 extension UIButton {
   
-  internal func setButtonProperties(cornerRadius: CGFloat, backgroundColor: UIColor, text: String, textColor: UIColor, font: UIFont) {
+  public func setButtonProperties(cornerRadius: CGFloat, backgroundColor: UIColor, text: String, textColor: UIColor, font: UIFont) {
     self.layer.cornerRadius = cornerRadius
     self.backgroundColor = backgroundColor
     self.setTitle(text, for: .normal)

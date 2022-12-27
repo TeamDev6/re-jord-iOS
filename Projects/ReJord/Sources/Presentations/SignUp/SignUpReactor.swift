@@ -12,6 +12,12 @@ import RxCocoa
 import ReactorKit
 import RxFlow
 
+enum PasswordConfirmType {
+  case empty
+  case notEqual
+  case equal
+}
+
 final class SignUpReactor: Reactor, Stepper {
   
   
@@ -34,7 +40,7 @@ final class SignUpReactor: Reactor, Stepper {
   struct State {
     var idValue: String? = ""
     var passwordValue: String? = ""
-    var passwordIsEqual: Bool = false
+    var passwordIsEqual: PasswordConfirmType = .empty
   }
   
   // MARK: - Properties
@@ -69,12 +75,7 @@ final class SignUpReactor: Reactor, Stepper {
     case .passwordConfirmValueInserted(value: let value):
       return .just(.passwordConfirmSet(password: value))
     case .signUpAction:
-      self.state.subscribe(onNext: { [weak self] state in
-        guard let id = state.idValue,
-              let pwd = state.passwordValue else { return }
-        self?.userSignUp(userId: id, userPassword: pwd)
-      })
-      .disposed(by: self.disposeBag)
+      self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
       return .empty()
     }
   }
@@ -89,14 +90,8 @@ final class SignUpReactor: Reactor, Stepper {
     case .passwordSet(password: let password):
       newState.passwordValue = password
     case .passwordConfirmSet(password: let passwordConfirm):
-      guard let password = state.passwordValue,
-            let passwordConfirm = passwordConfirm,
-            !password.isEmpty,
-            !passwordConfirm.isEmpty else {
-        newState.passwordIsEqual = true
-        return newState
-      }
-      newState.passwordIsEqual = password == passwordConfirm
+      guard let passwordConfirm, !passwordConfirm.isEmpty else { return newState }
+      newState.passwordIsEqual = state.passwordValue == passwordConfirm ? .equal : .notEqual
     }
     return newState
   }

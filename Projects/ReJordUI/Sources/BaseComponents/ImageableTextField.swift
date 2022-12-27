@@ -27,7 +27,7 @@ open class ImageableTextField: UITextField {
     return textRect
   }
   
-  init() {
+  public init() {
     super.init(frame: CGRect.zero)
   }
   
@@ -37,18 +37,18 @@ open class ImageableTextField: UITextField {
   
   // MARK: - Left/Right Image
   
-  var leftImage: UIImage? {
+  public var leftImage: UIImage? {
     didSet {
       updateView()
     }
   }
-  var rightImage: UIImage? {
+  public var rightImage: UIImage? {
     didSet {
       updateView()
     }
   }
   
-  var tapGesture: UITapGestureRecognizer? {
+  public var tapGesture: UITapGestureRecognizer? {
     didSet {
       if rightImage != nil {
         updateView()

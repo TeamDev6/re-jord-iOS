@@ -7,16 +7,18 @@
 //
 
 import UIKit
+import ReactorKit
 import SnapKit
 import RxCocoa
 import Then
+import ReJordUI
 
 public enum SignUpInputType {
   case withButton
   case withSecure
 }
 
-open class SignUpInputView: UIView {
+class SignUpInputView: UIView, View {
   
   // MARK: - Componenets
   
@@ -43,9 +45,15 @@ open class SignUpInputView: UIView {
   }()
   
   
+  // MARK: - DisposeBag
+  
+  var disposeBag = DisposeBag()
+  var reactor: SignUpReactor?
+  
+  
   // MARK: - Life Cycle
   
-  convenience public init(upperLabelText text: String, inputType: SignUpInputType) {
+  convenience init(reactor: SignUpReactor, upperLabelText text: String, inputType: SignUpInputType) {
     self.init(frame: CGRect.zero)
     
     self.upperLabel.text = text
@@ -78,7 +86,7 @@ open class SignUpInputView: UIView {
   
   // MARK: - Configure UI
   
-  public func configurateUI(inputType: SignUpInputType) {
+  func configurateUI(inputType: SignUpInputType) {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
     }
@@ -112,6 +120,9 @@ open class SignUpInputView: UIView {
         make.height.equalTo(47)
       }
     }
-
+  }
+  
+  func bind(reactor: SignUpReactor) {
+    
   }
 }

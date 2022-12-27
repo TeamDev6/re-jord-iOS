@@ -78,11 +78,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
     print("\(self) is deinited")
   }
   
-  // MARK: - Private Function
-  
-  private func makeWarningLabel(warningText: String) -> WarningLabel {
-    return WarningLabel(text: warningText, font: .roboto(fontType: .medium, fontSize: 12), color: .red)
-  }
   
   // MARK: - Configuration UI
   
@@ -132,7 +127,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
   }
   
-  // TODO: UI 모듈로 뺄 것
   private func setStackArrangesView(subViews: [UIView]) {
     subViews.forEach { view in
       self.vStackView.addArrangedSubview(view)
@@ -141,9 +135,10 @@ class SignUpViewController: UIViewController, Layoutable, View {
     self.vStackView.setCustomSpacing(80, after: warningView )
   }
   
-  // TODO: Util 모듈로 뺄 것
+  // 이거 유즈케이스에서 처리해야할거같은데..
   private func verifyPasswordRestriction(verifyText: String) -> Bool {
-    guard let regex = try? NSRegularExpression(pattern: "^{9,}[0-9a-zA-Z]*$") else { return false }
+    guard verifyText.count >= 8 else { return false }
+    guard let regex = try? NSRegularExpression(pattern: "^[0-9a-zA-Z]*$") else { return false }
     return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
   }
   
@@ -156,16 +151,24 @@ class SignUpViewController: UIViewController, Layoutable, View {
     
     self.reactor?.state.map { $0.passwordValue ?? "" }
       .subscribe(onNext: { password in
-        print(password)
+        guard !password.isEmpty else { return }
         let result = self.verifyPasswordRestriction(verifyText: password)
-        print(result)
+        if !result {
+          
+        }
       })
       .disposed(by: self.disposeBag)
     
     self.reactor?.state.map { $0.passwordIsEqual }
-      .subscribe(onNext: { equal in
-//        print("is equal ? `> \(equal)")
-        
+      .subscribe(onNext: { equalType in
+        switch equalType {
+        case .empty:
+          return
+        case .notEqual:
+          print("no equal")
+        case .equal:
+          print("equal")
+        }
       })
       .disposed(by: self.disposeBag)
     

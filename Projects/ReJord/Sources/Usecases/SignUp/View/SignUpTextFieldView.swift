@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import ReJordUI
 
 open class SignUpTextFieldView: UIView {
   
@@ -27,7 +28,7 @@ open class SignUpTextFieldView: UIView {
   // MARK: - Life Cycle
   
   
-  init(placeholderText text: String = "", image: UIImage? = nil, textSecure: Bool = false) {
+  public init(placeholderText text: String = "", image: UIImage? = nil, textSecure: Bool = false) {
     super.init(frame: .zero)
     self.setup(placeholderText: text, rightImage: image, isSecure: textSecure)
     self.setLayout()

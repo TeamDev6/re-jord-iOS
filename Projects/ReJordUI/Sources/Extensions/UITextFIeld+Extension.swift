@@ -10,7 +10,7 @@ import UIKit
 
 extension UITextField {
   
-  internal func setTextFieldOptions(
+  public func setTextFieldOptions(
     textColor: UIColor = .black,
     backgroundColor: UIColor = .white,
     font: UIFont = UIFont.systemFont(ofSize: 10, weight: .regular),
@@ -23,7 +23,7 @@ extension UITextField {
       self.keyboardType = keyboardType
     }
   
-  internal func setPlaceHolder(text: String = "", color: UIColor, font: UIFont) {
+  public func setPlaceHolder(text: String = "", color: UIColor, font: UIFont) {
     self.attributedPlaceholder = NSAttributedString(
       string: text,
       attributes: [NSAttributedString.Key.foregroundColor : color,
@@ -31,7 +31,7 @@ extension UITextField {
     )
   }
   
-  internal func setShadowAndBorder(shadowColor: UIColor, borderColor: UIColor) {
+  public func setShadowAndBorder(shadowColor: UIColor, borderColor: UIColor) {
     self.layer.shadowColor = shadowColor.cgColor
     self.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
     self.layer.shadowRadius = 5.0
@@ -42,7 +42,7 @@ extension UITextField {
     self.layer.borderWidth = 1.0
   }
   
-  internal func togglePasswordVisibility() {
+  public func togglePasswordVisibility() {
     isSecureTextEntry = !isSecureTextEntry
     
     if let existingText = text, isSecureTextEntry {
