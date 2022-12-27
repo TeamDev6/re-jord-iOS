@@ -72,7 +72,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   }
   
   deinit {
-    print("SignUpViewcController is deinited")
+    print("\(self) is deinited")
   }
   
   

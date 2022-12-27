@@ -49,9 +49,10 @@ platform :ios do
 
   def match_appStore_signing
     sync_code_signing(
+      git_branch: "develop",
       type: "appstore",
       app_identifier: "team.dev6.ReJord",
-      readonly: true,
+      readonly: false,
       api_key_path: "fastlane/578LND8DV7.json",
       username: "cec7777@naver.com",
       git_url: "https://github.com/naldal/matchRepo",
