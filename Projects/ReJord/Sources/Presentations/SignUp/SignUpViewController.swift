@@ -28,11 +28,18 @@ class SignUpViewController: UIViewController, Layoutable, View {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
+  
   private let logoView = UIView()
-  private let waringLabel = WarningLabel(
-    text: ReJordUIStrings.welcomeToVisitRejord,
-    font: .roboto(fontType: .bold, fontSize: 24)
-  )
+  private let vStackView = UIStackView().then { (stackView: UIStackView) in
+    stackView.axis = .vertical
+    stackView.alignment = .fill
+    stackView.distribution = .fill
+  }
+  private let welcomeLabel = UILabel().then { (label: UILabel) in
+    label.text = ReJordUIStrings.welcomeToVisitRejord
+    label.font = .roboto(fontType: .bold, fontSize: 24)
+    label.numberOfLines = 2
+  }
   private let idInputView = SignUpInputView(
     upperLabelText: ReJordUIStrings.id,
     inputType: .withButton
@@ -46,14 +53,10 @@ class SignUpViewController: UIViewController, Layoutable, View {
     inputType: .withSecure
   )
   
+  
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
   
-  
-  // MARK: - Private Properites
-  
-  private var currentId: String?
-  private var currentPwd: String?
-  
+
   
   // MARK: - Life Cycle
   
@@ -75,38 +78,31 @@ class SignUpViewController: UIViewController, Layoutable, View {
     print("\(self) is deinited")
   }
   
+  // MARK: - Private Function
+  
+  private func makeWarningLabel(warningText: String) -> WarningLabel {
+    return WarningLabel(text: warningText, font: .roboto(fontType: .medium, fontSize: 12), color: .red)
+  }
   
   // MARK: - Configuration UI
   
   func setLayout() {
+    
+    self.setStackArrangesView(subViews: [
+      self.welcomeLabel,
+      self.idInputView,
+      self.passwordInputView,
+      self.passwordConfirmInputView,
+    ])
+    
     self.baseView.snpLayout(baseView: self.view) { make in
       make.edges.equalToSuperview()
       make.width.height.equalToSuperview()
     }
     self.logoView.snpLayout(baseView: baseView) { make in
+      self.logoView.backgroundColor = .gray
       make.width.leading.trailing.top.equalToSuperview()
       make.height.equalTo(124)
-    }
-    self.waringLabel.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.logoView.snp.bottom)
-      make.leading.equalToSuperview().inset(29)
-    }
-    
-    self.idInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.waringLabel.snp.bottom).offset(20)
-      make.leading.equalTo(self.waringLabel)
-      make.trailing.equalToSuperview().inset(29)
-      make.height.equalTo(100)
-    }
-    self.passwordInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.idInputView.snp.bottom)
-      make.leading.trailing.equalTo(self.idInputView)
-      make.height.equalTo(100)
-    }
-    self.passwordConfirmInputView.snpLayout(baseView: baseView) { make in
-      make.top.equalTo(self.passwordInputView.snp.bottom)
-      make.leading.trailing.equalTo(self.idInputView)
-      make.height.equalTo(100)
     }
     
     self.signUpButton.snpLayout(baseView: baseView) { make in
@@ -114,6 +110,41 @@ class SignUpViewController: UIViewController, Layoutable, View {
       make.leading.trailing.equalToSuperview().inset(20)
       make.height.equalTo(47)
     }
+    
+    self.vStackView.snpLayout(baseView: self.view) { make in
+      self.vStackView.backgroundColor = .blue
+      make.top.equalTo(self.logoView.snp.bottom)
+      make.leading.trailing.equalToSuperview().inset(12)
+      
+      self.welcomeLabel.snp.makeConstraints { make in
+        make.top.equalTo(self.logoView.snp.bottom)
+        make.leading.equalToSuperview()
+      }
+      self.idInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+      self.passwordInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+      self.passwordConfirmInputView.snp.makeConstraints { make in
+        make.height.equalTo(100)
+      }
+    }
+  }
+  
+  // TODO: UI 모듈로 뺄 것
+  private func setStackArrangesView(subViews: [UIView]) {
+    subViews.forEach { view in
+      self.vStackView.addArrangedSubview(view)
+    }
+    guard let warningView = subViews.first else { return }
+    self.vStackView.setCustomSpacing(80, after: warningView )
+  }
+  
+  // TODO: Util 모듈로 뺄 것
+  private func verifyPasswordRestriction(verifyText: String) -> Bool {
+    guard let regex = try? NSRegularExpression(pattern: "^{9,}[0-9a-zA-Z]*$") else { return false }
+    return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
   }
   
   
@@ -121,20 +152,27 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   func bind(reactor: SignUpReactor) {
     
-    self.reactor?.state
-      .map { $0.idValue }
-      .subscribe(onNext: { [weak self] id in
-        self?.currentId = id
+    // reactor - state
+    
+    self.reactor?.state.map { $0.passwordValue ?? "" }
+      .subscribe(onNext: { password in
+        print(password)
+        let result = self.verifyPasswordRestriction(verifyText: password)
+        print(result)
       })
       .disposed(by: self.disposeBag)
     
-    self.reactor?.state
-      .map { $0.passwordValue }
-      .subscribe(onNext: { [weak self] pwd in
-        self?.currentPwd = pwd
+    self.reactor?.state.map { $0.passwordIsEqual }
+      .subscribe(onNext: { equal in
+//        print("is equal ? `> \(equal)")
+        
       })
       .disposed(by: self.disposeBag)
+    
+    
  
+    // reactor - action
+    
     self.idInputView.signUpTextField?.baseTextField.rx.text
       .asDriver()
       .drive(onNext: { [weak self] idText in
@@ -159,9 +197,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     self.signUpButton.rx.tap
       .asDriver()
       .drive(onNext: { [weak self] _ in
-        guard let id = self?.currentId,
-              let pwd = self?.currentPwd else { return }
-        self?.reactor?.action.onNext(.signUpAction(id: id, pwd: pwd))
+        self?.reactor?.action.onNext(.signUpAction)
       })
       .disposed(by: self.disposeBag)
       

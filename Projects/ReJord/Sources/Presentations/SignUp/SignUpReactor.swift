@@ -15,14 +15,13 @@ import RxFlow
 final class SignUpReactor: Reactor, Stepper {
   
   
-  
   // MARK: - Reactor
   
   enum Action {
     case idValueInserted(value: String?)
     case passwordValueInserted(value: String?)
     case passwordConfirmValueInserted(value: String?)
-    case signUpAction(id: String, pwd: String)
+    case signUpAction
   }
   
   enum Mutation {
@@ -35,13 +34,15 @@ final class SignUpReactor: Reactor, Stepper {
   struct State {
     var idValue: String? = ""
     var passwordValue: String? = ""
-    var passwordIsNotEqual: Bool = false
+    var passwordIsEqual: Bool = false
   }
   
   // MARK: - Properties
   
   var initialState: State = State()
   var steps: PublishRelay<Step> = PublishRelay()
+  let disposeBag = DisposeBag()
+  
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
   private let usecase: SignUpUsecase
   
@@ -67,8 +68,13 @@ final class SignUpReactor: Reactor, Stepper {
       return .just(.passwordSet(password: value))
     case .passwordConfirmValueInserted(value: let value):
       return .just(.passwordConfirmSet(password: value))
-    case .signUpAction(let id, let pwd):
-      self.userSignUp(userId: id, userPassword: pwd)
+    case .signUpAction:
+      self.state.subscribe(onNext: { [weak self] state in
+        guard let id = state.idValue,
+              let pwd = state.passwordValue else { return }
+        self?.userSignUp(userId: id, userPassword: pwd)
+      })
+      .disposed(by: self.disposeBag)
       return .empty()
     }
   }
@@ -83,7 +89,14 @@ final class SignUpReactor: Reactor, Stepper {
     case .passwordSet(password: let password):
       newState.passwordValue = password
     case .passwordConfirmSet(password: let passwordConfirm):
-      newState.passwordIsNotEqual = state.passwordValue != passwordConfirm
+      guard let password = state.passwordValue,
+            let passwordConfirm = passwordConfirm,
+            !password.isEmpty,
+            !passwordConfirm.isEmpty else {
+        newState.passwordIsEqual = true
+        return newState
+      }
+      newState.passwordIsEqual = password == passwordConfirm
     }
     return newState
   }
