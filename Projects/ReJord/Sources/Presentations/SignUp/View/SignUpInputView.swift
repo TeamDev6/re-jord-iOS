@@ -24,7 +24,7 @@ class SignUpInputView: UIView, View {
   // MARK: - Componenets
   
   private let baseView = UIView().then {
-    $0.backgroundColor = .yellow
+    $0.backgroundColor = .clear
   }
   public var signUpTextField: SignUpTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
@@ -51,6 +51,10 @@ class SignUpInputView: UIView, View {
   }()
 
   
+  // MARK: - private properties
+  
+  var viewType: SignUpInputType?
+  
   
   // MARK: - DisposeBag
   
@@ -63,6 +67,7 @@ class SignUpInputView: UIView, View {
     self.init(frame: CGRect.zero)
     self.reactor = reactor
     self.upperLabel.text = text
+    self.viewType = inputType
     switch inputType {
     case .id:
       self.signUpTextField = SignUpTextFieldView()
@@ -132,27 +137,67 @@ class SignUpInputView: UIView, View {
   
   func bind(reactor: SignUpReactor) {
     
+    // state
+    
     self.reactor?.state.map { $0.passwordValue ?? "" }
-      .subscribe(onNext: { password in
-        guard !password.isEmpty else { return }
-        let result = self.verifyPasswordRestriction(verifyText: password)
-        if !result {
-          self.setTextOnCommentLabel(text: "waring!waring!waring!waring!")
-          self.setComment()
+      .subscribe(onNext: { [weak self] password in
+        guard let self, let viewType = self.viewType else { return }
+        guard !password.isEmpty else {
+          Task {
+            await self.removeComment()
+          }
+          return
+        }
+        let isAband = !self.verifyPasswordRestriction(verifyText: password)
+        if viewType == .pwd {
+          let commentTitle = isAband ? ReJordUIStrings.signUpPasswordRestriction : ReJordUIStrings.signUpAvailablePassword
+          Task {
+            await self.setTextOnCommentLabel(text: commentTitle, isWarning: isAband)
+          }
         }
       })
       .disposed(by: self.disposeBag)
     
     self.reactor?.state.map { $0.passwordIsEqual }
-      .subscribe(onNext: { equalType in
-        switch equalType {
-        case .empty:
-          return
-        case .notEqual:
-          print("no equal")
-        case .equal:
-          print("equal")
+      .subscribe(onNext: { [weak self] equalType in
+        guard let viewType = self?.viewType, viewType == .pwdConfirm else { return }
+        Task {
+          switch equalType {
+          case .empty:
+            await self?.removeComment()
+          case .notEqual:
+            await self?.setTextOnCommentLabel(text: ReJordUIStrings.signUpPasswordMismatch, isWarning: true)
+          case .equal:
+            await self?.setTextOnCommentLabel(text: ReJordUIStrings.signUpPasswordMatch, isWarning: false)
+          }
         }
+      })
+      .disposed(by: self.disposeBag)
+    
+    self.reactor?.state.map { $0.idIsAvailable }
+      .asDriver(onErrorJustReturn: .checkYet)
+      .drive(onNext: { [weak self] checkType in
+        Task {
+          guard let viewType = self?.viewType, viewType == .id else { return }
+          switch checkType {
+          case .checkYet:
+            await self?.removeComment()
+          case .available:
+            await self?.setTextOnCommentLabel(text: ReJordUIStrings.signUpAvailableId, isWarning: false)
+          case .duplicated:
+            await self?.setTextOnCommentLabel(text: ReJordUIStrings.signUpIdDuplicate, isWarning: true)
+          }
+        }
+      })
+      .disposed(by: self.disposeBag)
+    
+    
+    // action
+    
+    self.duplicateInspectionButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] _ in
+        self?.reactor?.action.onNext(.checkIdDuplication)
       })
       .disposed(by: self.disposeBag)
     
@@ -162,19 +207,27 @@ class SignUpInputView: UIView, View {
   
   // MARK: - private functions
   
-  private func setTextOnCommentLabel(text: String) {
+  private func setTextOnCommentLabel(text: String, isWarning: Bool) async {
     self.commentLabel.text = text
+    self.commentLabel.textColor = isWarning ? .red : .green
+    await self.setComment()
   }
   
-  private func setComment() {
+  private func setComment() async {
     self.commentLabel.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self, let signUpTextField = self.signUpTextField else { return }
       make.top.equalTo(signUpTextField.snp.bottom).offset(5)
-      make.height.equalTo(30)
       make.leading.equalTo(signUpTextField)
     }
     self.baseView.snpLayout(baseView: self, snpType: .update) { make in
-      make.height.equalTo(130)
+      make.height.equalTo(125)
+    }
+  }
+  
+  private func removeComment() async {
+    self.commentLabel.removeFromSuperview()
+    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+      make.height.equalTo(100)
     }
   }
   

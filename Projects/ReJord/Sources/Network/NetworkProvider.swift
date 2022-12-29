@@ -15,7 +15,7 @@ import RxCocoa
 
 protocol Networkable {
   associatedtype Target
-  func request(target: Target) -> Observable<Result<Data, Error>>
+  func request(target: Target) -> Observable<Result<Data, ReJordError>>
 }
 
 class NetworkProvider<Target: TargetType> {
@@ -60,7 +60,7 @@ class NetworkProvider<Target: TargetType> {
 
 extension NetworkProvider: Networkable {
   
-  func request(target: Target) -> Observable<Result<Data, Error>> {
+  func request(target: Target) -> Observable<Result<Data, ReJordError>> {
     
     if self.isStubbing {
       let stubRequest = self.provider.rx.request(target, callbackQueue: self.dispatchQueue)
@@ -71,7 +71,7 @@ extension NetworkProvider: Networkable {
           return .success(response.data)
         }
         .catch { error in
-          return .just(.failure(error))
+          return .just(.failure(.serverError))
         }
     } else {
       let online = networkEnable()
@@ -87,7 +87,7 @@ extension NetworkProvider: Networkable {
             })
             .retry(3)
             .catch { error in
-              return .just(.failure(error))
+              return .just(.failure(.serverError))
             }
         }
     }

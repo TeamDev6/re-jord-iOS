@@ -8,24 +8,38 @@
 
 import UIKit
 import Moya
+import RxSwift
 
 final class SignUpRepositoryImplement: SignUpRepository {
   
-  var provider: MoyaProvider<ReJordAPI>
-  
-  init(networkProvider: MoyaProvider<ReJordAPI>) {
-    self.provider = networkProvider
-  }
-  
-  func signUp(userId: String, userPassword: String) {
-    self.provider
-      .request(.userSignUp(id: userId, pwd: userPassword), callbackQueue: .global()) { result in
+  var provider = NetworkProvider<ReJordAPI>()
+    
+  func signUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>> {
+    return self.provider
+      .request(target: .userSignUp(id: userId, pwd: userPassword))
+      .map({ result in
         switch result {
         case .success(let data):
-          print(data)
+          return .success(data)
         case .failure(let error):
-          print(error)
+          return .failure(error)
+        }
+      })
+  }
+  
+  func checkId(id: String) -> Observable<Result<Data, ReJordError>> {
+    return self.provider
+      .request(target: .idValidate(id: id))
+      .map { result in
+        switch result {
+        case .success(let data):
+          return .success(data)
+        case .failure(let error):
+          return .failure(error)
         }
       }
   }
+  
+  
+  
 }

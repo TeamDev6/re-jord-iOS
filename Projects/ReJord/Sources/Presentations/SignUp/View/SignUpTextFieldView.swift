@@ -43,6 +43,7 @@ open class SignUpTextFieldView: UIView {
   
   private func setup(placeholderText: String, rightImage image: UIImage?, isSecure: Bool) {
     if isSecure {
+      self.baseTextField.textContentType = .oneTimeCode
       self.baseTextField.isSecureTextEntry = true
       self.baseTextField.tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapAction))
     }

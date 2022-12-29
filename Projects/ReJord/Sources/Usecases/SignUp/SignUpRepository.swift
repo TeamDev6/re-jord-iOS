@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol SignUpRepository {
-  func signUp(userId: String, userPassword: String)
+  func signUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>>
+  func checkId(id: String) -> Observable<Result<Data, ReJordError>>
+  
 }

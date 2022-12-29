@@ -18,6 +18,12 @@ enum PasswordConfirmType {
   case equal
 }
 
+enum IdAvailableType {
+  case checkYet
+  case available
+  case duplicated
+}
+
 final class SignUpReactor: Reactor, Stepper {
   
   
@@ -27,6 +33,7 @@ final class SignUpReactor: Reactor, Stepper {
     case idValueInserted(value: String?)
     case passwordValueInserted(value: String?)
     case passwordConfirmValueInserted(value: String?)
+    case checkIdDuplication
     case signUpAction
     case errorOccured
   }
@@ -36,12 +43,14 @@ final class SignUpReactor: Reactor, Stepper {
     case idSet(id: String?)
     case passwordSet(password: String?)
     case passwordConfirmSet(password: String?)
+    case setIdValidationResult(availbale: Bool)
   }
   
   struct State {
     var idValue: String? = ""
     var passwordValue: String? = ""
     var passwordIsEqual: PasswordConfirmType = .empty
+    var idIsAvailable: IdAvailableType = .checkYet
   }
   
   // MARK: - Properties
@@ -75,9 +84,32 @@ final class SignUpReactor: Reactor, Stepper {
       return .just(.passwordSet(password: value))
     case .passwordConfirmValueInserted(value: let value):
       return .just(.passwordConfirmSet(password: value))
+    case .checkIdDuplication:
+//      guard let id = self.currentState.idValue else { return .empty() }
+      return .just(.setIdValidationResult(availbale: true))
+//      return self.check(id: id)
+//        .map { result in
+//          switch result {
+//          case .success(_):
+//            // 분기에 따라 true/false 설정, 아직 api 나오지 않아 true 로 하드코딩
+//            return .setIdValidationResult(availbale: true)
+//          case .failure(let error):
+//            self.errorListener.accept(error)
+//            return .empty
+//          }
+//        }
     case .signUpAction:
-      self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
-      return .empty()
+      return self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
+        .map { result in
+          switch result {
+          case .success(_):
+            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
+            return .empty
+          case .failure(let error):
+            self.errorListener.accept(error)
+            return .empty
+          }
+        }
     case .errorOccured:
       self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
@@ -96,14 +128,33 @@ final class SignUpReactor: Reactor, Stepper {
     case .passwordConfirmSet(password: let passwordConfirm):
       guard let passwordConfirm, !passwordConfirm.isEmpty else { return newState }
       newState.passwordIsEqual = state.passwordValue == passwordConfirm ? .equal : .notEqual
+    case .setIdValidationResult(availbale: let availbale):
+      if availbale {
+        newState.idIsAvailable = .available
+      } else {
+        newState.idIsAvailable = .duplicated
+      }
     }
     return newState
   }
   
   // MARK: - Private Functions
   
-  private func userSignUp(userId: String, userPassword: String) {
-    self.usecase.signUp(userId: userId, userPassword: userPassword)
+  private func userSignUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>> {
+    return self.usecase.signUp(userId: userId, userPassword: userPassword)
+  }
+  
+  private func check(id: String) -> Observable<Result<Data, ReJordError>> {
+    return self.usecase.checkIdDuplication(id: id)
+//      .map { result in
+//        switch result {
+//        case .success(let data):
+//          return .available
+//        case .failure(let error):
+//          self.errorListener.accept(.serverError)
+//          return
+//        }
+//      }
   }
   
 }

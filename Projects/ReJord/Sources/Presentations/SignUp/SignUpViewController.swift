@@ -29,8 +29,11 @@ class SignUpViewController: UIViewController, Layoutable, View {
     $0.backgroundColor = .white
   }
   
-  private let logoView = UIView()
+  private let logoView = UIView().then {
+    $0.backgroundColor = .clear
+  }
   private let vStackView = UIStackView().then { (stackView: UIStackView) in
+    stackView.backgroundColor = .clear
     stackView.axis = .vertical
     stackView.alignment = .fill
     stackView.distribution = .fill
@@ -39,6 +42,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     label.text = ReJordUIStrings.welcomeToVisitRejord
     label.font = .roboto(fontType: .bold, fontSize: 24)
     label.numberOfLines = 2
+    label.sizeToFit()
   }
   private lazy var idInputView: SignUpInputView = {
     guard let reactor = self.reactor else {
@@ -117,7 +121,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
       make.bottom.equalTo(safeGuide)
     }
     self.logoView.snpLayout(baseView: baseView) { make in
-      self.logoView.backgroundColor = .gray
       make.width.leading.trailing.top.equalToSuperview()
       make.height.equalTo(124)
     }
@@ -128,14 +131,14 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
     self.vStackView.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
-      self.vStackView.backgroundColor = .blue
       make.top.equalTo(self.logoView.snp.bottom)
       make.leading.trailing.equalToSuperview().inset(12)
     }
-    self.welcomeLabel.snp.makeConstraints { make in
-      make.top.equalTo(self.logoView.snp.bottom)
-      make.leading.equalToSuperview()
+    self.welcomeLabel.snp.makeConstraints { [weak self] make in
+      guard let self else { return }
+      make.height.equalTo(self.welcomeLabel.intrinsicContentSize.height)
     }
+    
   }
   
   private func setStackArrangesView(subViews: [UIView]) {

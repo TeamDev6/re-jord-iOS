@@ -23,7 +23,7 @@ class SignUpFlow: Flow {
   // MARK: - Life Cycle
   
   init() {
-    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(networkProvider: MoyaProvider<ReJordAPI>()))
+    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
     self.signUpViewController = SignUpViewController(reactor: signUpReactor)
     self.signUpReactor = signUpReactor
   }
@@ -48,12 +48,16 @@ class SignUpFlow: Flow {
     switch step {
     case .signUpIsRequired:
       return self.push(to: step)
+    case .signUpCompleteSceneIsRequired:
+      return self.push(to: step)
     }
   }
   
   private func present(to step: ReJordSteps) -> FlowContributors {
     switch step {
     case .signUpIsRequired:
+      return .none
+    case .signUpCompleteSceneIsRequired:
       return .none
     }
   }
@@ -63,6 +67,9 @@ class SignUpFlow: Flow {
     case .signUpIsRequired:
       self.rootViewController.pushViewController(self.signUpViewController, animated: false)
       return .one(flowContributor: FlowContributor.contribute(withNextPresentable: self.signUpViewController, withNextStepper: self.signUpReactor))
+    case .signUpCompleteSceneIsRequired:
+      let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor)
+      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))
     }
   }
   
