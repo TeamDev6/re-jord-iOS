@@ -60,6 +60,10 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View {
   
   // MARK: - layout
   
+  func setLayout() {
+    
+  }
+  
   private func configureNavigationBar() {
     DispatchQueue.main.async {
       self.navigationItem.setHidesBackButton(true, animated: false)
@@ -80,24 +84,20 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View {
           on: .right,
           image: ReJordUIAsset.secureGlanceOff.image,
           configuration: $0.configuration,
-          imagePadding: 20,
-          titlePadding: 20
+          imagePadding: 11
         )
       } else {
         $0.setSideImage(
           on: .right,
           image: ReJordUIAsset.secureGlanceOff.image,
-          contentInsets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+          contentInsets: UIEdgeInsets(top: 0, left: 11, bottom: 0, right: 0)
         )
       }
-      $0.addTarget(self, action: #selector(tt), for: .touchUpInside)
+      $0.addTarget(self, action: #selector(rightButtonAction), for: .touchUpInside)
     }
   }
-  @objc func tt() {
+  @objc func rightButtonAction() {
     print("aaaaa")
-  }
-  func setLayout() {
-    
   }
   
   
