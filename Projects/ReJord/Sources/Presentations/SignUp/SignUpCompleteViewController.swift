@@ -12,12 +12,13 @@ import RxCocoa
 import ReactorKit
 import SnapKit
 import Then
+import ReJordUI
 
-final class SignUpCompleteViewController: UIViewController, View {
-  
+final class SignUpCompleteViewController: UIViewController, Layoutable, View {
   
   
   // MARK: - components
+  
   
   
   // MARK: - component options
@@ -43,6 +44,9 @@ final class SignUpCompleteViewController: UIViewController, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = .white
+    self.configureNavigationBar()
+    self.setLayout()
   }
   
   required init?(coder: NSCoder) {
@@ -55,6 +59,46 @@ final class SignUpCompleteViewController: UIViewController, View {
   
   
   // MARK: - layout
+  
+  private func configureNavigationBar() {
+    DispatchQueue.main.async {
+      self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationItem.rightBarButtonItem = self.addRightBarButton().toBarButtonItem()
+    }
+  }
+  
+  private func addRightBarButton() -> UIButton {
+    return UIButton().then {
+      $0.setButtonProperties(
+        backgroundColor: .clear,
+        text: ReJordUIStrings.jumpUp,
+        textColor: .black,
+        font: .roboto(fontType: .medium, fontSize: 13)
+      )
+      if #available(iOS 15.0, *) {
+        $0.setSideImage(
+          on: .right,
+          image: ReJordUIAsset.secureGlanceOff.image,
+          configuration: $0.configuration,
+          imagePadding: 20,
+          titlePadding: 20
+        )
+      } else {
+        $0.setSideImage(
+          on: .right,
+          image: ReJordUIAsset.secureGlanceOff.image,
+          contentInsets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        )
+      }
+      $0.addTarget(self, action: #selector(tt), for: .touchUpInside)
+    }
+  }
+  @objc func tt() {
+    print("aaaaa")
+  }
+  func setLayout() {
+    
+  }
   
   
   // MARK: - bind reactor

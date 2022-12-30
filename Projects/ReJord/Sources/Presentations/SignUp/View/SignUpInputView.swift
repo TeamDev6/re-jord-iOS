@@ -72,14 +72,16 @@ class SignUpInputView: UIView, View {
     case .id:
       self.signUpTextField = SignUpTextFieldView()
       self.signUpTextField?.setSignUpPlaceholder(
-        newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
-        placeHolderColor: .gray
+        newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
+        placeHolderColor: .gray,
+        fontSize: 13
       )
     case .pwd, .pwdConfirm:
-      self.signUpTextField = SignUpTextFieldView(image: .image(name: "secureGlanceOff"), textSecure: true)
+      self.signUpTextField = SignUpTextFieldView(image: ReJordUIAsset.secureGlanceOff.image, textSecure: true)
       self.signUpTextField?.setSignUpPlaceholder(
-        newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
-        placeHolderColor: .gray
+        newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
+        placeHolderColor: .gray,
+        fontSize: 13
       )
     }
     
@@ -140,7 +142,8 @@ class SignUpInputView: UIView, View {
     // state
     
     self.reactor?.state.map { $0.passwordValue ?? "" }
-      .subscribe(onNext: { [weak self] password in
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] password in
         guard let self, let viewType = self.viewType else { return }
         guard !password.isEmpty else {
           Task {
@@ -159,7 +162,8 @@ class SignUpInputView: UIView, View {
       .disposed(by: self.disposeBag)
     
     self.reactor?.state.map { $0.passwordIsEqual }
-      .subscribe(onNext: { [weak self] equalType in
+      .asDriver(onErrorJustReturn: .empty)
+      .drive(onNext: { [weak self] equalType in
         guard let viewType = self?.viewType, viewType == .pwdConfirm else { return }
         Task {
           switch equalType {

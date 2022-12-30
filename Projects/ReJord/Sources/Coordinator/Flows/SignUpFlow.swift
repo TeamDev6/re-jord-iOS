@@ -69,6 +69,7 @@ class SignUpFlow: Flow {
       return .one(flowContributor: FlowContributor.contribute(withNextPresentable: self.signUpViewController, withNextStepper: self.signUpReactor))
     case .signUpCompleteSceneIsRequired:
       let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor)
+      self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
       return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))
     }
   }

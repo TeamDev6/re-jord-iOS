@@ -28,10 +28,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
-  
-  private let logoView = UIView().then {
-    $0.backgroundColor = .clear
-  }
   private let vStackView = UIStackView().then { (stackView: UIStackView) in
     stackView.backgroundColor = .clear
     stackView.axis = .vertical
@@ -44,7 +40,8 @@ class SignUpViewController: UIViewController, Layoutable, View {
     label.numberOfLines = 2
     label.sizeToFit()
   }
-  private lazy var idInputView: SignUpInputView = {
+  private lazy var idInputView: SignUpInputView = { [weak self] in
+    guard let self = self else { return SignUpInputView(frame: .zero) }
     guard let reactor = self.reactor else {
       self.reactor?.action.onNext(.errorOccured)
       return SignUpInputView(frame: .zero)
@@ -55,7 +52,8 @@ class SignUpViewController: UIViewController, Layoutable, View {
      inputType: .id
    )
   }()
-  private lazy var passwordInputView: SignUpInputView = {
+  private lazy var passwordInputView: SignUpInputView = { [weak self] in
+    guard let self = self else { return SignUpInputView(frame: .zero) }
     guard let reactor = self.reactor else {
       self.reactor?.action.onNext(.errorOccured)
       return SignUpInputView(frame: .zero)
@@ -66,7 +64,8 @@ class SignUpViewController: UIViewController, Layoutable, View {
       inputType: .pwd
     )
   }()
-  private lazy var passwordConfirmInputView: SignUpInputView = {
+  private lazy var passwordConfirmInputView: SignUpInputView = { [weak self] in
+    guard let self = self else { return SignUpInputView(frame: .zero) }
     guard let reactor = self.reactor else {
       self.reactor?.action.onNext(.errorOccured)
       return SignUpInputView(frame: .zero)
@@ -87,6 +86,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = .white
     self.setLayout()
   }
   
@@ -109,7 +109,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
   func setLayout() {
     
     self.setStackArrangesView(subViews: [
-      self.welcomeLabel,
       self.idInputView,
       self.passwordInputView,
       self.passwordConfirmInputView,
@@ -117,36 +116,30 @@ class SignUpViewController: UIViewController, Layoutable, View {
     
     self.baseView.snpLayout(baseView: self.view) { make in
       let safeGuide = self.view.safeAreaLayoutGuide
-      make.top.leading.trailing.equalToSuperview()
-      make.bottom.equalTo(safeGuide)
+      make.top.bottom.equalTo(safeGuide)
+      make.leading.trailing.equalToSuperview().inset(14)
     }
-    self.logoView.snpLayout(baseView: baseView) { make in
-      make.width.leading.trailing.top.equalToSuperview()
-      make.height.equalTo(124)
-    }
-    self.signUpButton.snpLayout(baseView: baseView) { make in
-      make.bottom.equalToSuperview().inset(50)
-      make.leading.trailing.equalToSuperview().inset(20)
-      make.height.equalTo(47)
+    self.welcomeLabel.snpLayout(baseView: self.baseView) { [weak self] make in
+      guard let self else { return }
+      make.top.equalTo(self.baseView.snp.top)
+      make.leading.equalToSuperview()
     }
     self.vStackView.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
-      make.top.equalTo(self.logoView.snp.bottom)
-      make.leading.trailing.equalToSuperview().inset(12)
+      make.top.equalTo(self.welcomeLabel.snp.bottom).offset(20)
+      make.leading.trailing.equalToSuperview()
     }
-    self.welcomeLabel.snp.makeConstraints { [weak self] make in
-      guard let self else { return }
-      make.height.equalTo(self.welcomeLabel.intrinsicContentSize.height)
+    self.signUpButton.snpLayout(baseView: baseView) { make in
+      make.bottom.equalToSuperview().inset(50)
+      make.leading.trailing.equalToSuperview().inset(10)
+      make.height.equalTo(47)
     }
-    
   }
   
   private func setStackArrangesView(subViews: [UIView]) {
     subViews.forEach { view in
       self.vStackView.addArrangedSubview(view)
     }
-    guard let warningView = subViews.first else { return }
-    self.vStackView.setCustomSpacing(80, after: warningView )
   }
   
   

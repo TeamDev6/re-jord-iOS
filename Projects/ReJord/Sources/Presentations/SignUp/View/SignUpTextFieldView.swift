@@ -47,7 +47,11 @@ open class SignUpTextFieldView: UIView {
       self.baseTextField.isSecureTextEntry = true
       self.baseTextField.tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapAction))
     }
-    self.setSignUpPlaceholder(newPlaceHolder: placeholderText, placeHolderColor: .gray)
+    self.setSignUpPlaceholder(
+      newPlaceHolder: placeholderText,
+      placeHolderColor: .gray,
+      fontSize: 13
+    )
     self.baseTextField.setTextFieldOptions(
       textColor: .black,
       backgroundColor: .white,
@@ -72,11 +76,11 @@ open class SignUpTextFieldView: UIView {
     }
   }
   
-  public func setSignUpPlaceholder(newPlaceHolder: String, placeHolderColor: UIColor) {
+  public func setSignUpPlaceholder(newPlaceHolder: String, placeHolderColor: UIColor, fontSize: CGFloat) {
     self.baseTextField.setPlaceHolder(
       text: newPlaceHolder,
       color: placeHolderColor,
-      font: .roboto(fontType: .medium, fontSize: 13)
+      font: .roboto(fontType: .medium, fontSize: fontSize)
     )
   }
   

@@ -12,6 +12,7 @@
 "signUp_password_match" = "비밀번호가 일치합니다.";
 "signUp_available_id" = "사용가능한 아이디입니다.";
 "signUp_available_password" = "사용가능한 비밀번호입니다.";
+"jumpUp" = "건너뛰기";
 
 
 // MARK: - Warning

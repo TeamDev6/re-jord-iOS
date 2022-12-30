@@ -107,6 +107,8 @@ final class SignUpReactor: Reactor, Stepper {
             return .empty
           case .failure(let error):
             self.errorListener.accept(error)
+            // TODO: 테스트 이후 step 정상화 할 것
+            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
             return .empty
           }
         }
