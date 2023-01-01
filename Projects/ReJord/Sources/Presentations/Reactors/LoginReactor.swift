@@ -17,7 +17,7 @@ final class LoginReactor: Reactor, Stepper {
   // MARK: - Reactor
   
   enum Action {
-    
+    case gotoSignUpScene
   }
   
   enum Mutation {
@@ -56,7 +56,11 @@ final class LoginReactor: Reactor, Stepper {
   // MARK: - Reactor Action
   
   func mutate(action: Action) -> Observable<Mutation> {
-    
+    switch action {
+    case .gotoSignUpScene:
+      self.steps.accept(ReJordSteps.signUpIsRequired)
+      return .empty()
+    }
   }
   
   func reduce(state: State, mutation: Mutation) -> State {

@@ -29,14 +29,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(windowScene: windowScene)
     
-    let signUpFlow = SignUpFlow()
+    let signInFlow = LoginFlow()
     
     self.coordinator.coordinate(
-      flow: signUpFlow,
+      flow: signInFlow,
       with: AppStepper()
     )
     
-    Flows.use(signUpFlow, when: .created) { root in
+    Flows.use(signInFlow, when: .created) { root in
       self.window?.rootViewController = root
       self.window?.makeKeyAndVisible()
     }
