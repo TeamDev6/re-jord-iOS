@@ -82,7 +82,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View {
       if #available(iOS 15.0, *) {
         $0.setSideImage(
           on: .right,
-          image: ReJordUIAsset.secureGlanceOff.image,
+          image: ReJordUIAsset.jumpUp.image,
           configuration: $0.configuration,
           imagePadding: 11
         )

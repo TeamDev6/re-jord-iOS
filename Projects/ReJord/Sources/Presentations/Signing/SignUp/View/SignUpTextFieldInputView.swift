@@ -13,20 +13,20 @@ import RxCocoa
 import Then
 import ReJordUI
 
-public enum SignUpInputType {
+public enum SignUpTextFieldInputType {
   case id
   case pwd
   case pwdConfirm
 }
 
-class SignUpInputView: UIView, View {
+class SignUpTextFieldInputView: UIView, View {
   
   // MARK: - Componenets
   
   private let baseView = UIView().then {
     $0.backgroundColor = .clear
   }
-  public var signUpTextField: SignUpTextFieldView?
+  public var signUpTextField: SigningTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
     label.sizeToFit()
@@ -53,7 +53,7 @@ class SignUpInputView: UIView, View {
   
   // MARK: - private properties
   
-  var viewType: SignUpInputType?
+  var viewType: SignUpTextFieldInputType?
   
   
   // MARK: - DisposeBag
@@ -63,21 +63,21 @@ class SignUpInputView: UIView, View {
   
   // MARK: - Life Cycle
   
-  convenience init(reactor: SignUpReactor, upperLabelText text: String, inputType: SignUpInputType) {
+  convenience init(reactor: SignUpReactor, upperLabelText text: String, inputType: SignUpTextFieldInputType) {
     self.init(frame: CGRect.zero)
     self.reactor = reactor
     self.upperLabel.text = text
     self.viewType = inputType
     switch inputType {
     case .id:
-      self.signUpTextField = SignUpTextFieldView()
+      self.signUpTextField = SigningTextFieldView()
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
         placeHolderColor: .gray,
         fontSize: 13
       )
     case .pwd, .pwdConfirm:
-      self.signUpTextField = SignUpTextFieldView(image: ReJordUIAsset.secureGlanceOff.image, textSecure: true)
+      self.signUpTextField = SigningTextFieldView(image: ReJordUIAsset.secureGlanceOff.image, textSecure: true)
       self.signUpTextField?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
         placeHolderColor: .gray,
@@ -99,7 +99,7 @@ class SignUpInputView: UIView, View {
   
   // MARK: - Configure UI
   
-  func configurateUI(inputType: SignUpInputType) {
+  func configurateUI(inputType: SignUpTextFieldInputType) {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
       make.height.equalTo(100)

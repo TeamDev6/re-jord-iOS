@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 import ReJordUI
 
-open class SignUpTextFieldView: UIView {
+open class SigningTextFieldView: UIView {
   
   // MARK: - Private Properties
   

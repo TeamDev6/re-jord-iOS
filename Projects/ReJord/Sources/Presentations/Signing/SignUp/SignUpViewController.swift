@@ -40,37 +40,37 @@ class SignUpViewController: UIViewController, Layoutable, View {
     label.numberOfLines = 2
     label.sizeToFit()
   }
-  private lazy var idInputView: SignUpInputView = { [weak self] in
-    guard let self = self else { return SignUpInputView(frame: .zero) }
-    guard let reactor = self.reactor else {
-      self.reactor?.action.onNext(.errorOccured)
-      return SignUpInputView(frame: .zero)
+  private lazy var idInputView: SignUpTextFieldInputView = { [weak self] in
+    guard let self,
+          let reactor = self.reactor else {
+      self?.reactor?.action.onNext(.errorOccured)
+      return SignUpTextFieldInputView(frame: .zero)
     }
-    return SignUpInputView(
+    return SignUpTextFieldInputView(
      reactor: reactor,
      upperLabelText: ReJordUIStrings.id,
      inputType: .id
    )
   }()
-  private lazy var passwordInputView: SignUpInputView = { [weak self] in
-    guard let self = self else { return SignUpInputView(frame: .zero) }
-    guard let reactor = self.reactor else {
-      self.reactor?.action.onNext(.errorOccured)
-      return SignUpInputView(frame: .zero)
+  private lazy var passwordInputView: SignUpTextFieldInputView = { [weak self] in
+    guard let self,
+          let reactor = self.reactor else {
+      self?.reactor?.action.onNext(.errorOccured)
+      return SignUpTextFieldInputView(frame: .zero)
     }
-    return SignUpInputView(
+    return SignUpTextFieldInputView(
       reactor: reactor,
       upperLabelText: ReJordUIStrings.password,
       inputType: .pwd
     )
   }()
-  private lazy var passwordConfirmInputView: SignUpInputView = { [weak self] in
-    guard let self = self else { return SignUpInputView(frame: .zero) }
-    guard let reactor = self.reactor else {
-      self.reactor?.action.onNext(.errorOccured)
-      return SignUpInputView(frame: .zero)
+  private lazy var passwordConfirmInputView: SignUpTextFieldInputView = { [weak self] in
+    guard let self,
+          let reactor = self.reactor else {
+      self?.reactor?.action.onNext(.errorOccured)
+      return SignUpTextFieldInputView(frame: .zero)
     }
-    return SignUpInputView(
+    return SignUpTextFieldInputView(
       reactor: reactor,
       upperLabelText: ReJordUIStrings.confirmPassword,
       inputType: .pwdConfirm
