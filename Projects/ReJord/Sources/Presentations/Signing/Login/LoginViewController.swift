@@ -79,8 +79,9 @@ final class LoginViewController: UIViewController, Layoutable, View {
     label.text = ReJordUIStrings.gotoSignUp
     label.textColor = .gray
     label.sizeToFit()
-    let tapGesture = UITapGestureRecognizer()
-    tapGesture.addTarget(self, action: #selector(gotoSignUpAction))
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gotoSignUpAction))
+    tapGesture.accessibilityRespondsToUserInteraction = true
+    label.isUserInteractionEnabled = true
     label.addGestureRecognizer(tapGesture)
     return label
   }()
@@ -94,7 +95,7 @@ final class LoginViewController: UIViewController, Layoutable, View {
   // MARK: - private functions
   
   @objc private func gotoSignUpAction() {
-    
+    self.reactor?.action.onNext(.gotoSignUpScene)
   }
   
   
@@ -114,9 +115,7 @@ final class LoginViewController: UIViewController, Layoutable, View {
     super.viewDidLoad()
     self.view.backgroundColor = .white
     self.setLayout()
-    
   }
-  
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -134,25 +133,29 @@ final class LoginViewController: UIViewController, Layoutable, View {
     }
     self.loginTitleLabel.snpLayout(baseView: self.baseView) { make in
       make.top.leading.equalToSuperview()
+      make.height.equalTo(self.loginTitleLabel.intrinsicContentSize.height)
     }
     self.loginSubTitleLabel.snpLayout(baseView: self.baseView) { make in
       make.top.equalTo(self.loginTitleLabel.snp.bottom)
+      make.height.equalTo(self.loginSubTitleLabel.intrinsicContentSize.height)
       make.leading.equalToSuperview()
     }
     self.loginComponentStack.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
       make.top.equalTo(self.loginSubTitleLabel.snp.bottom).offset(15)
+      make.width.equalToSuperview()
       make.leading.trailing.equalToSuperview()
     }
     self.loginButton.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
-      make.top.equalTo(self.loginComponentStack.snp.bottom).inset(25)
-      make.bottom.equalToSuperview()
+      make.top.equalTo(self.loginComponentStack.snp.bottom).offset(25)
       make.leading.trailing.equalToSuperview()
+      make.height.equalTo(47)
     }
     self.gotoSignUpGestureLabel.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
-      make.top.equalTo(self.loginButton.snp.bottom).inset(31)
+      make.top.equalTo(self.loginButton.snp.bottom).offset(31)
+      make.height.equalTo(self.gotoSignUpGestureLabel.intrinsicContentSize.height)
       make.centerX.equalToSuperview()
     }
     
@@ -163,16 +166,8 @@ final class LoginViewController: UIViewController, Layoutable, View {
   
   func bind(reactor: LoginReactor) {
     
+    // action
     
-    
-    
-    
-    // test
-    self.moveTestButton.rx.tap
-      .subscribe(onNext: { _ in
-        self.reactor?.action.onNext(.gotoSignUpScene)
-      })
-      .disposed(by: self.disposeBag)
   }
   
   

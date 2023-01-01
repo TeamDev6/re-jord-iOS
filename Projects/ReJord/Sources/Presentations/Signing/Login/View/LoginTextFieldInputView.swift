@@ -71,7 +71,9 @@ final class LoginTextFieldInputView: UIView, View {
         fontSize: 13
       )
     }
-    self.configurateUI(inputType: inputType)
+    Task {
+      await self.configurateUI(inputType: inputType)
+    }
   }
   
   override public init(frame: CGRect) {
@@ -84,19 +86,21 @@ final class LoginTextFieldInputView: UIView, View {
   
   // MARK: - configure UI
   
-  private func configurateUI(inputType: LoginTextFieldInputType) {
+  private func configurateUI(inputType: LoginTextFieldInputType) async {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
       make.height.equalTo(100)
     }
-    self.upperLabel.snpLayout(baseView: self.baseView) { make in
+    self.upperLabel.snpLayout(baseView: self.baseView) { [weak self] make in
+      guard let self else { return }
       make.top.leading.equalToSuperview()
+      make.height.equalTo(self.upperLabel.intrinsicContentSize.height)
     }
     switch inputType {
     case .id:
       self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
-        make.top.equalTo(self.upperLabel.snp.bottom).inset(11)
+        make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.trailing.leading.equalToSuperview()
         make.height.equalTo(47)
       }
