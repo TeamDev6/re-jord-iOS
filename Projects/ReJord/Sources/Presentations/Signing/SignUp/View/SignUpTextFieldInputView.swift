@@ -26,7 +26,7 @@ class SignUpTextFieldInputView: UIView, View {
   private let baseView = UIView().then {
     $0.backgroundColor = .clear
   }
-  public var signUpTextField: SigningTextFieldView?
+  public var signingTextFieldView: SigningTextFieldView?
   private let upperLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
     label.sizeToFit()
@@ -70,15 +70,15 @@ class SignUpTextFieldInputView: UIView, View {
     self.viewType = inputType
     switch inputType {
     case .id:
-      self.signUpTextField = SigningTextFieldView()
-      self.signUpTextField?.setSignUpPlaceholder(
+      self.signingTextFieldView = SigningTextFieldView()
+      self.signingTextFieldView?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpIdRestriction,
         placeHolderColor: .gray,
         fontSize: 13
       )
     case .pwd, .pwdConfirm:
-      self.signUpTextField = SigningTextFieldView(image: ReJordUIAsset.secureGlanceOff.image, textSecure: true)
-      self.signUpTextField?.setSignUpPlaceholder(
+      self.signingTextFieldView = SigningTextFieldView(image: ReJordUIAsset.secureGlanceOff.image, textSecure: true)
+      self.signingTextFieldView?.setSignUpPlaceholder(
         newPlaceHolder: ReJordUIStrings.signUpPasswordRestriction,
         placeHolderColor: .gray,
         fontSize: 13
@@ -97,9 +97,43 @@ class SignUpTextFieldInputView: UIView, View {
   }
   
   
+  
+  // MARK: - private functions
+  
+  private func setTextOnCommentLabel(text: String, isWarning: Bool) async {
+    self.commentLabel.text = text
+    self.commentLabel.textColor = isWarning ? .red : .green
+    await self.setComment()
+  }
+  
+  private func setComment() async {
+    self.commentLabel.snpLayout(baseView: self.baseView) { [weak self] make in
+      guard let self, let signUpTextField = self.signingTextFieldView else { return }
+      make.top.equalTo(signUpTextField.snp.bottom).offset(5)
+      make.leading.equalTo(signUpTextField)
+    }
+    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+      make.height.equalTo(125)
+    }
+  }
+  
+  private func removeComment() async {
+    self.commentLabel.removeFromSuperview()
+    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+      make.height.equalTo(100)
+    }
+  }
+  
+  // 이거 유즈케이스에서 처리해야할거같은데..
+  private func verifyPasswordRestriction(verifyText: String) -> Bool {
+    guard verifyText.count >= 8 else { return false }
+    guard let regex = try? NSRegularExpression(pattern: "^[0-9a-zA-Z]*$") else { return false }
+    return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
+  }
+  
   // MARK: - Configure UI
   
-  func configurateUI(inputType: SignUpTextFieldInputType) {
+  private func configurateUI(inputType: SignUpTextFieldInputType) {
     baseView.snpLayout(baseView: self) { make in
       make.edges.equalToSuperview()
       make.height.equalTo(100)
@@ -116,7 +150,7 @@ class SignUpTextFieldInputView: UIView, View {
         make.width.equalTo(101)
         make.trailing.equalToSuperview()
       }
-      self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
+      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
         make.centerY.equalTo(self.duplicateInspectionButton)
         make.leading.equalToSuperview()
@@ -125,7 +159,7 @@ class SignUpTextFieldInputView: UIView, View {
       }
       
     case .pwd, .pwdConfirm:
-      self.signUpTextField?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
+      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
         guard let self else { return }
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.leading.equalToSuperview()
@@ -208,37 +242,4 @@ class SignUpTextFieldInputView: UIView, View {
   }
   
   
-  
-  // MARK: - private functions
-  
-  private func setTextOnCommentLabel(text: String, isWarning: Bool) async {
-    self.commentLabel.text = text
-    self.commentLabel.textColor = isWarning ? .red : .green
-    await self.setComment()
-  }
-  
-  private func setComment() async {
-    self.commentLabel.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self, let signUpTextField = self.signUpTextField else { return }
-      make.top.equalTo(signUpTextField.snp.bottom).offset(5)
-      make.leading.equalTo(signUpTextField)
-    }
-    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
-      make.height.equalTo(125)
-    }
-  }
-  
-  private func removeComment() async {
-    self.commentLabel.removeFromSuperview()
-    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
-      make.height.equalTo(100)
-    }
-  }
-  
-  // 이거 유즈케이스에서 처리해야할거같은데..
-  private func verifyPasswordRestriction(verifyText: String) -> Bool {
-    guard verifyText.count >= 8 else { return false }
-    guard let regex = try? NSRegularExpression(pattern: "^[0-9a-zA-Z]*$") else { return false }
-    return regex.firstMatch(in: verifyText, range: NSRange(location: 0, length: verifyText.utf16.count)) != nil
-  }
 }

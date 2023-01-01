@@ -28,12 +28,20 @@ class SignUpViewController: UIViewController, Layoutable, View {
   private let baseView = UIView().then {
     $0.backgroundColor = .white
   }
-  private let vStackView = UIStackView().then { (stackView: UIStackView) in
+  private lazy var signUpComponentStack: UIStackView = { [weak self] in
+    let stackView = UIStackView()
+    guard let self else { return stackView }
     stackView.backgroundColor = .clear
     stackView.axis = .vertical
     stackView.alignment = .fill
     stackView.distribution = .fill
-  }
+    stackView.setStackArrangesView(subViews: [
+      self.idInputView,
+      self.passwordInputView,
+      self.passwordConfirmInputView,
+    ])
+    return stackView
+  }()
   private let welcomeLabel = UILabel().then { (label: UILabel) in
     label.text = ReJordUIStrings.welcomeToVisitRejord
     label.font = .roboto(fontType: .bold, fontSize: 24)
@@ -76,8 +84,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
       inputType: .pwdConfirm
     )
   }()
-  
-  
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
   
 
@@ -108,12 +114,6 @@ class SignUpViewController: UIViewController, Layoutable, View {
   
   func setLayout() {
     
-    self.setStackArrangesView(subViews: [
-      self.idInputView,
-      self.passwordInputView,
-      self.passwordConfirmInputView,
-    ])
-    
     self.baseView.snpLayout(baseView: self.view) { make in
       let safeGuide = self.view.safeAreaLayoutGuide
       make.top.bottom.equalTo(safeGuide)
@@ -124,7 +124,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
       make.top.equalTo(self.baseView.snp.top)
       make.leading.equalToSuperview()
     }
-    self.vStackView.snpLayout(baseView: self.baseView) { [weak self] make in
+    self.signUpComponentStack.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
       make.top.equalTo(self.welcomeLabel.snp.bottom).offset(20)
       make.leading.trailing.equalToSuperview()
@@ -136,33 +136,26 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
   }
   
-  private func setStackArrangesView(subViews: [UIView]) {
-    subViews.forEach { view in
-      self.vStackView.addArrangedSubview(view)
-    }
-  }
-  
-  
   
   // MARK: - Reactor Binding
   
   func bind(reactor: SignUpReactor) {
     
-    self.idInputView.signUpTextField?.baseTextField.rx.text
+    self.idInputView.signingTextFieldView?.baseTextField.rx.text
       .asDriver()
       .drive(onNext: { [weak self] idText in
         self?.reactor?.action.onNext(.idValueInserted(value: idText))
       })
       .disposed(by: self.disposeBag)
     
-    self.passwordInputView.signUpTextField?.baseTextField.rx.text
+    self.passwordInputView.signingTextFieldView?.baseTextField.rx.text
       .asDriver()
       .drive(onNext: { [weak self] passwordText in
         self?.reactor?.action.onNext(.passwordValueInserted(value: passwordText))
       })
       .disposed(by: self.disposeBag)
     
-    self.passwordConfirmInputView.signUpTextField?.baseTextField.rx.text
+    self.passwordConfirmInputView.signingTextFieldView?.baseTextField.rx.text
       .asDriver()
       .drive(onNext: { [weak self] passwordConfirmText in
         self?.reactor?.action.onNext(.passwordConfirmValueInserted(value: passwordConfirmText))

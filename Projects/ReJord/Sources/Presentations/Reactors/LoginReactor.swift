@@ -18,6 +18,7 @@ final class LoginReactor: Reactor, Stepper {
   
   enum Action {
     case gotoSignUpScene
+    case errorOccured
   }
   
   enum Mutation {
@@ -59,6 +60,8 @@ final class LoginReactor: Reactor, Stepper {
     switch action {
     case .gotoSignUpScene:
       self.steps.accept(ReJordSteps.signUpIsRequired)
+      return .empty()
+    case .errorOccured:
       return .empty()
     }
   }

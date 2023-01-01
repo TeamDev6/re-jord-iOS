@@ -13,6 +13,12 @@
 "signUp_available_id" = "사용가능한 아이디입니다.";
 "signUp_available_password" = "사용가능한 비밀번호입니다.";
 "jumpUp" = "건너뛰기";
+"loginTitle" = "로그인";
+"loginSubTitle" = "로그인 후 RE:욜드를 즐겨보세요.\n최초 1회 로그인후 자동으로 유지됩니다.";
+"login_id_placeholder" = "아이디를 입력해주세요.";
+"login_pwd_placeholder" = "비밀번호를 입력해주세요.";
+"do_login" = "로그인하기";
+"goto_signUp" = "회원가입";
 
 
 // MARK: - Warning
