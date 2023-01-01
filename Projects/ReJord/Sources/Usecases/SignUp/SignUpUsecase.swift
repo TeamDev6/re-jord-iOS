@@ -25,5 +25,4 @@ final class SignUpUsecase {
     return self.repository.checkId(id: id)
   }
   
-  
 }

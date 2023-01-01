@@ -25,7 +25,7 @@ extension ReJordAPI: TargetType {
     case .userSignUp:
       return "/v1/users"
     case .idValidate(id: let id):
-      return ""
+      return "/v1/users/\(id)/duplication"
     }
   }
   
@@ -33,8 +33,8 @@ extension ReJordAPI: TargetType {
     switch self {
     case .userSignUp:
       return .post
-    case .idValidate(id: let id):
-      return .post
+    case .idValidate:
+      return .get
     }
   }
   
@@ -44,7 +44,7 @@ extension ReJordAPI: TargetType {
       let params: [String: Any] = ["userId": id, "password": pwd, "userType": "BASIC"]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
     case .idValidate(id: let id):
-      return .requestParameters(parameters: [:], encoding: JSONEncoding.default)
+      return .requestPlain
     }
   }
   var validationType: ValidationType {
@@ -57,7 +57,7 @@ extension ReJordAPI: TargetType {
     switch self {
     case .userSignUp:
       return header
-    case .idValidate(id: let id):
+    case .idValidate:
       return header
     }
   }

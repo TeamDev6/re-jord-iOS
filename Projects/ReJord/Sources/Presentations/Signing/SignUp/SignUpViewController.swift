@@ -16,14 +16,9 @@ import Then
 import ReactorKit
 
 class SignUpViewController: UIViewController, Layoutable, View {
+
   
-  
-  // MARK: - Private Properties
-  
-  var disposeBag: DisposeBag = DisposeBag()
-  
-  
-  // MARK: - Componenets
+  // MARK: - componenets
   
   private let baseView = UIView().then {
     $0.backgroundColor = .white
@@ -85,8 +80,12 @@ class SignUpViewController: UIViewController, Layoutable, View {
     )
   }()
   private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
+    
   
-
+  // MARK: - dispose bag
+  
+  var disposeBag = DisposeBag()
+  
   
   // MARK: - Life Cycle
   
@@ -108,6 +107,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   deinit {
     print("\(self) is deinited")
   }
+  
   
   
   // MARK: - Configuration UI
@@ -137,7 +137,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
   }
   
   
-  // MARK: - Reactor Binding
+  // MARK: - reactor rinding
   
   func bind(reactor: SignUpReactor) {
     

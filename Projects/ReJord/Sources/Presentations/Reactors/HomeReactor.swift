@@ -1,9 +1,9 @@
 //
-//  LoginReactor.swift
+//  HomeReactor.swift
 //  ReJord
 //
-//  Created by 송하민 on 2022/12/30.
-//  Copyright © 2022 team.reJord. All rights reserved.
+//  Created by 송하민 on 2023/01/01.
+//  Copyright © 2023 team.reJord. All rights reserved.
 //
 
 import UIKit
@@ -12,13 +12,12 @@ import RxCocoa
 import ReactorKit
 import RxFlow
 
-final class LoginReactor: Reactor, Stepper {
+final class HomeReactor: Reactor, Stepper {
   
   // MARK: - Reactor
   
   enum Action {
-    case gotoSignUpScene
-    case errorOccured
+    
   }
   
   enum Mutation {
@@ -35,7 +34,7 @@ final class LoginReactor: Reactor, Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
-  private let usecase: SignUpUsecase
+  private let usecase: HomeUsecase
   
   
   // MARK: - DisposeBag
@@ -45,25 +44,19 @@ final class LoginReactor: Reactor, Stepper {
   
   // MARK: - Life Cycle
   
-  init(repository: SignUpRepository) {
-    self.usecase = SignUpUsecase(repository: repository)
+  init(repository: HomeRepository) {
+    self.usecase = HomeUsecase(repository: repository)
   }
   
   deinit {
-    print("SignUpReactor is deinit")
+    print("\(self) is deinit")
   }
-
+  
   
   // MARK: - Reactor Action
   
   func mutate(action: Action) -> Observable<Mutation> {
-    switch action {
-    case .gotoSignUpScene:
-      self.steps.accept(ReJordSteps.signUpIsRequired)
-      return .empty()
-    case .errorOccured:
-      return .empty()
-    }
+    
   }
   
   func reduce(state: State, mutation: Mutation) -> State {
