@@ -71,6 +71,7 @@ final class LoginTextFieldInputView: UIView, View {
         fontSize: 13
       )
     }
+    
     Task {
       await self.configurateUI(inputType: inputType)
     }

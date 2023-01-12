@@ -136,13 +136,13 @@ final class LoginViewController: UIViewController, Layoutable, View {
       make.height.equalTo(self.loginTitleLabel.intrinsicContentSize.height)
     }
     self.loginSubTitleLabel.snpLayout(baseView: self.baseView) { make in
-      make.top.equalTo(self.loginTitleLabel.snp.bottom)
+      make.top.equalTo(self.loginTitleLabel.snp.bottom).offset(17)
       make.height.equalTo(self.loginSubTitleLabel.intrinsicContentSize.height)
       make.leading.equalToSuperview()
     }
     self.loginComponentStack.snpLayout(baseView: self.baseView) { [weak self] make in
       guard let self else { return }
-      make.top.equalTo(self.loginSubTitleLabel.snp.bottom).offset(15)
+      make.top.equalTo(self.loginSubTitleLabel.snp.bottom).offset(35)
       make.width.equalToSuperview()
       make.leading.trailing.equalToSuperview()
     }

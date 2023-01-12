@@ -43,7 +43,7 @@ extension ReJordAPI: TargetType {
     case .userSignUp(let id, let pwd):
       let params: [String: Any] = ["userId": id, "password": pwd, "userType": "BASIC"]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
-    case .idValidate(id: let id):
+    case .idValidate:
       return .requestPlain
     }
   }

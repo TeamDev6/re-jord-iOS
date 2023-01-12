@@ -116,17 +116,16 @@ class SignUpViewController: UIViewController, Layoutable, View {
     
     self.baseView.snpLayout(baseView: self.view) { make in
       let safeGuide = self.view.safeAreaLayoutGuide
-      make.top.bottom.equalTo(safeGuide)
+      make.top.equalTo(safeGuide).offset(45)
+      make.bottom.equalTo(safeGuide)
       make.leading.trailing.equalToSuperview().inset(14)
     }
-    self.welcomeLabel.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
+    self.welcomeLabel.snpLayout(baseView: self.baseView) { make in
       make.top.equalTo(self.baseView.snp.top)
       make.leading.equalToSuperview()
     }
-    self.signUpComponentStack.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
-      make.top.equalTo(self.welcomeLabel.snp.bottom).offset(20)
+    self.signUpComponentStack.snpLayout(baseView: self.baseView) { make in
+      make.top.equalTo(self.welcomeLabel.snp.bottom).offset(29)
       make.leading.trailing.equalToSuperview()
     }
     self.signUpButton.snpLayout(baseView: baseView) { make in

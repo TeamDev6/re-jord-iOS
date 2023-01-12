@@ -90,11 +90,11 @@ final class SignUpReactor: Reactor, Stepper {
       return self.check(id: id)
         .map { result in
           switch result {
-          case .success(let data):
+          case .success(_):
             return .setIdValidationResult(availbale: true)
           case .failure(let error):
             self.errorListener.accept(error)
-            return .empty
+            return .setIdValidationResult(availbale: false)
           }
         }
     case .signUpAction:
@@ -126,8 +126,13 @@ final class SignUpReactor: Reactor, Stepper {
       newState.idValue = id
     case .passwordSet(password: let password):
       newState.passwordValue = password
+      newState.passwordIsEqual = .empty
     case .passwordConfirmSet(password: let passwordConfirm):
-      guard let passwordConfirm, !passwordConfirm.isEmpty else { return newState }
+      guard let passwordConfirm,
+            !passwordConfirm.isEmpty else {
+        newState.passwordIsEqual = .empty
+        return newState
+      }
       newState.passwordIsEqual = state.passwordValue == passwordConfirm ? .equal : .notEqual
     case .setIdValidationResult(availbale: let availbale):
       if availbale {

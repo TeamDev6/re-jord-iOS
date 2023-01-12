@@ -30,7 +30,9 @@ open class SigningTextFieldView: UIView {
   
   public init(placeholderText text: String = "", image: UIImage? = nil, textSecure: Bool = false) {
     super.init(frame: .zero)
-    self.setup(placeholderText: text, rightImage: image, isSecure: textSecure)
+    
+    self.setupBaseView()
+    self.setupTextField(placeholderText: text, rightImage: image, isSecure: textSecure)
     self.setLayout()
   }
   
@@ -39,9 +41,24 @@ open class SigningTextFieldView: UIView {
   }
   
   
-  // MARK: - Set up
   
-  private func setup(placeholderText: String, rightImage image: UIImage?, isSecure: Bool) {
+  // MARK: - private functions
+  
+  private func setupBaseView() {
+    self.layer.masksToBounds = false
+    self.backgroundColor = .white
+    self.layer.cornerRadius = 8
+    self.layer.borderWidth = 0
+    self.layer.borderColor = UIColor.gray.cgColor
+    self.layer.shadowRadius = 4
+    self.layer.shadowOpacity = 0.3
+    self.layer.shadowOffset = CGSize(width: 0, height: 1)
+    self.layer.shadowColor = UIColor.gray.cgColor
+    self.layer.shouldRasterize = true
+  }
+  
+  private func setupTextField(placeholderText: String, rightImage image: UIImage?, isSecure: Bool) {
+    
     if isSecure {
       self.baseTextField.textContentType = .oneTimeCode
       self.baseTextField.isSecureTextEntry = true
@@ -59,9 +76,8 @@ open class SigningTextFieldView: UIView {
       align: .left,
       keyboardType: .alphabet
     )
-    self.layer.borderWidth = 2
-    self.layer.cornerRadius = 8.0
-    self.baseTextField.rightPadding = 30
+  
+    self.baseTextField.rightPadding = 5
     self.baseTextField.rightImage = image
   }
   
@@ -82,10 +98,10 @@ open class SigningTextFieldView: UIView {
   
   private func setLayout() {
     self.baseTextField.snpLayout(baseView: self) { make in
-      make.top.bottom.equalToSuperview()
-      make.leading.equalToSuperview().inset(13)
-      make.width.height.equalToSuperview()
+      make.top.bottom.height.equalToSuperview()
+      make.leading.trailing.equalToSuperview().inset(13)
     }
   }
   
 }
+

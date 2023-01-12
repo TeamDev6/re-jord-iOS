@@ -35,7 +35,7 @@ class SignUpTextFieldInputView: UIView, View {
     let button = UIButton().then { (button: UIButton) in
       button.setButtonProperties(
         cornerRadius: 20,
-        backgroundColor: .black,
+        backgroundColor: ReJordUIAsset.mainGreen.color,
         text: ReJordUIStrings.checkDuplicate,
         textColor: .white,
         font: .roboto(fontType: .medium, fontSize: 16)
@@ -102,24 +102,25 @@ class SignUpTextFieldInputView: UIView, View {
   
   private func setTextOnCommentLabel(text: String, isWarning: Bool) async {
     self.commentLabel.text = text
-    self.commentLabel.textColor = isWarning ? .red : .green
+    self.commentLabel.textColor = isWarning ? ReJordUIAsset.warningRed.color : ReJordUIAsset.mainGreen.color
     await self.setComment()
   }
   
   private func setComment() async {
-    self.commentLabel.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self, let signUpTextField = self.signingTextFieldView else { return }
-      make.top.equalTo(signUpTextField.snp.bottom).offset(5)
-      make.leading.equalTo(signUpTextField)
+    self.commentLabel.snpLayout(baseView: self.baseView, snpType: .remake) { make in
+      guard let signingTextFieldView = self.signingTextFieldView else { return }
+      make.top.equalTo(signingTextFieldView.snp.bottom).offset(8)
+      make.leading.equalTo(signingTextFieldView)
     }
-    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+    self.baseView.snp.remakeConstraints { make in
+      make.edges.equalToSuperview()
       make.height.equalTo(125)
     }
   }
   
   private func removeComment() async {
     self.commentLabel.removeFromSuperview()
-    self.baseView.snpLayout(baseView: self, snpType: .update) { make in
+    self.baseView.snp.updateConstraints { make in
       make.height.equalTo(100)
     }
   }
@@ -154,7 +155,7 @@ class SignUpTextFieldInputView: UIView, View {
         guard let self else { return }
         make.centerY.equalTo(self.duplicateInspectionButton)
         make.leading.equalToSuperview()
-        make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-7)
+        make.trailing.equalTo(self.duplicateInspectionButton.snp.leading).offset(-21)
         make.height.equalTo(47)
       }
       

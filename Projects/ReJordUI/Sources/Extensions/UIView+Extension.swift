@@ -14,7 +14,6 @@ extension UIView {
   public enum SnpType {
     case make
     case remake
-    case update
   }
   
   public func snpLayout(baseView: UIView, snpType: SnpType = .make, snpConstraints: @escaping (_ make: ConstraintMaker) -> Void) {
@@ -25,8 +24,6 @@ extension UIView {
         self.snp.makeConstraints(snpConstraints)
       case .remake:
         self.snp.remakeConstraints(snpConstraints)
-      case .update:
-        self.snp.updateConstraints(snpConstraints)
       }
     }
   }
