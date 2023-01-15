@@ -14,21 +14,43 @@ import SnapKit
 import Then
 import ReJordUI
 
-final class SignUpCompleteViewController: UIViewController, Layoutable, View {
+final class SignUpCompleteViewController: UIViewController, Layoutable, View, UITextFieldDelegate {
   
   
   // MARK: - components
   
+  private let backgroundView: UIView = UIView().then {
+    $0.backgroundColor = .white
+  }
   
+  private let baseView: UIView = UIView().then {
+    $0.backgroundColor = .clear
+  }
   
-  // MARK: - component options
-  
-  
-  // MARK: - private properties
-  
-  
-  // MARK: - private functions
-  
+  private lazy var welcomeStack = UIStackView().asVertical(distribution: .fill, alignment: .leading, spacing: 30).then {
+    $0.setStackArrangesView(subViews: [self.signUpCompleteLabel, self.nicknameStack, self.welcomeCompleteLabel])
+  }
+  private let signUpCompleteLabel: UILabel = UILabel().then {
+    $0.font = .roboto(fontType: .bold, fontSize: 30)
+    $0.text = "회원가입 완료! 👋"
+    $0.textColor = ReJordUIAsset.mainGreen.color
+  }
+  private lazy var nicknameStack = UIStackView().asHorizontal(distribution: .fill, alignment: .fill, spacing: 5.0).then { (stackView) in
+    self.suffixOfNickname.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+    self.nicknameFieldView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    stackView.setStackArrangesView(subViews: [self.nicknameFieldView, self.suffixOfNickname])
+  }
+  private lazy var nicknameFieldView = NicknameTextFieldView()
+  private let suffixOfNickname = UILabel().then { (label: UILabel) in
+    label.font = .roboto(fontType: .bold, fontSize: 26)
+    label.text = "님"
+    label.textColor = .black
+  }
+  private let welcomeCompleteLabel: UILabel = UILabel().then { (label: UILabel) in
+    label.font = .roboto(fontType: .bold, fontSize: 26)
+    label.text = "반갑습니다 :)"
+    label.textColor = .black
+  }
   
   // MARK: - disposebag
   
@@ -57,11 +79,34 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View {
     print("\(self) is deinited")
   }
   
-  
   // MARK: - layout
   
   func setLayout() {
-    
+    self.backgroundView.snpLayout(baseView: self.view) { make in
+      make.edges.equalToSuperview()
+    }
+    self.baseView.snpLayout(baseView: self.backgroundView) { make in
+      let safeGuide = self.view.safeAreaLayoutGuide
+      make.top.bottom.equalTo(safeGuide)
+      make.leading.trailing.equalToSuperview().inset(16)
+    }
+    self.welcomeStack.snpLayout(baseView: self.baseView) { make in
+      make.top.equalToSuperview().inset(45)
+      make.leading.trailing.equalToSuperview()
+      
+      self.signUpCompleteLabel.snp.makeConstraints { make in
+        make.leading.equalToSuperview()
+      }
+    }
+    self.nicknameStack.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview()
+      self.nicknameFieldView.snp.makeConstraints { make in
+        make.leading.equalToSuperview()
+      }
+      self.suffixOfNickname.snp.makeConstraints { make in
+        make.trailing.equalToSuperview()
+      }
+    }
   }
   
   private func configureNavigationBar() {

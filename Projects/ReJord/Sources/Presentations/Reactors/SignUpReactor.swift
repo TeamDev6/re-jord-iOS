@@ -36,6 +36,7 @@ final class SignUpReactor: Reactor, Stepper {
     case checkIdDuplication
     case signUpAction
     case errorOccured
+    case nickNameValueInserted(text: String?)
   }
   
   enum Mutation {
@@ -44,6 +45,7 @@ final class SignUpReactor: Reactor, Stepper {
     case passwordSet(password: String?)
     case passwordConfirmSet(password: String?)
     case setIdValidationResult(availbale: Bool)
+    case setNicknameInputCounts(textCount: Int)
   }
   
   struct State {
@@ -51,6 +53,7 @@ final class SignUpReactor: Reactor, Stepper {
     var passwordValue: String? = ""
     var passwordIsEqual: PasswordConfirmType = .empty
     var idIsAvailable: IdAvailableType = .checkYet
+    var nickNameCountOverTen: Bool = false
   }
   
   // MARK: - Properties
@@ -114,6 +117,9 @@ final class SignUpReactor: Reactor, Stepper {
     case .errorOccured:
       self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
+    case .nickNameValueInserted(text: let text):
+      guard let text = text else { return .empty() }
+      return .just(.setNicknameInputCounts(textCount: text.count))
     }
   }
   
@@ -135,11 +141,9 @@ final class SignUpReactor: Reactor, Stepper {
       }
       newState.passwordIsEqual = state.passwordValue == passwordConfirm ? .equal : .notEqual
     case .setIdValidationResult(availbale: let availbale):
-      if availbale {
-        newState.idIsAvailable = .available
-      } else {
-        newState.idIsAvailable = .duplicated
-      }
+      newState.idIsAvailable = availbale ? .available : .duplicated
+    case .setNicknameInputCounts(textCount: let textCount):
+      newState.nickNameCountOverTen = textCount > 10
     }
     return newState
   }

@@ -27,4 +27,35 @@ extension UIView {
       }
     }
   }
+  
+  public func addBorder(edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
+    let border = UIView()
+    self.bringSubviewToFront(border)
+    border.backgroundColor = color
+    switch edge {
+    case .top:
+      border.snpLayout(baseView: self) { make in
+        make.top.leading.trailing.equalToSuperview()
+        make.height.equalTo(thickness)
+      }
+    case .bottom:
+      border.snpLayout(baseView: self) { make in
+        make.bottom.leading.trailing.equalToSuperview()
+        make.height.equalTo(thickness)
+      }
+    case .left:
+      border.snpLayout(baseView: self) { make in
+        make.top.leading.bottom.equalToSuperview()
+        make.width.equalTo(thickness)
+      }
+    case .right:
+      border.snpLayout(baseView: self) { make in
+        make.top.trailing.bottom.equalToSuperview()
+        make.width.equalTo(thickness)
+      }
+    default:
+      break
+    }
+  }
+  
 }

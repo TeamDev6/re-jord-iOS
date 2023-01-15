@@ -92,22 +92,19 @@ final class LoginTextFieldInputView: UIView, View {
       make.edges.equalToSuperview()
       make.height.equalTo(100)
     }
-    self.upperLabel.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
+    self.upperLabel.snpLayout(baseView: self.baseView) { make in
       make.top.leading.equalToSuperview()
       make.height.equalTo(self.upperLabel.intrinsicContentSize.height)
     }
     switch inputType {
     case .id:
-      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
-        guard let self else { return }
+      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { make in
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.trailing.leading.equalToSuperview()
         make.height.equalTo(47)
       }
     case .pwd:
-      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { [weak self] make in
-        guard let self else { return }
+      self.signingTextFieldView?.snpLayout(baseView: self.baseView, snpType: .remake) { make in
         make.top.equalTo(self.upperLabel.snp.bottom).offset(11)
         make.leading.trailing.equalToSuperview()
         make.height.equalTo(47)
