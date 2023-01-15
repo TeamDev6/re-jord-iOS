@@ -11,18 +11,14 @@ import RxSwift
 
 final class LoginUsecase {
   
-  let repository: SignUpRepository
+  let repository: LoginRepository
   
-  init(repository: SignUpRepository) {
+  init(repository: LoginRepository) {
     self.repository = repository
   }
   
-  func signUp(userId id: String, userPassword password: String) -> Observable<Result<SignUpResult, ReJordError>> {
-    return self.repository.signUp(userId: id, userPassword: password)
-  }
-  
-  func checkIdDuplication(id: String) -> Observable<Result<Data, ReJordError>> {
-    return self.repository.checkId(id: id)
+  func login(id: String, password: String) -> Observable<Result<Data, ReJordError>> {
+    return self.repository.login(id: id, password: password)
   }
   
   

@@ -12,4 +12,5 @@ enum ReJordSteps: Step {
   case signInIsRequired
   case signUpIsRequired
   case signUpCompleteSceneIsRequired(signUpResult: SignUpResult)
+  case homeSceneIsRequired
 }

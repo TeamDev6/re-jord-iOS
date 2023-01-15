@@ -19,7 +19,7 @@ public enum LoginTextFieldInputType {
   case pwd
 }
 
-final class LoginTextFieldInputView: UIView, View {
+final class LoginTextFieldInputView: UIView {
   
   
   // MARK: - components
@@ -43,16 +43,10 @@ final class LoginTextFieldInputView: UIView, View {
   var viewType: LoginTextFieldInputType?
   
   
-  // MARK: - dispose bag
-  
-  var disposeBag = DisposeBag()
-  
-  
   // MARK: - life cycle
   
-  convenience init(reactor: LoginReactor, upperLabelText text: String, inputType: LoginTextFieldInputType) {
+  convenience init(upperLabelText text: String, inputType: LoginTextFieldInputType) {
     self.init(frame: .zero)
-    self.reactor = reactor
     self.upperLabel.text = text
     self.viewType = inputType
     switch inputType {
@@ -111,12 +105,5 @@ final class LoginTextFieldInputView: UIView, View {
       }
     }
   }
-  
-  
-  // MARK: - bind reactor
-  
-  func bind(reactor: LoginReactor) {
     
-  }
-  
 }

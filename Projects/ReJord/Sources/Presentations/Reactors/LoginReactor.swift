@@ -19,6 +19,7 @@ final class LoginReactor: Reactor, Stepper {
   enum Action {
     case gotoSignUpScene
     case errorOccured
+    case loginAction(userId: String, userPassword: String)
   }
   
   enum Mutation {
@@ -35,7 +36,7 @@ final class LoginReactor: Reactor, Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
-  private let usecase: SignUpUsecase
+  private let loginUsecase: LoginUsecase
   
   
   // MARK: - DisposeBag
@@ -45,8 +46,8 @@ final class LoginReactor: Reactor, Stepper {
   
   // MARK: - Life Cycle
   
-  init(repository: SignUpRepository) {
-    self.usecase = SignUpUsecase(repository: repository)
+  init(repository: LoginRepository) {
+    self.loginUsecase = LoginUsecase(repository: repository)
   }
   
   deinit {
@@ -64,6 +65,11 @@ final class LoginReactor: Reactor, Stepper {
       return .empty()
     case .errorOccured:
       return .empty()
+    case .loginAction(let id, let password):
+//      self.steps.accept(ReJordSteps.homeSceneIsRequired)
+      self.login(id: id, password: password)
+        
+      return .empty()
     }
   }
   
@@ -72,6 +78,10 @@ final class LoginReactor: Reactor, Stepper {
   }
   
   // MARK: - Private Functions
+  
+  private func login(id: String, password: String) -> Observable<Result<Data, ReJordError>> {
+    return self.loginUsecase.login(id: id, password: password)
+  }
   
   
 }

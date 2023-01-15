@@ -10,5 +10,5 @@ import Foundation
 import RxSwift
 
 protocol LoginRepository {
-  
+  func login(id: String, password: String) -> Observable<Result<Data, ReJordError>>
 }

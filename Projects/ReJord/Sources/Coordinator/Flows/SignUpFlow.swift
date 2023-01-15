@@ -11,6 +11,10 @@ import UIKit
 
 class SignUpFlow: Flow {
   
+  enum PushTransition {
+    case pushToSignUpCompletViewController(signUpResult: SignUpResult)
+  }
+  
   
   // MARK: - Private Properties
   
@@ -42,18 +46,16 @@ class SignUpFlow: Flow {
       return .none
     case .signUpIsRequired:
       return .none
-    case .signUpCompleteSceneIsRequired:
-      return self.push(to: step)
+    case .signUpCompleteSceneIsRequired(let signUpResult):
+      return self.push(to: .pushToSignUpCompletViewController(signUpResult: signUpResult))
+    case .homeSceneIsRequired:
+      return .one(flowContributor: .forwardToParentFlow(withStep: ReJordSteps.homeSceneIsRequired))
     }
   }
   
-  private func push(to step: ReJordSteps) -> FlowContributors {
+  private func push(to step: PushTransition) -> FlowContributors {
     switch step {
-    case .signInIsRequired:
-      return .none
-    case .signUpIsRequired:
-      return .none
-    case .signUpCompleteSceneIsRequired(let signUpResult):
+    case .pushToSignUpCompletViewController(let signUpResult):
       let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor, signUpResult: signUpResult)
       self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
       return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))

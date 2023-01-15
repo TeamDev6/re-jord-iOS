@@ -13,6 +13,7 @@ enum ReJordAPI {
   case userSignUp(id: String, pwd: String)
   case idValidate(id: String)
   case nicknameValidate(nickname: String, uid: String)
+  case login(id: String, password: String)
 }
 
 extension ReJordAPI: TargetType {
@@ -29,6 +30,8 @@ extension ReJordAPI: TargetType {
       return "/v1/users/\(id)/duplication"
     case .nicknameValidate(_, let uid):
       return "/v1/users/\(uid)"
+    case .login:
+      return "/v1/login"
     }
   }
   
@@ -40,6 +43,8 @@ extension ReJordAPI: TargetType {
       return .get
     case .nicknameValidate:
       return .patch
+    case .login:
+      return .post
     }
   }
   
@@ -52,6 +57,8 @@ extension ReJordAPI: TargetType {
       return .requestPlain
     case .nicknameValidate(let nickname, _):
       return .requestParameters(parameters: ["nickname": nickname], encoding: JSONEncoding.default)
+    case .login(id: let id, password: let password):
+      return .requestParameters(parameters: ["useriId": id, "password": password], encoding: JSONEncoding.default)
     }
   }
   var validationType: ValidationType {
@@ -67,6 +74,8 @@ extension ReJordAPI: TargetType {
     case .idValidate:
       return header
     case .nicknameValidate:
+      return header
+    case .login(id: let id, password: let password):
       return header
     }
   }

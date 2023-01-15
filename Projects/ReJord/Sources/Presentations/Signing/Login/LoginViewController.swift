@@ -58,7 +58,10 @@ final class LoginViewController: UIViewController, Layoutable, View {
       self?.reactor?.action.onNext(.errorOccured)
       return LoginTextFieldInputView(frame: .zero)
     }
-    return LoginTextFieldInputView(reactor: reactor, upperLabelText: ReJordUIStrings.id, inputType: .id)
+    return LoginTextFieldInputView(
+      upperLabelText: ReJordUIStrings.id,
+      inputType: .id
+    )
   }()
   private lazy var passwordInputView: LoginTextFieldInputView = { [weak self] in
     guard let self,
@@ -67,7 +70,6 @@ final class LoginViewController: UIViewController, Layoutable, View {
       return LoginTextFieldInputView(frame: .zero)
     }
     return LoginTextFieldInputView(
-      reactor: reactor,
       upperLabelText: ReJordUIStrings.password,
       inputType: .pwd
     )
@@ -167,6 +169,14 @@ final class LoginViewController: UIViewController, Layoutable, View {
   func bind(reactor: LoginReactor) {
     
     // action
+    
+    self.loginButton.rx
+      .tap
+      .asDriver()
+      .drive(onNext: { _ in
+        self.reactor?.action.onNext(.loginAction(userId: <#T##String#>, userPassword: <#T##String#>))
+      })
+      .disposed(by: self.disposeBag)
     
   }
   
