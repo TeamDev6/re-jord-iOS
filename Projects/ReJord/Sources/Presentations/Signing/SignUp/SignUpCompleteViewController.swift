@@ -65,6 +65,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     label.text = "닉네임은 영문 대/소문자, 한글, 숫자로 등록 가능하며,\n최소 2글자~최대 10글자까지 등록 가능합니다."
     label.numberOfLines = 2
   }
+  private let confirmButton = ConfirmButton(text: "등록완료")
   
   // MARK: - disposebag
   
@@ -80,7 +81,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       settableString = "닉네임을 등록해보세요."
     case .duplicated:
       settableString = "이미 사용중인 닉네임입니다."
-    case .overCount:
+    case .invalidCount:
       settableString = "형식에 맞지 않은 닉네임입니다."
     case .valid:
       settableString = "사용가능한 닉네임입니다."
@@ -95,7 +96,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       settableColor = .gray
     case .duplicated:
       settableColor = ReJordUIAsset.warningRed.color
-    case .overCount:
+    case .invalidCount:
       settableColor = ReJordUIAsset.warningRed.color
     case .valid:
       settableColor = ReJordUIAsset.mainGreen.color
@@ -139,11 +140,17 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     print("aaaaa")
   }
   
+  // MARK: - private properties
+  
+  var signUpResult: SignUpResult?
+  
+  
   // MARK: - life cycles
   
-  init(reactor: SignUpReactor) {
+  init(reactor: SignUpReactor, signUpResult: SignUpResult) {
     super.init(nibName: nil, bundle: nil)
     self.reactor = reactor
+    self.signUpResult = signUpResult
   }
   
   override func viewDidLoad() {
@@ -194,6 +201,9 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       make.top.equalTo(self.welcomeStack.snp.bottom).offset(20)
       make.leading.trailing.equalToSuperview()
     }
+    self.confirmButton.snpLayout(baseView: self.baseView) { make in
+      make.bottom.leading.trailing.equalToSuperview()
+    }
   }
   
   
@@ -219,7 +229,8 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       .debounce(.seconds(2), scheduler: MainScheduler.asyncInstance)
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] text in
-        self?.reactor?.action.onNext(.nickNameValueInserted(text: text))
+        guard let signUpResult = self?.signUpResult else { return }
+        self?.reactor?.action.onNext(.nickNameValueInserted(text: text, signUpResult: signUpResult))
       })
       .disposed(by: self.disposeBag)
   }

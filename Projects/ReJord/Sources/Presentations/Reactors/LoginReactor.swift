@@ -59,8 +59,8 @@ final class LoginReactor: Reactor, Stepper {
   func mutate(action: Action) -> Observable<Mutation> {
     switch action {
     case .gotoSignUpScene:
-//      self.steps.accept(ReJordSteps.signUpIsRequired)
-      self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
+      self.steps.accept(ReJordSteps.signUpIsRequired)
+//      self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
       return .empty()
     case .errorOccured:
       return .empty()

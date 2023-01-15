@@ -17,7 +17,7 @@ final class LoginUsecase {
     self.repository = repository
   }
   
-  func signUp(userId id: String, userPassword password: String) -> Observable<Result<Data, ReJordError>> {
+  func signUp(userId id: String, userPassword password: String) -> Observable<Result<SignUpResult, ReJordError>> {
     return self.repository.signUp(userId: id, userPassword: password)
   }
   

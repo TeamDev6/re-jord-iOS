@@ -15,6 +15,6 @@ enum ErrorFrom {
 enum ReJordError: Error {
   case serverError
   case cantBindReactor
-  
+  case jsonDecodingFail
 }
 

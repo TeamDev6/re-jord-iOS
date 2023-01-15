@@ -11,5 +11,5 @@ import RxFlow
 enum ReJordSteps: Step {
   case signInIsRequired
   case signUpIsRequired
-  case signUpCompleteSceneIsRequired
+  case signUpCompleteSceneIsRequired(signUpResult: SignUpResult)
 }

@@ -17,7 +17,7 @@ final class SignUpUsecase {
     self.repository = repository
   }
   
-  func signUp(userId id: String, userPassword password: String) -> Observable<Result<Data, ReJordError>> {
+  func signUp(userId id: String, userPassword password: String) -> Observable<Result<SignUpResult, ReJordError>> {
     return self.repository.signUp(userId: id, userPassword: password)
   }
   
@@ -25,8 +25,8 @@ final class SignUpUsecase {
     return self.repository.checkId(id: id)
   }
   
-  func checkNicknameDuplicated(nickname: String) -> Observable<Result<Data, ReJordError>> {
-    return self.repository.checkNickname(nickname: nickname)
+  func checkNicknameDuplicated(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
+    return self.repository.checkNickname(nickname: nickname, uid: uid)
   }
   
 }

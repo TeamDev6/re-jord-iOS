@@ -27,7 +27,7 @@ enum IdAvailableType {
 enum NickNameStatusType {
   case empty
   case duplicated
-  case overCount
+  case invalidCount
   case valid
 }
 
@@ -43,7 +43,7 @@ final class SignUpReactor: Reactor, Stepper {
     case checkIdDuplication
     case signUpAction
     case errorOccured
-    case nickNameValueInserted(text: String?)
+    case nickNameValueInserted(text: String?, signUpResult: SignUpResult?)
   }
   
   enum Mutation {
@@ -70,13 +70,13 @@ final class SignUpReactor: Reactor, Stepper {
   let disposeBag = DisposeBag()
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
-  private let usecase: SignUpUsecase
+  private let signUpUsecase: SignUpUsecase
   
   
   // MARK: - Life Cycle
   
   init(repository: SignUpRepository) {
-    usecase = SignUpUsecase(repository: repository)
+    self.signUpUsecase = SignUpUsecase(repository: repository)
   }
   
   deinit {
@@ -110,26 +110,26 @@ final class SignUpReactor: Reactor, Stepper {
       return self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
         .map { result in
           switch result {
-          case .success(_):
-            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
+          case .success(let signUpResult):
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(signUpResult), forKey: "signUpResult")
+            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired(signUpResult: signUpResult))
             return .empty
           case .failure(let error):
             self.errorListener.accept(error)
-            // TODO: 테스트 이후 step 정상화 할 것
-            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
             return .empty
           }
         }
     case .errorOccured:
       self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
-    case .nickNameValueInserted(text: let text):
-      guard let text = text else { return .empty() }
-      guard !text.isEmpty else { return .just(.setNicknameStatus(status: .empty)) }
-      if text.count < 2 || text.count > 10 {
-        return .just(.setNicknameStatus(status: .overCount))
+    case .nickNameValueInserted(let text, let signUpResult):
+      guard let text = text,
+            let uid = signUpResult?.uid,
+            !text.isEmpty else { return .empty() }
+      guard text.count >= 2 || text.count < 10 else {
+        return .just(.setNicknameStatus(status: .invalidCount))
       }
-      return self.checkNicknameDuplicated(nickname: text)
+      return self.checkNicknameDuplicated(nickname: text, uid: uid)
         .map { result in
           switch result {
           case .success(_):
@@ -168,16 +168,16 @@ final class SignUpReactor: Reactor, Stepper {
   
   // MARK: - Private Functions
   
-  private func userSignUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>> {
-    return self.usecase.signUp(userId: userId, userPassword: userPassword)
+  private func userSignUp(userId: String, userPassword: String) -> Observable<Result<SignUpResult, ReJordError>> {
+    return self.signUpUsecase.signUp(userId: userId, userPassword: userPassword)
   }
   
   private func checkIDDuplicated(id: String) -> Observable<Result<Data, ReJordError>> {
-    return self.usecase.checkIdDuplication(id: id)
+    return self.signUpUsecase.checkIdDuplication(id: id)
   }
   
-  private func checkNicknameDuplicated(nickname: String) -> Observable<Result<Data, ReJordError>> {
-    return self.usecase.checkNicknameDuplicated(nickname: nickname)
+  private func checkNicknameDuplicated(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
+    return self.signUpUsecase.checkNicknameDuplicated(nickname: nickname, uid: uid)
   }
   
   

@@ -14,13 +14,18 @@ final class SignUpRepositoryImplement: SignUpRepository {
   
   var provider = NetworkProvider<ReJordAPI>()
     
-  func signUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>> {
+  func signUp(userId: String, userPassword: String) -> Observable<Result<SignUpResult, ReJordError>> {
     return self.provider
       .request(target: .userSignUp(id: userId, pwd: userPassword))
       .map({ result in
         switch result {
         case .success(let data):
-          return .success(data)
+          do {
+            let result = try JSONDecoder().decode(SignUpResult.self, from: data)
+            return .success(result)
+          } catch {
+            return .failure(ReJordError.jsonDecodingFail)
+          }
         case .failure(let error):
           return .failure(error)
         }
@@ -40,9 +45,9 @@ final class SignUpRepositoryImplement: SignUpRepository {
       }
   }
   
-  func checkNickname(nickname: String) -> Observable<Result<Data, ReJordError>> {
+  func checkNickname(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
     return self.provider
-      .request(target: .nicknameValidate(nickname: nickname))
+      .request(target: .nicknameValidate(nickname: nickname, uid: uid))
       .map { result in
         switch result {
         case .success(let data):
