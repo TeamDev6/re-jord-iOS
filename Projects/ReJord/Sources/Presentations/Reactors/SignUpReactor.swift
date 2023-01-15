@@ -24,6 +24,13 @@ enum IdAvailableType {
   case duplicated
 }
 
+enum NickNameStatusType {
+  case empty
+  case duplicated
+  case overCount
+  case valid
+}
+
 final class SignUpReactor: Reactor, Stepper {
   
   
@@ -45,7 +52,7 @@ final class SignUpReactor: Reactor, Stepper {
     case passwordSet(password: String?)
     case passwordConfirmSet(password: String?)
     case setIdValidationResult(availbale: Bool)
-    case setNicknameInputCounts(textCount: Int)
+    case setNicknameStatus(status: NickNameStatusType)
   }
   
   struct State {
@@ -53,7 +60,7 @@ final class SignUpReactor: Reactor, Stepper {
     var passwordValue: String? = ""
     var passwordIsEqual: PasswordConfirmType = .empty
     var idIsAvailable: IdAvailableType = .checkYet
-    var nickNameCountOverTen: Bool = false
+    var nicknameStatus: NickNameStatusType = .empty
   }
   
   // MARK: - Properties
@@ -89,8 +96,7 @@ final class SignUpReactor: Reactor, Stepper {
       return .just(.passwordConfirmSet(password: value))
     case .checkIdDuplication:
       guard let id = self.currentState.idValue else { return .empty() }
-//      return .just(.setIdValidationResult(availbale: true))
-      return self.check(id: id)
+      return self.checkIDDuplicated(id: id)
         .map { result in
           switch result {
           case .success(_):
@@ -119,7 +125,19 @@ final class SignUpReactor: Reactor, Stepper {
       return .empty()
     case .nickNameValueInserted(text: let text):
       guard let text = text else { return .empty() }
-      return .just(.setNicknameInputCounts(textCount: text.count))
+      guard !text.isEmpty else { return .just(.setNicknameStatus(status: .empty)) }
+      if text.count < 2 || text.count > 10 {
+        return .just(.setNicknameStatus(status: .overCount))
+      }
+      return self.checkNicknameDuplicated(nickname: text)
+        .map { result in
+          switch result {
+          case .success(_):
+            return .setNicknameStatus(status: .valid)
+          case .failure(_):
+            return .setNicknameStatus(status: .duplicated)
+          }
+        }
     }
   }
   
@@ -142,8 +160,8 @@ final class SignUpReactor: Reactor, Stepper {
       newState.passwordIsEqual = state.passwordValue == passwordConfirm ? .equal : .notEqual
     case .setIdValidationResult(availbale: let availbale):
       newState.idIsAvailable = availbale ? .available : .duplicated
-    case .setNicknameInputCounts(textCount: let textCount):
-      newState.nickNameCountOverTen = textCount > 10
+    case .setNicknameStatus(let status):
+      newState.nicknameStatus = status
     }
     return newState
   }
@@ -154,8 +172,13 @@ final class SignUpReactor: Reactor, Stepper {
     return self.usecase.signUp(userId: userId, userPassword: userPassword)
   }
   
-  private func check(id: String) -> Observable<Result<Data, ReJordError>> {
+  private func checkIDDuplicated(id: String) -> Observable<Result<Data, ReJordError>> {
     return self.usecase.checkIdDuplication(id: id)
   }
+  
+  private func checkNicknameDuplicated(nickname: String) -> Observable<Result<Data, ReJordError>> {
+    return self.usecase.checkNicknameDuplicated(nickname: nickname)
+  }
+  
   
 }

@@ -25,4 +25,8 @@ final class SignUpUsecase {
     return self.repository.checkId(id: id)
   }
   
+  func checkNicknameDuplicated(nickname: String) -> Observable<Result<Data, ReJordError>> {
+    return self.repository.checkNickname(nickname: nickname)
+  }
+  
 }

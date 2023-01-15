@@ -12,5 +12,6 @@ import RxSwift
 protocol SignUpRepository {
   func signUp(userId: String, userPassword: String) -> Observable<Result<Data, ReJordError>>
   func checkId(id: String) -> Observable<Result<Data, ReJordError>>
+  func checkNickname(nickname: String) -> Observable<Result<Data, ReJordError>>
   
 }

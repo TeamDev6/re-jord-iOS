@@ -40,6 +40,20 @@ final class SignUpRepositoryImplement: SignUpRepository {
       }
   }
   
+  func checkNickname(nickname: String) -> Observable<Result<Data, ReJordError>> {
+    return self.provider
+      .request(target: .nicknameValidate(nickname: nickname))
+      .map { result in
+        switch result {
+        case .success(let data):
+          print(data)
+          return .success(data)
+        case .failure(let error):
+          return .failure(error)
+        }
+      }
+  }
+  
   
   
 }
