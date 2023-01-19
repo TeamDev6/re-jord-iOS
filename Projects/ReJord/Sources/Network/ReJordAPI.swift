@@ -58,7 +58,7 @@ extension ReJordAPI: TargetType {
     case .nicknameValidate(let nickname, _):
       return .requestParameters(parameters: ["nickname": nickname], encoding: JSONEncoding.default)
     case .login(id: let id, password: let password):
-      return .requestParameters(parameters: ["useriId": id, "password": password], encoding: JSONEncoding.default)
+      return .requestParameters(parameters: ["userId": id, "password": password], encoding: JSONEncoding.default)
     }
   }
   var validationType: ValidationType {
@@ -75,7 +75,7 @@ extension ReJordAPI: TargetType {
       return header
     case .nicknameValidate:
       return header
-    case .login(id: let id, password: let password):
+    case .login:
       return header
     }
   }

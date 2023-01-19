@@ -12,10 +12,15 @@ import RxSwift
 import RxCocoa
 import ReJordUI
 
-open class SigningTextFieldView: UIView {
+@objc protocol SigningTextFieldViewDelegate: AnyObject {
+  @objc optional func textInput(view: SigningTextFieldView, text: String?)
+}
+
+class SigningTextFieldView: UIView {
   
   // MARK: - Private Properties
   
+  weak var delegate: SigningTextFieldViewDelegate?
   private let disposeBag = DisposeBag()
   private let tapGestrue = UITapGestureRecognizer()
   
@@ -34,6 +39,8 @@ open class SigningTextFieldView: UIView {
     self.setupBaseView()
     self.setupTextField(placeholderText: text, rightImage: image, isSecure: textSecure)
     self.setLayout()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(textDidChange(_:)), name: UITextField.textDidChangeNotification, object: self.baseTextField)
   }
   
   required public init?(coder: NSCoder) {
@@ -43,6 +50,11 @@ open class SigningTextFieldView: UIView {
   
   
   // MARK: - private functions
+  
+  @objc private func textDidChange(_ notification: Notification) {
+    guard let textField = notification.object as? UITextField else { return }
+    self.delegate?.textInput?(view: self, text: textField.text)
+  }
   
   private func setupBaseView() {
     self.layer.masksToBounds = false
@@ -103,5 +115,37 @@ open class SigningTextFieldView: UIView {
     }
   }
   
+}
+
+class SigningTextFieldViewDelegateProxy: DelegateProxy<SigningTextFieldView, SigningTextFieldViewDelegate>, DelegateProxyType, SigningTextFieldViewDelegate {
+  
+  static func registerKnownImplementations() {
+    self.register { (viewController) -> SigningTextFieldViewDelegateProxy in
+      SigningTextFieldViewDelegateProxy(parentObject: viewController, delegateProxy: self)
+    }
+  }
+  
+  static func currentDelegate(for object: SigningTextFieldView) -> SigningTextFieldViewDelegate? {
+    return object.delegate
+  }
+  
+  static func setCurrentDelegate(_ delegate: SigningTextFieldViewDelegate?, to object: SigningTextFieldView) {
+    return object.delegate = delegate
+  }
+  
+}
+
+extension Reactive where Base == SigningTextFieldView {
+  
+  var delegate: DelegateProxy<SigningTextFieldView, SigningTextFieldViewDelegate> {
+    return SigningTextFieldViewDelegateProxy.proxy(for: self.base)
+  }
+  
+  var textInput: Observable<String?> {
+    return delegate.methodInvoked(#selector(SigningTextFieldViewDelegate.textInput(view:text:)))
+      .map { params in
+        return params[1] as? String
+      }
+  }
 }
 

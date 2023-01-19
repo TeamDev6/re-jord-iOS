@@ -70,7 +70,7 @@ extension NetworkProvider: Networkable {
         .map { response in
           return .success(response.data)
         }
-        .catch { error in
+        .catch { _ in
           return .just(.failure(.serverError))
         }
     } else {
@@ -85,8 +85,7 @@ extension NetworkProvider: Networkable {
             .map({ response in
               return .success(response.data)
             })
-            .retry(3)
-            .catch { error in
+            .catch { _ in
               return .just(.failure(.serverError))
             }
         }

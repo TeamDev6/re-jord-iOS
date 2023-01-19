@@ -19,15 +19,21 @@ final class LoginReactor: Reactor, Stepper {
   enum Action {
     case gotoSignUpScene
     case errorOccured
-    case loginAction(userId: String, userPassword: String)
+    case idInput(id: String?)
+    case passwordInput(password: String?)
+    case loginAction
   }
   
   enum Mutation {
-    
+    case empty
+    case setId(id: String?)
+    case setPassword(password: String?)
   }
   
   struct State {
     
+    var idValue: String = ""
+    var passwordValue: String = ""
   }
   
   // MARK: - Properties
@@ -61,20 +67,43 @@ final class LoginReactor: Reactor, Stepper {
     switch action {
     case .gotoSignUpScene:
       self.steps.accept(ReJordSteps.signUpIsRequired)
-//      self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired)
       return .empty()
     case .errorOccured:
       return .empty()
-    case .loginAction(let id, let password):
-//      self.steps.accept(ReJordSteps.homeSceneIsRequired)
-      self.login(id: id, password: password)
+    case .idInput(id: let id):
+      return .just(.setId(id: id))
+    case .passwordInput(password: let password):
+      return .just(.setPassword(password: password))
+    case .loginAction:
+      return self.login(id: currentState.idValue, password: currentState.passwordValue)
+        .map { result in
+          switch result {
+          case .success(_):
+            self.steps.accept(ReJordSteps.homeSceneIsRequired)
+            return .empty
+          case .failure(_):
+            self.action.onNext(.errorOccured)
+            return .empty
+          }
+        }
         
-      return .empty()
+      
     }
   }
   
   func reduce(state: State, mutation: Mutation) -> State {
-    
+    var newState = state
+    switch mutation {
+    case .empty:
+      break
+    case .setId(let id):
+      guard let id = id else { return newState }
+      newState.idValue = id
+    case .setPassword(let password):
+      guard let password = password else { return newState }
+      newState.passwordValue = password
+    }
+    return newState
   }
   
   // MARK: - Private Functions

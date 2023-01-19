@@ -37,7 +37,10 @@ final class NicknameTextFieldView: UIView {
   // MARK: - private func
   
   @objc private func textDidChange(_ notification: Notification) {
-    self.delegate?.textInput?(view: self, value: self.nicknameTextField.text)
+    guard let textField = notification.object as? UITextField else {
+      return
+    }
+    self.delegate?.textInput?(view: self, value: textField.text)
   }
   
   
@@ -71,6 +74,7 @@ final class NicknameTextFieldView: UIView {
 }
 
 class NickNameTextFieldViewDelegateProxy: DelegateProxy<NicknameTextFieldView, NickNameTextFieldViewDelegate>, DelegateProxyType, NickNameTextFieldViewDelegate {
+  
   static func registerKnownImplementations() {
     self.register { (viewController) -> NickNameTextFieldViewDelegateProxy in
       NickNameTextFieldViewDelegateProxy(parentObject: viewController, delegateProxy: self)

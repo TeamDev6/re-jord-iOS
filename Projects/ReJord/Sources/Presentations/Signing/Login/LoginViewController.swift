@@ -19,10 +19,7 @@ final class LoginViewController: UIViewController, Layoutable, View {
   
   
   // MARK: - components
-  
-  // test
-  private let moveTestButton = UIButton().then { $0.backgroundColor = .blue }
-  
+ 
   private var baseView = UIView().then {
     $0.backgroundColor = .clear
   }
@@ -56,20 +53,18 @@ final class LoginViewController: UIViewController, Layoutable, View {
     guard let self,
           let reactor = self.reactor else {
       self?.reactor?.action.onNext(.errorOccured)
-      return LoginTextFieldInputView(frame: .zero)
+      return LoginTextFieldInputView()
     }
-    return LoginTextFieldInputView(
-      upperLabelText: ReJordUIStrings.id,
-      inputType: .id
-    )
+    return LoginTextFieldInputView(reactor: reactor, upperLabelText: ReJordUIStrings.id, inputType: .id)
   }()
   private lazy var passwordInputView: LoginTextFieldInputView = { [weak self] in
     guard let self,
           let reactor = self.reactor else {
       self?.reactor?.action.onNext(.errorOccured)
-      return LoginTextFieldInputView(frame: .zero)
+      return LoginTextFieldInputView()
     }
     return LoginTextFieldInputView(
+      reactor: reactor,
       upperLabelText: ReJordUIStrings.password,
       inputType: .pwd
     )
@@ -142,20 +137,17 @@ final class LoginViewController: UIViewController, Layoutable, View {
       make.height.equalTo(self.loginSubTitleLabel.intrinsicContentSize.height)
       make.leading.equalToSuperview()
     }
-    self.loginComponentStack.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
+    self.loginComponentStack.snpLayout(baseView: self.baseView) { make in
       make.top.equalTo(self.loginSubTitleLabel.snp.bottom).offset(35)
       make.width.equalToSuperview()
       make.leading.trailing.equalToSuperview()
     }
-    self.loginButton.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
+    self.loginButton.snpLayout(baseView: self.baseView) { make in
       make.top.equalTo(self.loginComponentStack.snp.bottom).offset(25)
       make.leading.trailing.equalToSuperview()
       make.height.equalTo(47)
     }
-    self.gotoSignUpGestureLabel.snpLayout(baseView: self.baseView) { [weak self] make in
-      guard let self else { return }
+    self.gotoSignUpGestureLabel.snpLayout(baseView: self.baseView) { make in
       make.top.equalTo(self.loginButton.snp.bottom).offset(31)
       make.height.equalTo(self.gotoSignUpGestureLabel.intrinsicContentSize.height)
       make.centerX.equalToSuperview()
@@ -173,8 +165,8 @@ final class LoginViewController: UIViewController, Layoutable, View {
     self.loginButton.rx
       .tap
       .asDriver()
-      .drive(onNext: { _ in
-        self.reactor?.action.onNext(.loginAction(userId: <#T##String#>, userPassword: <#T##String#>))
+      .drive(onNext: { [weak self] _ in
+        self?.reactor?.action.onNext(.loginAction)
       })
       .disposed(by: self.disposeBag)
     

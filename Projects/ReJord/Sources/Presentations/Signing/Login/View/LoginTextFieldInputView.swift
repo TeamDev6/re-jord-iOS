@@ -19,7 +19,7 @@ public enum LoginTextFieldInputType {
   case pwd
 }
 
-final class LoginTextFieldInputView: UIView {
+final class LoginTextFieldInputView: UIView, View {
   
   
   // MARK: - components
@@ -43,10 +43,20 @@ final class LoginTextFieldInputView: UIView {
   var viewType: LoginTextFieldInputType?
   
   
+  // MARK: - dispose bag
+  
+  var disposeBag = DisposeBag()
+  
+  
   // MARK: - life cycle
   
-  convenience init(upperLabelText text: String, inputType: LoginTextFieldInputType) {
-    self.init(frame: .zero)
+  init() {
+    super.init(frame: CGRect.zero)
+  }
+
+  init(reactor: LoginReactor, upperLabelText text: String, inputType: LoginTextFieldInputType) {
+    super.init(frame: CGRect.zero)
+    
     self.upperLabel.text = text
     self.viewType = inputType
     switch inputType {
@@ -69,10 +79,8 @@ final class LoginTextFieldInputView: UIView {
     Task {
       await self.configurateUI(inputType: inputType)
     }
-  }
-  
-  override public init(frame: CGRect) {
-    super.init(frame: frame)
+    
+    self.reactor = reactor
   }
   
   required public init?(coder: NSCoder) {
@@ -105,5 +113,25 @@ final class LoginTextFieldInputView: UIView {
       }
     }
   }
+  
+  
+  // MARK: - bind reactor
+  
+  func bind(reactor: LoginReactor) {
     
+    self.signingTextFieldView?.rx.textInput
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] text in
+        guard let viewType = self?.viewType else { return }
+        switch viewType {
+        case .id:
+          self?.reactor?.action.onNext(.idInput(id: text))
+        case .pwd:
+          self?.reactor?.action.onNext(.passwordInput(password: text))
+        }
+      })
+      .disposed(by: self.disposeBag)
+    
+  }
+  
 }
