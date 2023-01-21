@@ -30,12 +30,52 @@ extension Project {
       name: name,
       organizationName: organizationName,
       packages: [],
-      settings: .settings(base: baseSettings),
+      settings: .settings(
+        base: baseSettings,
+        configurations: [
+          .debug(name: "Debug", xcconfig: .relativeToRoot("Configurations/XCConfig/Debug.xcconfig")),
+          .debug(name: "Alpha", xcconfig: .relativeToRoot("Configurations/XCConfig/Alpha.xcconfig")),
+          .debug(name: "Release", xcconfig: .relativeToRoot("Configurations/XCConfig/Release.xcconfig"))
+        ]
+      ),
       targets: targets,
       schemes: [
-        Scheme(name: "\(name)-Debug"),
-        Scheme(name: "\(name)-Release"),
-        Scheme(name: "\(name)-Alpha")
+        Scheme(name: "\(name)-Debug",
+               shared: true,
+               buildAction: BuildAction(targets: ["ReJord"]),
+               testAction: TestAction.targets(
+                ["\(name)Tests"],
+                configuration: "Debug",
+                diagnosticsOptions: [.mainThreadChecker]
+               ),
+               runAction: RunAction.runAction(configuration: "Debug"),
+               archiveAction: ArchiveAction.archiveAction(configuration: "Debug"),
+               analyzeAction: AnalyzeAction.analyzeAction(configuration: "Debug")
+              ),
+        Scheme(name: "\(name)-Alpha",
+               shared: true,
+               buildAction: BuildAction(targets: ["ReJord"]),
+               testAction: TestAction.targets(
+                ["\(name)Tests"],
+                configuration: "Alpha",
+                diagnosticsOptions: [.mainThreadChecker]
+               ),
+               runAction: RunAction.runAction(configuration: "Alpha"),
+               archiveAction: ArchiveAction.archiveAction(configuration: "Alpha"),
+               analyzeAction: AnalyzeAction.analyzeAction(configuration: "Alpha")
+              ),
+        Scheme(name: "\(name)-Release",
+               shared: true,
+               buildAction: BuildAction(targets: ["ReJord"]),
+               testAction: TestAction.targets(
+                ["\(name)Tests"],
+                configuration: "Release",
+                diagnosticsOptions: [.mainThreadChecker]
+               ),
+               runAction: RunAction.runAction(configuration: "Release"),
+               archiveAction: ArchiveAction.archiveAction(configuration: "Release"),
+               analyzeAction: AnalyzeAction.analyzeAction(configuration: "Release")
+              ),
       ],
       additionalFiles: [],
       resourceSynthesizers: []
@@ -111,19 +151,20 @@ private extension Project {
                          resources: ["Resources/**"],
                          headers: Headers.headers(public: FileList(arrayLiteral: "RxCocoa-Swift.h")),
                          dependencies: dependencies)
+    // TEST 필요 시 주석해제
+//    let tests = Target(name: "\(name)Tests",
+//                       platform: platform,
+//                       product: .unitTests,
+//                       bundleId: "team.dev6.\(name)Tests",
+//                       infoPlist: .default,
+//                       sources: ["Tests/**"],
+//                       resources: [],
+//                       dependencies: [
+//                        .target(name: name),
+//                        .external(name: "RxTest")
+//                       ])
+    return [sources, /* tests */ ]
     
-    let tests = Target(name: "\(name)Tests",
-                       platform: platform,
-                       product: .unitTests,
-                       bundleId: "team.dev6.\(name)Tests",
-                       infoPlist: .default,
-                       sources: ["Tests/**"],
-                       resources: [],
-                       dependencies: [
-                        .target(name: name),
-                        .external(name: "RxTest")
-                       ])
-    return [sources, tests]
   }
   
   static func makeAppTargets(
@@ -149,18 +190,20 @@ private extension Project {
       dependencies: dependencies
     )
     
-    let testTarget = Target(
-      name: "\(name)Tests",
-      platform: platform,
-      product: .unitTests,
-      bundleId: "team.dev6.Tests",
-      infoPlist: .default,
-      sources: ["Tests/**"],
-      dependencies: [
-        .target(name: "\(name)"),
-        .external(name: "RxTest")
-      ])
-    return [mainTarget, testTarget]
+    // TODO: Test 필요 시 주석해제
+//    let testTarget = Target(
+//      name: "\(name)Tests",
+//      platform: platform,
+//      product: .unitTests,
+//      bundleId: "team.dev6.Tests",
+//      infoPlist: .default,
+//      sources: ["Tests/**"],
+//      dependencies: [
+//        .target(name: "\(name)"),
+//        .external(name: "RxTest")
+//      ])
+    
+    return [mainTarget, /* testTarget */]
   }
   
 }

@@ -9,6 +9,7 @@
 import RxFlow
 import RxSwift
 import UIKit
+import FirebaseCore
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
@@ -19,6 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     
+//    FirebaseApp.configure()
+    
     coordinator.rx.willNavigate
       .subscribe { flow, step in
         print("will navigate flow ~> \(flow), with step ~> \(step)")
@@ -26,14 +29,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(windowScene: windowScene)
     
-    let signUpFlow = SignUpFlow()
+    let signInFlow = LoginFlow()
     
     self.coordinator.coordinate(
-      flow: signUpFlow,
+      flow: signInFlow,
       with: AppStepper()
     )
     
-    Flows.use(signUpFlow, when: .created) { root in
+    Flows.use(signInFlow, when: .created) { root in
       self.window?.rootViewController = root
       self.window?.makeKeyAndVisible()
     }

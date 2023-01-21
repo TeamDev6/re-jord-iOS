@@ -44,7 +44,7 @@ open class ConfirmButton: UIButton {
   private func setupButton(titleText: String) {
     self.setButtonProperties(
       cornerRadius: 7,
-      backgroundColor: .gray,
+      backgroundColor: ReJordUIAsset.mainGreen.color,
       text: titleText,
       textColor: .white,
       font: .roboto(fontType: .bold, fontSize: 20)

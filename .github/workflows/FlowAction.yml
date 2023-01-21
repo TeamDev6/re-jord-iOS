@@ -3,20 +3,43 @@
 
 name: Swift
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "feature/*" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-jobs:
-  build:
+# jobs:
+#   build:
+#     runs-on: macos-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+    
+#     - name: Select Xcode Version
+#       uses: maxim-lobanov/setup-xcode@v1
+#       with:
+#         xcode-version: latest-stable
 
-    runs-on: macos-latest
+#     - name: Install SSH key    
+#       uses: shimataro/ssh-key-action@v2
+#       with:
+#         key: ${{ secrets.SSH_KEY }}
+#         known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+#     - name: install Tuist
+#       run: curl -Ls https://install.tuist.io | bash
+
+#     - name: Tuist fetch -u
+#       run: tuist fetch -u
+
+#     - name: Tuist generate
+#       run: tuist generate
+
+#     - name: ls -al
+#       run: ls -al
+    
+#     - name: Testflight Upload
+#       run: fastlane testflight_upload
+#       env:
+#         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}

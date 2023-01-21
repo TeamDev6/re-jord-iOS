@@ -18,10 +18,13 @@ let project = Project.app(
     .external(name: "Kingfisher"),
     .external(name: "NeedleFoundation"),
     .external(name: "Moya"),
+    .external(name: "RxMoya"),
     .external(name: "Alamofire"),
     .external(name: "SnapKit"),
     .external(name: "SwiftyJSON"),
     .external(name: "Then"),
+    .external(name: "FirebaseAnalytics"),
+    .external(name: "FirebaseCrashlytics"),
     TargetDependency.Project.ReJordUI
   ]
 )

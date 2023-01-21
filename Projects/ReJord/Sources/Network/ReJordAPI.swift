@@ -11,6 +11,9 @@ import Moya
 
 enum ReJordAPI {
   case userSignUp(id: String, pwd: String)
+  case idValidate(id: String)
+  case nicknameValidate(nickname: String, uid: String)
+  case login(id: String, password: String)
 }
 
 extension ReJordAPI: TargetType {
@@ -23,12 +26,24 @@ extension ReJordAPI: TargetType {
     switch self {
     case .userSignUp:
       return "/v1/users"
+    case .idValidate(id: let id):
+      return "/v1/users/\(id)/duplication"
+    case .nicknameValidate(_, let uid):
+      return "/v1/users/\(uid)"
+    case .login:
+      return "/v1/login"
     }
   }
   
   var method: Moya.Method {
     switch self {
     case .userSignUp:
+      return .post
+    case .idValidate:
+      return .get
+    case .nicknameValidate:
+      return .patch
+    case .login:
       return .post
     }
   }
@@ -38,6 +53,12 @@ extension ReJordAPI: TargetType {
     case .userSignUp(let id, let pwd):
       let params: [String: Any] = ["userId": id, "password": pwd, "userType": "BASIC"]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+    case .idValidate:
+      return .requestPlain
+    case .nicknameValidate(let nickname, _):
+      return .requestParameters(parameters: ["nickname": nickname], encoding: JSONEncoding.default)
+    case .login(id: let id, password: let password):
+      return .requestParameters(parameters: ["userId": id, "password": password], encoding: JSONEncoding.default)
     }
   }
   var validationType: ValidationType {
@@ -49,6 +70,12 @@ extension ReJordAPI: TargetType {
     header["Content-Type"] = "application/json; charset=utf-8"
     switch self {
     case .userSignUp:
+      return header
+    case .idValidate:
+      return header
+    case .nicknameValidate:
+      return header
+    case .login:
       return header
     }
   }

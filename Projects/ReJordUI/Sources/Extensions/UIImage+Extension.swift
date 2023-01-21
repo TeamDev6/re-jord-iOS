@@ -10,7 +10,7 @@ import UIKit
 
 extension UIImage {
   
-  static func image(name string: String) -> UIImage {
+  public static func image(name string: String) -> UIImage {
     return ReJordUIImages(name: string).image
   }
 }

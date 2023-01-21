@@ -1,0 +1,100 @@
+
+default_platform(:ios)
+
+platform :ios do
+
+  ### Helper Defs ###
+
+  # build
+
+  def adhoc_Build
+    build_ios_app(
+      export_method: "ad-hoc",
+      configuration: "Alpha",
+      silent: false
+    )
+  end
+
+  def appstore_Build
+    build_ios_app(
+      workspace: "./ReJord.xcworkspace",
+      export_method: "app-store",
+      configuration: "Release",
+      silent: false,
+      skip_codesigning: true,
+      scheme: "ReJord-Release",
+      export_team_id: "M3U22RZ325",
+      clean: "true"
+    )
+  end
+
+  # Signing
+  def local_signing
+    get_provisioning_profile(
+      adhoc: true,
+      api_key_path: "fastlane/578LND8DV7.json",
+      filename: "../re-jord-iOS/Tuist/Signing/ReJord.Debug.mobileprovision"
+    )
+  end
+
+  def match_adhoc_signing
+    sync_code_signing(
+      type: "adhoc",
+      app_identifier: "team.dev6.ReJord",
+      readonly: true
+    )
+  end
+
+  def match_appStore_signing
+    sync_code_signing(
+      git_branch: "develop",
+      type: "appstore",
+      app_identifier: "team.dev6.ReJord",
+      readonly: false,
+      api_key_path: "fastlane/578LND8DV7.json",
+      username: "cec7777@naver.com",
+      git_url: "https://github.com/naldal/matchRepo",
+      clone_branch_directly: false,
+      git_basic_authorization: "bmFsZGFsOmdocF91UmFOS0trczVrQkVZWFBOY0kxanRrdzgwU3ZTR1U0V21uSDY="
+    )
+  end
+
+  # build+signing
+
+  def build_with_local_signing
+    clear_derived_data
+    local_signing
+    pure_build
+  end
+  
+  def build_with_match_signing_appstore
+    clear_derived_data
+    match_appStore_signing
+    appstore_Build
+  end
+  
+
+
+  ### Lanes ###
+  
+  lane :firebase_upload do
+    appstore_Build
+  end
+
+  lane :testflight_upload do
+    # get latest number from Testflight
+    latest_build_number=latest_testflight_build_number(
+      api_key_path: "fastlane/578LND8DV7.json",
+      initial_build_number: 1
+    )
+
+    # build app
+    build_with_match_signing_appstore
+    # upload to Testflight
+    pilot(
+      api_key_path: "fastlane/578LND8DV7.json",
+      build_number: 5
+    )
+  end
+
+end

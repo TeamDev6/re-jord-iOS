@@ -1,13 +1,27 @@
 "welcome_to_visit_rejord"="RE:욜드에\n오신 것을 환영합니다!";
-"ID"="아이디";
-"Password"="비밀번호";
-"Confirm_Password"="비밀번호 확인";
-"SignUp"="가입하기";
-"Check_Duplicate"="중복체크";
-"Withdrawal"="탈퇴하기";
-"SignUpIdRestriction"="5~20자 영문 소문자, 숫자를 사용하세요.";
-"SignUpPasswordRestriction"="8~20자 영문 소문자, 숫자를 사용하세요";
+"id"="아이디";
+"password"="비밀번호";
+"confirm_password"="비밀번호 확인";
+"signUp"="가입하기";
+"check_Duplicate"="중복체크";
+"withdrawal"="탈퇴하기";
+"signUp_id_restriction"="5~20자 영문 소문자, 숫자를 사용하세요.";
+"signUp_id_duplicate" = "이미 가입된 아이디입니다 ";
+"signUp_password_restriction" = "영문과 숫자를 포함하여 최소 8글자 이상을 입력해주세요.";
+"signUp_password_mismatch" = "비밀번호가 일치하지 않습니다.";
+"signUp_password_match" = "비밀번호가 일치합니다.";
+"signUp_available_id" = "사용가능한 아이디입니다.";
+"signUp_available_password" = "사용가능한 비밀번호입니다.";
+"jumpUp" = "건너뛰기";
+"loginTitle" = "로그인";
+"loginSubTitle" = "로그인 후 RE:욜드를 즐겨보세요.\n최초 1회 로그인후 자동으로 유지됩니다.";
+"login_id_placeholder" = "아이디를 입력해주세요.";
+"login_pwd_placeholder" = "비밀번호를 입력해주세요.";
+"do_login" = "로그인하기";
+"goto_signUp" = "회원가입";
+
 
 // MARK: - Warning
+
 "waringFontMissing"="Warning! the Roboto font is missing. Be sure the font willing to use is exist on your assets";
 

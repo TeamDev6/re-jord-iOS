@@ -13,6 +13,7 @@ open class WarningLabel: UILabel {
   convenience public init(text: String, font: UIFont, color: UIColor = .black) {
     self.init(frame: CGRect.zero)
     self.setupLabel(labelText: text, font: font, color: color)
+    self.sizeToFit()
   }
   
   override public init(frame: CGRect) {
@@ -27,7 +28,7 @@ open class WarningLabel: UILabel {
     self.font = font
     self.textColor = color
     self.text = labelText
-    self.numberOfLines = 2
+    self.numberOfLines = 1
   }
   
 }

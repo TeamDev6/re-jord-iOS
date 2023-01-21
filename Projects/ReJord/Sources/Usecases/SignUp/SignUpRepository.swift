@@ -7,7 +7,18 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol SignUpRepository {
-  func signUp(userId: String, userPassword: String)
+  func signUp(userId: String, userPassword: String) -> Observable<Result<SignUpResult, ReJordError>>
+  func checkId(id: String) -> Observable<Result<Data, ReJordError>>
+  func checkNickname(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>>
+  
+}
+
+struct SignUpResult: Codable {
+  let nickname: String
+  let uid: String
+  let userId: String
+  let userType: String
 }

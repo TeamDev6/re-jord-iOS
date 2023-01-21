@@ -8,36 +8,32 @@
 
 import RxFlow
 import UIKit
-import ReJordUI
-import Moya
 
 class SignUpFlow: Flow {
+  
+  enum PushTransition {
+    case pushToSignUpCompletViewController(signUpResult: SignUpResult)
+  }
   
   
   // MARK: - Private Properties
   
-  private var signUpViewController: SignUpViewController
-  private var signUpReactor: SignUpReactor
+  private var signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
   
   
   // MARK: - Life Cycle
   
-  init() {
-    let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(networkProvider: MoyaProvider<ReJordAPI>()))
-    self.signUpViewController = SignUpViewController(reactor: signUpReactor)
-    self.signUpReactor = signUpReactor
+  init(root: UINavigationController) {
+    self.rootViewController = root
   }
   
   // MARK: - Root ViewController
   
   var root: Presentable {
-      return self.rootViewController
+    return self.rootViewController
   }
   
-  private lazy var rootViewController: UINavigationController = {
-      let viewController = UINavigationController()
-      return viewController
-  }()
+  private var rootViewController: UINavigationController
   
   // MARK: - Navigations
   
@@ -46,23 +42,24 @@ class SignUpFlow: Flow {
       return .none
     }
     switch step {
-    case .signUpIsRequired:
-      return self.push(to: step)
-    }
-  }
-  
-  private func present(to step: ReJordSteps) -> FlowContributors {
-    switch step {
+    case .signInIsRequired:
+      return .none
     case .signUpIsRequired:
       return .none
+    case .signUpCompleteSceneIsRequired(let signUpResult):
+      return self.push(to: .pushToSignUpCompletViewController(signUpResult: signUpResult))
+    case .homeSceneIsRequired:
+      return .one(flowContributor: .forwardToParentFlow(withStep: ReJordSteps.homeSceneIsRequired))
     }
   }
   
-  private func push(to step: ReJordSteps) -> FlowContributors {
+  private func push(to step: PushTransition) -> FlowContributors {
     switch step {
-    case .signUpIsRequired:
-      self.rootViewController.pushViewController(self.signUpViewController, animated: false)
-      return .one(flowContributor: FlowContributor.contribute(withNextPresentable: self.signUpViewController, withNextStepper: self.signUpReactor))
+    case .pushToSignUpCompletViewController(let signUpResult):
+      let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor, signUpResult: signUpResult)
+      self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
+      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))
+    
     }
   }
   

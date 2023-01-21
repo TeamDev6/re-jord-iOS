@@ -8,6 +8,13 @@
 
 import Foundation
 
-enum ReJordError: Error {
-  
+enum ErrorFrom {
+  case server
 }
+
+enum ReJordError: Error {
+  case serverError
+  case cantBindReactor
+  case jsonDecodingFail
+}
+
