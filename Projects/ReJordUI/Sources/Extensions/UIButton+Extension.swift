@@ -51,7 +51,7 @@ extension UIButton {
     titlePadding: CGFloat = 0,
     contentInsets: UIEdgeInsets = .zero,
     titleInsets: UIEdgeInsets = .zero) {
-      self.semanticContentAttribute = on == .left ? .forceLeftToRight : .forceRightToLeft
+  
       self.setImage(image, for: .normal)
       
       if #available(iOS 15.0, *) {
@@ -59,16 +59,19 @@ extension UIButton {
         if let configurationDirection {
           configuration.contentInsets = configurationDirection
         }
+        configuration.imagePlacement = on == .left ? .leading : .trailing
         configuration.imagePadding = imagePadding
         configuration.titlePadding = titlePadding
         self.configuration = configuration
       } else {
+        self.semanticContentAttribute = on == .left ? .forceLeftToRight : .forceRightToLeft
         self.contentEdgeInsets = contentInsets
         self.titleEdgeInsets = titleInsets
       }
   }
   
   public func toBarButtonItem() -> UIBarButtonItem? {
+    self.sizeToFit()
     return UIBarButtonItem(customView: self)
   }
 }

@@ -55,7 +55,11 @@ final class LoginViewController: UIViewController, Layoutable, View {
       self?.reactor?.action.onNext(.errorOccured)
       return LoginTextFieldInputView()
     }
-    return LoginTextFieldInputView(reactor: reactor, upperLabelText: ReJordUIStrings.id, inputType: .id)
+    return LoginTextFieldInputView(
+      reactor: reactor,
+      upperLabelText: ReJordUIStrings.signingId,
+      inputType: .id
+    )
   }()
   private lazy var passwordInputView: LoginTextFieldInputView = { [weak self] in
     guard let self,
@@ -65,15 +69,15 @@ final class LoginViewController: UIViewController, Layoutable, View {
     }
     return LoginTextFieldInputView(
       reactor: reactor,
-      upperLabelText: ReJordUIStrings.password,
+      upperLabelText: ReJordUIStrings.signingPassword,
       inputType: .pwd
     )
   }()
-  private let loginButton = ConfirmButton(text: ReJordUIStrings.doLogin)
+  private let loginButton = ConfirmButton(text: ReJordUIStrings.loginLogin)
   private lazy var gotoSignUpGestureLabel: UILabel = { [weak self] in
     var label = UILabel()
     guard let self else { return label }
-    label.text = ReJordUIStrings.gotoSignUp
+    label.text = ReJordUIStrings.loginGotoSignUp
     label.textColor = .gray
     label.sizeToFit()
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gotoSignUpAction))

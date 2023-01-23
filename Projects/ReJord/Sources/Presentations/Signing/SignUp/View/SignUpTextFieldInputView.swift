@@ -36,7 +36,7 @@ class SignUpTextFieldInputView: UIView, View {
       button.setButtonProperties(
         cornerRadius: 20,
         backgroundColor: ReJordUIAsset.mainGreen.color,
-        text: ReJordUIStrings.checkDuplicate,
+        text: ReJordUIStrings.signUpCheckDuplicate,
         textColor: .white,
         font: .roboto(fontType: .medium, fontSize: 16)
       )

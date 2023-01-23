@@ -28,12 +28,13 @@ final class LoginReactor: Reactor, Stepper {
     case empty
     case setId(id: String?)
     case setPassword(password: String?)
+    case setLoginFailure(isFail: Pulse<Bool>)
   }
   
   struct State {
-    
     var idValue: String = ""
     var passwordValue: String = ""
+    var isLoginFail: Pulse<Bool> = Pulse(wrappedValue: false)
   }
   
   // MARK: - Properties
@@ -79,15 +80,15 @@ final class LoginReactor: Reactor, Stepper {
         .map { result in
           switch result {
           case .success(_):
-            self.steps.accept(ReJordSteps.homeSceneIsRequired)
-            return .empty
+            defer {
+              self.steps.accept(ReJordSteps.homeSceneIsRequired)
+            }
+            return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: false))
           case .failure(_):
             self.action.onNext(.errorOccured)
-            return .empty
+            return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: true))
           }
         }
-        
-      
     }
   }
   
@@ -102,6 +103,8 @@ final class LoginReactor: Reactor, Stepper {
     case .setPassword(let password):
       guard let password = password else { return newState }
       newState.passwordValue = password
+    case .setLoginFailure(let isFail):
+      newState.isLoginFail = isFail
     }
     return newState
   }

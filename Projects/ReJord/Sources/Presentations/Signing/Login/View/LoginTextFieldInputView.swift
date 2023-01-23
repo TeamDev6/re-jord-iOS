@@ -33,8 +33,29 @@ final class LoginTextFieldInputView: UIView, View {
     label.sizeToFit()
   }
   private var commentLabel = UILabel().then { (label: UILabel) in
-    label.font = .roboto(fontType: .medium, fontSize: 12)
+    label.font = .roboto(fontType: .medium, fontSize: 14)
+    label.textColor = ReJordUIAsset.warningRed.color
     label.sizeToFit()
+  }
+  
+  // MARK: - component options
+  
+  private func setTextOnCommentLabel(text: String) {
+    self.commentLabel.text = text
+    self.commentLabel.sizeToFit()
+  
+    self.baseView.snp.updateConstraints { make in
+      make.height.equalTo(100 + self.commentLabel.intrinsicContentSize.height)
+    }
+    
+  }
+  
+  private func clearTextOnCommentLabel() {
+    self.commentLabel.text = ""
+    
+    self.baseView.snp.updateConstraints { make in
+      make.height.equalTo(100)
+    }
   }
   
   
@@ -87,6 +108,8 @@ final class LoginTextFieldInputView: UIView, View {
     fatalError("init(coder:) has not been implemented")
   }
   
+  
+  
   // MARK: - configure UI
   
   private func configurateUI(inputType: LoginTextFieldInputType) async {
@@ -111,6 +134,12 @@ final class LoginTextFieldInputView: UIView, View {
         make.leading.trailing.equalToSuperview()
         make.height.equalTo(47)
       }
+      self.commentLabel.snpLayout(baseView: self.baseView) { make in
+        guard let signingTextFieldView = self.signingTextFieldView else { return }
+        make.top.equalTo(signingTextFieldView.snp.bottom).offset(8)
+        make.leading.equalTo(self.upperLabel)
+        
+      }
     }
   }
   
@@ -118,6 +147,26 @@ final class LoginTextFieldInputView: UIView, View {
   // MARK: - bind reactor
   
   func bind(reactor: LoginReactor) {
+    
+    // state
+    
+    self.reactor?.state
+      .skip(1)
+      .map { $0.isLoginFail }
+      .asDriver(onErrorJustReturn: Pulse<Bool>(wrappedValue: false))
+      .drive(onNext: { [weak self] isLoginFail in
+        guard self?.viewType == .pwd else { return }
+        self?.layoutIfNeeded()
+        if isLoginFail.value {
+          self?.setTextOnCommentLabel(text: "아이디 또는 비밀번호가 일치하지 않습니다.")
+        } else {
+          self?.clearTextOnCommentLabel()
+        }
+      })
+      .disposed(by: self.disposeBag)
+    
+    
+    // action
     
     self.signingTextFieldView?.rx.textInput
       .asDriver(onErrorJustReturn: "")
@@ -131,6 +180,8 @@ final class LoginTextFieldInputView: UIView, View {
         }
       })
       .disposed(by: self.disposeBag)
+    
+    
     
   }
   

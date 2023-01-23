@@ -38,7 +38,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     return stackView
   }()
   private let welcomeLabel = UILabel().then { (label: UILabel) in
-    label.text = ReJordUIStrings.welcomeToVisitRejord
+    label.text = ReJordUIStrings.signUpWelcomeToVisitRejord
     label.font = .roboto(fontType: .bold, fontSize: 24)
     label.numberOfLines = 2
     label.sizeToFit()
@@ -51,7 +51,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
     return SignUpTextFieldInputView(
      reactor: reactor,
-     upperLabelText: ReJordUIStrings.id,
+     upperLabelText: ReJordUIStrings.signingId,
      inputType: .id
    )
   }()
@@ -63,7 +63,7 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
     return SignUpTextFieldInputView(
       reactor: reactor,
-      upperLabelText: ReJordUIStrings.password,
+      upperLabelText: ReJordUIStrings.signingPassword,
       inputType: .pwd
     )
   }()
@@ -75,11 +75,11 @@ class SignUpViewController: UIViewController, Layoutable, View {
     }
     return SignUpTextFieldInputView(
       reactor: reactor,
-      upperLabelText: ReJordUIStrings.confirmPassword,
+      upperLabelText: ReJordUIStrings.signUpConfirmPassword,
       inputType: .pwdConfirm
     )
   }()
-  private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUp)
+  private let signUpButton = ConfirmButton(text: ReJordUIStrings.signUpSignUp)
     
   
   // MARK: - dispose bag

@@ -32,7 +32,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   }
   private let signUpCompleteLabel: UILabel = UILabel().then {
     $0.font = .roboto(fontType: .bold, fontSize: 30)
-    $0.text = "회원가입 완료! 👋"
+    $0.text = ReJordUIStrings.signUpCompleteSignUpComplete
     $0.textColor = ReJordUIAsset.mainGreen.color
   }
   private lazy var nicknameStack = UIStackView().asHorizontal(distribution: .fill, alignment: .fill, spacing: 5.0).then { (stackView) in
@@ -43,12 +43,12 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   private lazy var nicknameFieldView = NicknameTextFieldView()
   private let suffixOfNickname = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .bold, fontSize: 26)
-    label.text = "님"
+    label.text = ReJordUIStrings.signUpCompleteSir
     label.textColor = .black
   }
   private let welcomeCompleteLabel: UILabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .bold, fontSize: 26)
-    label.text = "반갑습니다 :)"
+    label.text = ReJordUIStrings.signUpCompleteWelcome
     label.textColor = .black
   }
   private lazy var nicknameValidationStackView = UIStackView().asVertical(distribution: .fill, alignment: .fill).then { (stackView: UIStackView) in
@@ -62,10 +62,10 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   private let nicknameValidationDescriptionLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
     label.textColor = .gray
-    label.text = "닉네임은 영문 대/소문자, 한글, 숫자로 등록 가능하며,\n최소 2글자~최대 10글자까지 등록 가능합니다."
+    label.text = ReJordUIStrings.signUpCompleteRestriction
     label.numberOfLines = 2
   }
-  private let confirmButton = ConfirmButton(text: "등록완료")
+  private let confirmButton = ConfirmButton(text: ReJordUIStrings.signUpCompleteRegisterComplete)
   
   // MARK: - disposebag
   
@@ -78,13 +78,13 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     var settableString: String = ""
     switch status {
     case .empty:
-      settableString = "닉네임을 등록해보세요."
+      settableString = ReJordUIStrings.signUpCompleteRegisterNickname
     case .duplicated:
-      settableString = "이미 사용중인 닉네임입니다."
+      settableString = ReJordUIStrings.signUpCompleteAlreadyUsedNickname
     case .invalidCount:
-      settableString = "형식에 맞지 않은 닉네임입니다."
+      settableString = ReJordUIStrings.signUpCompleteInvalidNickname
     case .valid:
-      settableString = "사용가능한 닉네임입니다."
+      settableString = ReJordUIStrings.signUpCompleteUsableNickname
     }
     self.nicknameValidationLabel.text = settableString
   }
@@ -105,39 +105,15 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   }
   
   private func configureNavigationBar() {
-    DispatchQueue.main.async {
-      self.navigationItem.setHidesBackButton(true, animated: false)
-      self.navigationItem.rightBarButtonItem = self.addRightBarButton().toBarButtonItem()
-    }
+    self.navigationItem.setHidesBackButton(true, animated: false)
+    let pushNav = PushNavigationButton(pushTitle: ReJordUIStrings.navigationItemJumpUp)
+    pushNav.addTarget(self, action: #selector(rightNavigationAction), for: .touchUpInside)
+    self.navigationItem.rightBarButtonItem = pushNav.toBarButtonItem()
+    
   }
   
-  private func addRightBarButton() -> UIButton {
-    return UIButton().then {
-      $0.setButtonProperties(
-        backgroundColor: .clear,
-        text: ReJordUIStrings.jumpUp,
-        textColor: .black,
-        font: .roboto(fontType: .medium, fontSize: 13)
-      )
-      if #available(iOS 15.0, *) {
-        $0.setSideImage(
-          on: .right,
-          image: ReJordUIAsset.jumpUp.image,
-          configuration: $0.configuration,
-          imagePadding: 11
-        )
-      } else {
-        $0.setSideImage(
-          on: .right,
-          image: ReJordUIAsset.secureGlanceOff.image,
-          contentInsets: UIEdgeInsets(top: 0, left: 11, bottom: 0, right: 0)
-        )
-      }
-      $0.addTarget(self, action: #selector(rightButtonAction), for: .touchUpInside)
-    }
-  }
-  @objc func rightButtonAction() {
-    print("aaaaa")
+  @objc func rightNavigationAction() {
+    print("aaaa")
   }
   
   // MARK: - private properties
@@ -149,15 +125,14 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   
   init(reactor: SignUpReactor, signUpResult: SignUpResult) {
     super.init(nibName: nil, bundle: nil)
-    self.reactor = reactor
     self.signUpResult = signUpResult
+    self.configureNavigationBar()
+    self.setLayout()
+    self.reactor = reactor
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = .white
-    self.configureNavigationBar()
-    self.setLayout()
   }
   
   required init?(coder: NSCoder) {
@@ -182,11 +157,9 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     self.welcomeStack.snpLayout(baseView: self.baseView) { make in
       make.top.equalToSuperview().inset(45)
       make.leading.trailing.equalToSuperview()
-      
       self.signUpCompleteLabel.snp.makeConstraints { make in
         make.leading.equalToSuperview()
       }
-      
       self.nicknameStack.snp.makeConstraints { make in
         make.leading.trailing.equalToSuperview()
         self.nicknameFieldView.snp.makeConstraints { make in
@@ -203,6 +176,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     }
     self.confirmButton.snpLayout(baseView: self.baseView) { make in
       make.bottom.leading.trailing.equalToSuperview()
+      make.height.equalTo(47)
     }
   }
   
@@ -211,7 +185,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   // MARK: - bind reactor
   
   func bind(reactor: SignUpReactor) {
-    
+
     // state
     
     self.reactor?.state

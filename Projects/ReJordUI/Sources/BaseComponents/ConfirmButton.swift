@@ -10,20 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-@objc protocol ConfirmButtonDelegate: AnyObject {
-  @objc optional func tapped(view: ConfirmButton)
-}
-
 open class ConfirmButton: UIButton {
-  
-  weak var delegate: ConfirmButtonDelegate?
   
   // MARK: - Life Cycle
   
   convenience public init(text: String) {
     self.init(frame: CGRect.zero)
     self.setupButton(titleText: text)
-    self.addTarget(self, action: #selector(tapAction), for: .touchUpInside)
   }
   
   override public init(frame: CGRect) {
@@ -37,10 +30,6 @@ open class ConfirmButton: UIButton {
   
   // MARK: - Functions
   
-  @objc func tapAction() {
-    self.delegate?.tapped?(view: self)
-  }
-  
   private func setupButton(titleText: String) {
     self.setButtonProperties(
       cornerRadius: 7,
@@ -51,34 +40,4 @@ open class ConfirmButton: UIButton {
     )
   }
   
-}
-
-class ConfirmButtonDelegateProxy: DelegateProxy<ConfirmButton, ConfirmButtonDelegate>, DelegateProxyType, ConfirmButtonDelegate {
-  
-  static func registerKnownImplementations() {
-    self.register { (viewController) -> ConfirmButtonDelegateProxy in
-      ConfirmButtonDelegateProxy(parentObject: viewController, delegateProxy: self)
-    }
-  }
-  
-  static func currentDelegate(for object: ConfirmButton) -> ConfirmButtonDelegate? {
-    return object.delegate
-  }
-  
-  static func setCurrentDelegate(_ delegate: ConfirmButtonDelegate?, to object: ConfirmButton) {
-    object.delegate = delegate
-  }
-}
-
-extension Reactive where Base == ConfirmButton {
-  var delegate: DelegateProxy<ConfirmButton, ConfirmButtonDelegate> {
-    return ConfirmButtonDelegateProxy.proxy(for: self.base)
-  }
-
-  var tapped: Observable<Void> {
-    return delegate.methodInvoked(#selector(ConfirmButtonDelegate.tapped(view:)))
-      .map { param in
-        return
-      }
-  }
 }
