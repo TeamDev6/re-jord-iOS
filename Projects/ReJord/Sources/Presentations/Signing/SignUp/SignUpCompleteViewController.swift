@@ -138,7 +138,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   }
   
   @objc func rightNavigationAction() {
-    print("aaaa")
+    self.reactor?.steps.accept(ReJordSteps.homeSceneIsRequired)
   }
   
   // MARK: - private properties
