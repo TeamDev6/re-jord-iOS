@@ -12,7 +12,7 @@ import Moya
 enum ReJordAPI {
   case userSignUp(id: String, pwd: String)
   case idValidate(id: String)
-  case nicknameValidate(nickname: String, uid: String)
+  case modifyUserInfo(nickname: String, uid: String)
   case login(id: String, password: String)
 }
 
@@ -28,7 +28,7 @@ extension ReJordAPI: TargetType {
       return "/v1/users"
     case .idValidate(id: let id):
       return "/v1/users/\(id)/duplication"
-    case .nicknameValidate(_, let uid):
+    case .modifyUserInfo(_, let uid):
       return "/v1/users/\(uid)"
     case .login:
       return "/v1/login"
@@ -41,7 +41,7 @@ extension ReJordAPI: TargetType {
       return .post
     case .idValidate:
       return .get
-    case .nicknameValidate:
+    case .modifyUserInfo:
       return .patch
     case .login:
       return .post
@@ -55,7 +55,7 @@ extension ReJordAPI: TargetType {
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
     case .idValidate:
       return .requestPlain
-    case .nicknameValidate(let nickname, _):
+    case .modifyUserInfo(let nickname, _):
       return .requestParameters(parameters: ["nickname": nickname], encoding: JSONEncoding.default)
     case .login(id: let id, password: let password):
       return .requestParameters(parameters: ["userId": id, "password": password], encoding: JSONEncoding.default)
@@ -73,7 +73,7 @@ extension ReJordAPI: TargetType {
       return header
     case .idValidate:
       return header
-    case .nicknameValidate:
+    case .modifyUserInfo:
       return header
     case .login:
       return header

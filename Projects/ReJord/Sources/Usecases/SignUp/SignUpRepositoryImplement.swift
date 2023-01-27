@@ -47,7 +47,7 @@ final class SignUpRepositoryImplement: SignUpRepository {
   
   func checkNickname(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
     return self.provider
-      .request(target: .nicknameValidate(nickname: nickname, uid: uid))
+      .request(target: .modifyUserInfo(nickname: nickname, uid: uid))
       .map { result in
         switch result {
         case .success(let data):

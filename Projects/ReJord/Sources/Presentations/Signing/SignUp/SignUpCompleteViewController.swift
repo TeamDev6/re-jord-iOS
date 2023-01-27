@@ -28,19 +28,36 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   }
   
   private lazy var welcomeStack = UIStackView().asVertical(distribution: .fill, alignment: .leading, spacing: 30).then {
-    $0.setStackArrangesView(subViews: [self.signUpCompleteLabel, self.nicknameStack, self.welcomeCompleteLabel])
+    $0.setStackArrangesView(subViews: [
+      self.signUpCompleteLabel,
+      self.nicknameInputStack,
+      self.welcomeCompleteLabel
+    ])
   }
   private let signUpCompleteLabel: UILabel = UILabel().then {
     $0.font = .roboto(fontType: .bold, fontSize: 30)
     $0.text = ReJordUIStrings.signUpCompleteSignUpComplete
     $0.textColor = ReJordUIAsset.mainGreen.color
   }
-  private lazy var nicknameStack = UIStackView().asHorizontal(distribution: .fill, alignment: .fill, spacing: 5.0).then { (stackView) in
-    self.suffixOfNickname.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-    self.nicknameFieldView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-    stackView.setStackArrangesView(subViews: [self.nicknameFieldView, self.suffixOfNickname])
+  private lazy var nicknameInputStack = UIStackView().asHorizontal(
+    distribution: .fill,
+    alignment: .fill,
+    spacing: 5.0
+  ).then { (stackView: UIStackView) in
+    self.suffixOfNickname.setContentCompressionResistancePriority(
+      .defaultHigh,
+      for: .horizontal
+    )
+    self.nicknameFieldView.setContentHuggingPriority(
+      .defaultHigh,
+      for: .horizontal
+    )
+    stackView.setStackArrangesView(subViews: [
+      self.nicknameFieldView,
+      self.suffixOfNickname
+    ])
   }
-  private lazy var nicknameFieldView = NicknameTextFieldView()
+  private lazy var nicknameFieldView = NicknameTextFieldView(defaultNickname: self.signUpResult?.nickname)
   private let suffixOfNickname = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .bold, fontSize: 26)
     label.text = ReJordUIStrings.signUpCompleteSir
@@ -51,9 +68,16 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     label.text = ReJordUIStrings.signUpCompleteWelcome
     label.textColor = .black
   }
-  private lazy var nicknameValidationStackView = UIStackView().asVertical(distribution: .fill, alignment: .fill).then { (stackView: UIStackView) in
+  private lazy var nicknameValidationStackView = UIStackView().asVertical(
+    distribution: .fill,
+    alignment: .fill,
+    spacing: 8
+  ).then { (stackView: UIStackView) in
     stackView.backgroundColor = .clear
-    stackView.setStackArrangesView(subViews: [self.nicknameValidationLabel, self.nicknameValidationDescriptionLabel])
+    stackView.setStackArrangesView(subViews: [
+      self.nicknameValidationLabel,
+      self.nicknameValidationDescriptionLabel
+    ])
   }
   private let nicknameValidationLabel = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .medium, fontSize: 16)
@@ -66,6 +90,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     label.numberOfLines = 2
   }
   private let confirmButton = ConfirmButton(text: ReJordUIStrings.signUpCompleteRegisterComplete)
+  
   
   // MARK: - disposebag
   
@@ -129,6 +154,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     self.configureNavigationBar()
     self.setLayout()
     self.reactor = reactor
+//    self.reactor?.action.onNext(.nickNameValueInserted(text: signUpResult.nickname, signUpResult: signUpResult))
   }
   
   override func viewDidLoad() {
@@ -142,6 +168,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   deinit {
     print("\(self) is deinited")
   }
+  
   
   // MARK: - layout
   
@@ -160,13 +187,14 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       self.signUpCompleteLabel.snp.makeConstraints { make in
         make.leading.equalToSuperview()
       }
-      self.nicknameStack.snp.makeConstraints { make in
+      self.nicknameInputStack.snp.makeConstraints { make in
         make.leading.trailing.equalToSuperview()
         self.nicknameFieldView.snp.makeConstraints { make in
           make.leading.equalToSuperview()
         }
         self.suffixOfNickname.snp.makeConstraints { make in
           make.trailing.equalToSuperview()
+          make.height.equalTo(44)
         }
       }
     }
@@ -204,7 +232,10 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] text in
         guard let signUpResult = self?.signUpResult else { return }
-        self?.reactor?.action.onNext(.nickNameValueInserted(text: text, signUpResult: signUpResult))
+        self?.reactor?.action.onNext(.nickNameValueInserted(
+          text: text,
+          signUpResult: signUpResult)
+        )
       })
       .disposed(by: self.disposeBag)
   }

@@ -70,8 +70,8 @@ extension NetworkProvider: Networkable {
         .map { response in
           return .success(response.data)
         }
-        .catch { _ in
-          return .just(.failure(.serverError))
+        .catch { error in
+          return .just(.failure(.serverError(description: error.localizedDescription)))
         }
     } else {
       let online = networkEnable()
@@ -85,8 +85,8 @@ extension NetworkProvider: Networkable {
             .map({ response in
               return .success(response.data)
             })
-            .catch { _ in
-              return .just(.failure(.serverError))
+            .catch { error in
+              return .just(.failure(.serverError(description: error.localizedDescription)))
             }
         }
     }

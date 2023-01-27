@@ -24,32 +24,49 @@ final class NicknameTextFieldView: UIView {
   // MARK: - components
   
   private let baseView: UIView = UIView().then { (view: UIView) in
-    view.addBorder(edge: .bottom, color: ReJordUIAsset.mainGreen.color, thickness: 2)
+    view.addBorder(
+      edge: .bottom,
+      color: ReJordUIAsset.mainGreen.color,
+      thickness: 2
+    )
     view.backgroundColor = .white
   }
   
   private lazy var nicknameTextField = UITextField().then { (textField: UITextField) in
-    textField.setTextFieldOptions(textColor: .black, backgroundColor: .clear, font: .roboto(fontType: .bold, fontSize: 26), align: .left, keyboardType: .default)
-    textField.setPlaceHolder(text: "닉네임을 등록해주세요.", color: .gray, font: .roboto(fontType: .bold, fontSize: 26))
+    textField.setTextFieldOptions(
+      textColor: .black,
+      backgroundColor: .clear,
+      font: .roboto(fontType: .bold, fontSize: 26),
+      align: .left,
+      keyboardType: .default
+    )
+    textField.setPlaceHolder(
+      text: "닉네임을 등록해주세요.",
+      color: .gray,
+      font: .roboto(fontType: .bold, fontSize: 26)
+    )
+    textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
   }
   
   
   // MARK: - private func
   
-  @objc private func textDidChange(_ notification: Notification) {
-    guard let textField = notification.object as? UITextField else {
-      return
-    }
-    self.delegate?.textInput?(view: self, value: textField.text)
+  @objc private func textDidChange() {
+    self.delegate?.textInput?(view: self, value: self.nicknameTextField.text)
+  }
+  
+  private func setTextOnNicknameTextField(text: String?) {
+    self.nicknameTextField.text = text
+
   }
   
   
   // MARK: - life cycle
   
-  init() {
+  init(defaultNickname: String?) {
     super.init(frame: .zero)
     self.layout()
-    NotificationCenter.default.addObserver(self, selector: #selector(textDidChange(_:)), name: UITextField.textDidChangeNotification, object: self.nicknameTextField)
+    self.setTextOnNicknameTextField(text: defaultNickname)
   }
   
   required init?(coder: NSCoder) {

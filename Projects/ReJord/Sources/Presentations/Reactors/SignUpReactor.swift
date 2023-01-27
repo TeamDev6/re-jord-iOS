@@ -44,6 +44,7 @@ final class SignUpReactor: Reactor, Stepper {
     case signUpAction
     case errorOccured
     case nickNameValueInserted(text: String?, signUpResult: SignUpResult?)
+    case isConfirmable(_: Bool)
   }
   
   enum Mutation {
@@ -134,10 +135,12 @@ final class SignUpReactor: Reactor, Stepper {
           switch result {
           case .success(_):
             return .setNicknameStatus(status: .valid)
-          case .failure(_):
+          case .failure(let error):
             return .setNicknameStatus(status: .duplicated)
           }
         }
+    case .isConfirmable(let isConfirmable):
+      return .empty()
     }
   }
   
