@@ -45,7 +45,7 @@ final class SignUpRepositoryImplement: SignUpRepository {
       }
   }
   
-  func checkNickname(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
+  func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
     return self.provider
       .request(target: .modifyUserInfo(nickname: nickname, uid: uid))
       .map { result in

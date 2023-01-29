@@ -18,7 +18,7 @@ class SignUpFlow: Flow {
   
   // MARK: - Private Properties
   
-  private var signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
+  
   
   
   // MARK: - Life Cycle
@@ -56,9 +56,10 @@ class SignUpFlow: Flow {
   private func push(to step: PushTransition) -> FlowContributors {
     switch step {
     case .pushToSignUpCompletViewController(let signUpResult):
-      let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor, signUpResult: signUpResult)
+      let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(), signUpResult: signUpResult)
+      let signUpCompleteViewController = SignUpCompleteViewController(reactor: signUpReactor)
       self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
-      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))
+      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: signUpReactor))
     
     }
   }

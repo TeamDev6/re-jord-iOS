@@ -21,7 +21,7 @@ class LoginFlow: Flow {
   // MARK: - Private Properties
   
   let loginReactor: LoginReactor = LoginReactor(repository: LoginRepositoryImplement())
-  let signUpReactor: SignUpReactor = SignUpReactor(repository: SignUpRepositoryImplement())
+  let signUpReactor: SignUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(), signUpResult: nil)
   let homeReactor: HomeReactor = HomeReactor(repository: HomeRepositoryImplemenet())
   
   
@@ -52,16 +52,16 @@ class LoginFlow: Flow {
     case .signInIsRequired:
       return self.push(to: .pushToSignInViewController)
     case .signUpIsRequired:
-      return self.push(to: .pushToSignUpViewController)
+//      return self.push(to: .pushToSignUpViewController)
       
       // TODO: sample data
-//      return self.push(to: .pushToSignUpCompleteViewControllor(
-//        signUpResult: SignUpResult(
-//          nickname: "cec8057",
-//          uid: "US-xKcZXA1Omf",
-//          userId: "cec8057",
-//          userType: "BASIC")
-//      ))
+      return self.push(to: .pushToSignUpCompleteViewControllor(
+        signUpResult: SignUpResult(
+          nickname: "cec8057",
+          uid: "US-xKcZXA1Omf",
+          userId: "cec8057",
+          userType: "BASIC")
+      ))
     case .signUpCompleteSceneIsRequired(let signUpResult):
       return self.push(to: .pushToSignUpCompleteViewControllor(signUpResult: signUpResult))
     case .homeSceneIsRequired:
@@ -84,9 +84,10 @@ class LoginFlow: Flow {
         withNextStepper: self.signUpReactor
       ))
     case .pushToSignUpCompleteViewControllor(let signUpResult):
-      let signUpCompleteViewController = SignUpCompleteViewController(reactor: self.signUpReactor, signUpResult: signUpResult)
+      let signUpReactor = SignUpReactor(repository: SignUpRepositoryImplement(), signUpResult: signUpResult)
+      let signUpCompleteViewController = SignUpCompleteViewController(reactor: signUpReactor)
       self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
-      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: self.signUpReactor))
+      return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: signUpReactor))
     case .pushToHomeViewController:
       let homeViewController = HomeViewController(reactor: self.homeReactor)
       self.rootViewController.pushViewController(homeViewController, animated: true)

@@ -12,7 +12,7 @@ import RxSwift
 protocol SignUpRepository {
   func signUp(userId: String, userPassword: String) -> Observable<Result<SignUpResult, ReJordError>>
   func checkId(id: String) -> Observable<Result<Data, ReJordError>>
-  func checkNickname(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>>
+  func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>>
   
 }
 

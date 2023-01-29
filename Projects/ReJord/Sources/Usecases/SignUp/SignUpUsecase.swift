@@ -25,8 +25,16 @@ final class SignUpUsecase {
     return self.repository.checkId(id: id)
   }
   
-  func checkNicknameDuplicated(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
-    return self.repository.checkNickname(nickname: nickname, uid: uid)
+  func validateNickname(nickname: String?) -> Observable<Bool> {
+    // TODO: 영문 대/소문자, 한글, 숫자 2~10 글자
+    guard let nickname = nickname,
+          (nickname.count >= 2 && nickname.count <= 10) else { return .just(false) }
+    
+    return .just(false)
+  }
+  
+  func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
+    return self.repository.modifyUserInformation(nickname: nickname, uid: uid)
   }
   
 }

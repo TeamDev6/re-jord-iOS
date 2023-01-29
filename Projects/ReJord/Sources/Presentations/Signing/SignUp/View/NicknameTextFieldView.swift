@@ -55,7 +55,9 @@ final class NicknameTextFieldView: UIView {
     self.delegate?.textInput?(view: self, value: self.nicknameTextField.text)
   }
   
-  private func setTextOnNicknameTextField(text: String?) {
+  // MARK: - internal func
+  
+  func setTextOnNicknameTextField(text: String?) {
     self.nicknameTextField.text = text
 
   }
@@ -63,10 +65,9 @@ final class NicknameTextFieldView: UIView {
   
   // MARK: - life cycle
   
-  init(defaultNickname: String?) {
+  init() {
     super.init(frame: .zero)
     self.layout()
-    self.setTextOnNicknameTextField(text: defaultNickname)
   }
   
   required init?(coder: NSCoder) {

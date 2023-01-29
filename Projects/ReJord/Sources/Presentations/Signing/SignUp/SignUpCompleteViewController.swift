@@ -57,7 +57,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       self.suffixOfNickname
     ])
   }
-  private lazy var nicknameFieldView = NicknameTextFieldView(defaultNickname: self.signUpResult?.nickname)
+  private lazy var nicknameFieldView = NicknameTextFieldView()
   private let suffixOfNickname = UILabel().then { (label: UILabel) in
     label.font = .roboto(fontType: .bold, fontSize: 26)
     label.text = ReJordUIStrings.signUpCompleteSir
@@ -141,20 +141,14 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     self.reactor?.steps.accept(ReJordSteps.homeSceneIsRequired)
   }
   
-  // MARK: - private properties
-  
-  var signUpResult: SignUpResult?
-  
   
   // MARK: - life cycles
   
-  init(reactor: SignUpReactor, signUpResult: SignUpResult) {
+  init(reactor: SignUpReactor) {
     super.init(nibName: nil, bundle: nil)
-    self.signUpResult = signUpResult
     self.configureNavigationBar()
     self.setLayout()
     self.reactor = reactor
-//    self.reactor?.action.onNext(.nickNameValueInserted(text: signUpResult.nickname, signUpResult: signUpResult))
   }
   
   override func viewDidLoad() {
@@ -225,22 +219,36 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       })
       .disposed(by: self.disposeBag)
     
+    self.reactor?.state
+      .map { $0.defaultNickname }
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] defaultNickname in
+        self?.nicknameFieldView.setTextOnNicknameTextField(text: defaultNickname)
+      })
+      .disposed(by: self.disposeBag)
+    
+    
+    
     // action
     
     self.nicknameFieldView.rx.textInput
-      .debounce(.seconds(2), scheduler: MainScheduler.asyncInstance)
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] text in
-        guard let signUpResult = self?.signUpResult else { return }
-        self?.reactor?.action.onNext(.nickNameValueInserted(
-          text: text,
-          signUpResult: signUpResult)
-        )
+        // TODO: text validation
+        print(text)
       })
       .disposed(by: self.disposeBag)
+   
+    self.confirmButton.rx.tap
+      .asDriver(onErrorJustReturn: ())
+      .drive(onNext: { [weak self] text in
+        
+//        self?.reactor?.action.onNext(.nickNameValueInserted(
+//          text: text,
+//          signUpResult: signUpResult)
+//        )
+      })
+      .disposed(by: self.disposeBag)
+    
   }
-  
-  
-  
-  
 }

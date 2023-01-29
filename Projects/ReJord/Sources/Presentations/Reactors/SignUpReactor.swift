@@ -37,14 +37,15 @@ final class SignUpReactor: Reactor, Stepper {
   // MARK: - Reactor
   
   enum Action {
+    case errorOccured
     case idValueInserted(value: String?)
     case passwordValueInserted(value: String?)
     case passwordConfirmValueInserted(value: String?)
     case checkIdDuplication
     case signUpAction
-    case errorOccured
-    case nickNameValueInserted(text: String?, signUpResult: SignUpResult?)
-    case isConfirmable(_: Bool)
+    case nicknameInputed(text: String?)
+    case needNicknameValidation(nickname: String?)
+    
   }
   
   enum Mutation {
@@ -53,7 +54,9 @@ final class SignUpReactor: Reactor, Stepper {
     case passwordSet(password: String?)
     case passwordConfirmSet(password: String?)
     case setIdValidationResult(availbale: Bool)
+    case setDefaultNickname(text: String?)
     case setNicknameStatus(status: NickNameStatusType)
+    case setUserInformationUpdatable(_: Bool)
   }
   
   struct State {
@@ -61,7 +64,9 @@ final class SignUpReactor: Reactor, Stepper {
     var passwordValue: String? = ""
     var passwordIsEqual: PasswordConfirmType = .empty
     var idIsAvailable: IdAvailableType = .checkYet
+    var defaultNickname: String? = ""
     var nicknameStatus: NickNameStatusType = .empty
+    var isUserInformationUpdatable: Bool = false
   }
   
   // MARK: - Properties
@@ -72,12 +77,14 @@ final class SignUpReactor: Reactor, Stepper {
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
   private let signUpUsecase: SignUpUsecase
+  private var signUpResult: SignUpResult?
   
   
   // MARK: - Life Cycle
   
-  init(repository: SignUpRepository) {
+  init(repository: SignUpRepository, signUpResult: SignUpResult?) {
     self.signUpUsecase = SignUpUsecase(repository: repository)
+    self.action.onNext(.nicknameInputed(text: signUpResult?.nickname))
   }
   
   deinit {
@@ -123,23 +130,28 @@ final class SignUpReactor: Reactor, Stepper {
     case .errorOccured:
       self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
-    case .nickNameValueInserted(let text, let signUpResult):
-      guard let text = text,
-            let uid = signUpResult?.uid,
-            !text.isEmpty else { return .empty() }
-      guard text.count >= 2 || text.count < 10 else {
-        return .just(.setNicknameStatus(status: .invalidCount))
-      }
-      return self.checkNicknameDuplicated(nickname: text, uid: uid)
-        .map { result in
-          switch result {
-          case .success(_):
-            return .setNicknameStatus(status: .valid)
-          case .failure(let error):
-            return .setNicknameStatus(status: .duplicated)
-          }
+    case .nicknameInputed(let nickname):
+      return .just(.setDefaultNickname(text: nickname))
+//      guard let text = text,
+//            let uid = signUpResult?.uid,
+//            !text.isEmpty else { return .empty() }
+//      guard text.count >= 2 || text.count < 10 else {
+//        return .just(.setNicknameStatus(status: .invalidCount))
+//      }
+//      return self.modifyUserInformation(nickname: text, uid: uid)
+//        .map { result in
+//          switch result {
+//          case .success(_):
+//            return .setNicknameStatus(status: .valid)
+//          case .failure(let error):
+//            return .setNicknameStatus(status: .duplicated)
+//          }
+//        }
+    case .needNicknameValidation(nickname: let nickname):
+      return self.signUpUsecase.validateNickname(nickname: nickname)
+        .map { isValid in
+          return .setUserInformationUpdatable(isValid)
         }
-    case .isConfirmable(let isConfirmable):
       return .empty()
     }
   }
@@ -165,6 +177,10 @@ final class SignUpReactor: Reactor, Stepper {
       newState.idIsAvailable = availbale ? .available : .duplicated
     case .setNicknameStatus(let status):
       newState.nicknameStatus = status
+    case .setDefaultNickname(text: let defaultNickname):
+      newState.defaultNickname = defaultNickname
+    case .setUserInformationUpdatable(let isUserInformationUpdatable):
+      newState.isUserInformationUpdatable = isUserInformationUpdatable
     }
     return newState
   }
@@ -179,8 +195,12 @@ final class SignUpReactor: Reactor, Stepper {
     return self.signUpUsecase.checkIdDuplication(id: id)
   }
   
-  private func checkNicknameDuplicated(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
-    return self.signUpUsecase.checkNicknameDuplicated(nickname: nickname, uid: uid)
+  private func validateNickname(nickname: String?) -> Observable<Bool> {
+    return self.signUpUsecase.validateNickname(nickname: nickname)
+  }
+  
+  private func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {
+    return self.signUpUsecase.modifyUserInformation(nickname: nickname, uid: uid)
   }
   
   
