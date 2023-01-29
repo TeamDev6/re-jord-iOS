@@ -29,7 +29,7 @@ final class SignUpUsecase {
     guard let nickname = nickname,
           (nickname.count >= 2 && nickname.count <= 10) else { return .just(false) }
     let hasSpecialCharacters = nickname.range(
-      of: ".*[^A-Za-z0-9].*",
+      of: ".*[^A-Z가-힣ㄱ-ㅎㅏ-ㅣa-z0-9].*",
       options: .regularExpression
     ) != nil
     return .just(!hasSpecialCharacters)

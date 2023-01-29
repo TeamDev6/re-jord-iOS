@@ -106,12 +106,13 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       settableString = ReJordUIStrings.signUpCompleteRegisterNickname
     case .duplicated:
       settableString = ReJordUIStrings.signUpCompleteAlreadyUsedNickname
-    case .invalidCount:
+    case .invalid:
       settableString = ReJordUIStrings.signUpCompleteInvalidNickname
     case .valid:
       settableString = ReJordUIStrings.signUpCompleteUsableNickname
     }
     self.nicknameValidationLabel.text = settableString
+    self.setColorOnValidationLabel(status: status)
   }
   
   private func setColorOnValidationLabel(status: NickNameStatusType) {
@@ -121,7 +122,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       settableColor = .gray
     case .duplicated:
       settableColor = ReJordUIAsset.warningRed.color
-    case .invalidCount:
+    case .invalid:
       settableColor = ReJordUIAsset.warningRed.color
     case .valid:
       settableColor = ReJordUIAsset.mainGreen.color
@@ -215,7 +216,6 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       .asDriver(onErrorJustReturn: .empty)
       .drive(onNext: { [weak self] nicknameStatus in
         self?.setTextOnNicknameValidationLabel(status: nicknameStatus)
-        self?.setColorOnValidationLabel(status: nicknameStatus)
       })
       .disposed(by: self.disposeBag)
     

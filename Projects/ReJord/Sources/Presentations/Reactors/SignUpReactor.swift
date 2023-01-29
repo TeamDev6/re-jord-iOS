@@ -27,7 +27,7 @@ enum IdAvailableType {
 enum NickNameStatusType {
   case empty
   case duplicated
-  case invalidCount
+  case invalid
   case valid
 }
 
@@ -67,7 +67,6 @@ final class SignUpReactor: Reactor, Stepper {
     var idIsAvailable: IdAvailableType = .checkYet
     var defaultNickname: String? = ""
     var nicknameStatus: NickNameStatusType = .empty
-    var isUserInformationUpdatable: Bool = false
   }
   
   // MARK: - Properties
@@ -78,7 +77,6 @@ final class SignUpReactor: Reactor, Stepper {
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
   private let signUpUsecase: SignUpUsecase
-  private var signUpResult: SignUpResult?
   
   
   // MARK: - Life Cycle
@@ -137,12 +135,12 @@ final class SignUpReactor: Reactor, Stepper {
     case .needNicknameValidation(nickname: let nickname):
       return self.signUpUsecase.validateNickname(nickname: nickname)
         .map { isValid in
-          print(isValid)
           return .setUserInformationUpdatable(isValid)
         }
     case .updateUserInformation(signUpResult: let signUpResult):
-      guard let uid = signUpResult?.uid else { return .empty() }
-      return self.modifyUserInformation(nickname: "", uid: uid)
+      guard let nickname = signUpResult?.nickname,
+            let uid = signUpResult?.uid else { return .empty() }
+      return self.modifyUserInformation(nickname: nickname, uid: uid)
         .map { result in
           switch result {
           case .success(_):
@@ -178,7 +176,7 @@ final class SignUpReactor: Reactor, Stepper {
     case .setDefaultNickname(text: let defaultNickname):
       newState.defaultNickname = defaultNickname
     case .setUserInformationUpdatable(let isUserInformationUpdatable):
-      newState.isUserInformationUpdatable = isUserInformationUpdatable
+      newState.nicknameStatus = isUserInformationUpdatable ? .valid : .invalid
     }
     return newState
   }
