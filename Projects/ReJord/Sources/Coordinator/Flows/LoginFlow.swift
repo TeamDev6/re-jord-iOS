@@ -52,16 +52,7 @@ class LoginFlow: Flow {
     case .signInIsRequired:
       return self.push(to: .pushToSignInViewController)
     case .signUpIsRequired:
-//      return self.push(to: .pushToSignUpViewController)
-      
-      // TODO: sample data
-      return self.push(to: .pushToSignUpCompleteViewControllor(
-        signUpResult: SignUpResult(
-          nickname: "cec8057",
-          uid: "US-xKcZXA1Omf",
-          userId: "cec8057",
-          userType: "BASIC")
-      ))
+      return self.push(to: .pushToSignUpViewController)
     case .signUpCompleteSceneIsRequired(let signUpResult):
       return self.push(to: .pushToSignUpCompleteViewControllor(signUpResult: signUpResult))
     case .homeSceneIsRequired:

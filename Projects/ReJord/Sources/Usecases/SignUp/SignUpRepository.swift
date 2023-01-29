@@ -17,8 +17,12 @@ protocol SignUpRepository {
 }
 
 struct SignUpResult: Codable {
-  let nickname: String
+  var nickname: String
   let uid: String
   let userId: String
   let userType: String
+  
+  mutating func updateNickname(newNickname: String) {
+    self.nickname = newNickname
+  }
 }

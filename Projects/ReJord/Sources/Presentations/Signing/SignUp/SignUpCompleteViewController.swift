@@ -228,6 +228,14 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
       })
       .disposed(by: self.disposeBag)
     
+    self.reactor?.state
+      .map { $0.isUpdatable }
+      .distinctUntilChanged({ $0.value == $1.value })
+      .asDriver(onErrorJustReturn: Pulse<Bool>(wrappedValue: false))
+      .drive(onNext: { [weak self] isUpdatable in
+        isUpdatable.value ? self?.confirmButton.setAbleStatus() : self?.confirmButton.setDisableStatus()
+      })
+      .disposed(by: self.disposeBag)
     
     
     // action
@@ -242,7 +250,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     self.confirmButton.rx.tap
       .asDriver(onErrorJustReturn: ())
       .drive(onNext: { [weak self] _ in
-        
+        self?.reactor?.action.onNext(.updateUserInformation)
       })
       .disposed(by: self.disposeBag)
     

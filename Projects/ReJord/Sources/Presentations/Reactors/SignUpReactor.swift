@@ -45,7 +45,7 @@ final class SignUpReactor: Reactor, Stepper {
     case signUpAction
     case nicknameInputed(text: String?)
     case needNicknameValidation(nickname: String?)
-    case updateUserInformation(signUpResult: SignUpResult?)
+    case updateUserInformation
     
   }
   
@@ -67,6 +67,7 @@ final class SignUpReactor: Reactor, Stepper {
     var idIsAvailable: IdAvailableType = .checkYet
     var defaultNickname: String? = ""
     var nicknameStatus: NickNameStatusType = .empty
+    var isUpdatable: Pulse<Bool> = Pulse(wrappedValue: true)
   }
   
   // MARK: - Properties
@@ -77,6 +78,7 @@ final class SignUpReactor: Reactor, Stepper {
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
   private let signUpUsecase: SignUpUsecase
+  private var signUpResult: SignUpResult?
   
   
   // MARK: - Life Cycle
@@ -84,6 +86,7 @@ final class SignUpReactor: Reactor, Stepper {
   init(repository: SignUpRepository, signUpResult: SignUpResult?) {
     self.signUpUsecase = SignUpUsecase(repository: repository)
     self.action.onNext(.nicknameInputed(text: signUpResult?.nickname))
+    self.signUpResult = signUpResult
   }
   
   deinit {
@@ -134,18 +137,23 @@ final class SignUpReactor: Reactor, Stepper {
       
     case .needNicknameValidation(nickname: let nickname):
       return self.signUpUsecase.validateNickname(nickname: nickname)
-        .map { isValid in
+        .map { [weak self] isValid in
+          if isValid {
+            guard let nickname = nickname else { return .setUserInformationUpdatable(false)}
+            self?.signUpResult?.updateNickname(newNickname: nickname)
+          }
           return .setUserInformationUpdatable(isValid)
         }
-    case .updateUserInformation(signUpResult: let signUpResult):
+    case .updateUserInformation:
       guard let nickname = signUpResult?.nickname,
             let uid = signUpResult?.uid else { return .empty() }
       return self.modifyUserInformation(nickname: nickname, uid: uid)
         .map { result in
           switch result {
           case .success(_):
-            return .setNicknameStatus(status: .valid)
-          case .failure(let error):
+            self.steps.accept(ReJordSteps.homeSceneIsRequired)
+            return .empty
+          case .failure(_):
             return .setNicknameStatus(status: .duplicated)
           }
         }
@@ -176,6 +184,7 @@ final class SignUpReactor: Reactor, Stepper {
     case .setDefaultNickname(text: let defaultNickname):
       newState.defaultNickname = defaultNickname
     case .setUserInformationUpdatable(let isUserInformationUpdatable):
+      newState.isUpdatable = Pulse(wrappedValue: isUserInformationUpdatable) 
       newState.nicknameStatus = isUserInformationUpdatable ? .valid : .invalid
     }
     return newState

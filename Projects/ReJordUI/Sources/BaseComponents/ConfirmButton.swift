@@ -28,7 +28,24 @@ open class ConfirmButton: UIButton {
   }
   
   
-  // MARK: - Functions
+  // MARK: - internal functions
+  
+  open func setAbleStatus() {
+    self.isUserInteractionEnabled = true
+    UIView.animate(withDuration: 0.2) {
+      self.alpha = 1
+    }
+  }
+  
+  open func setDisableStatus() {
+    self.isUserInteractionEnabled = false
+    UIView.animate(withDuration: 0.2) {
+      self.alpha = 0.3
+    }
+  }
+  
+  
+  // MARK: - private functions
   
   private func setupButton(titleText: String) {
     self.setButtonProperties(
