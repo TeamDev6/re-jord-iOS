@@ -41,7 +41,7 @@ final class NicknameTextFieldView: UIView {
       keyboardType: .default
     )
     textField.setPlaceHolder(
-      text: "닉네임을 등록해주세요.",
+      text: ReJordUIStrings.signUpCompleteRegisterNickname,
       color: .gray,
       font: .roboto(fontType: .bold, fontSize: 26)
     )
@@ -59,7 +59,6 @@ final class NicknameTextFieldView: UIView {
   
   func setTextOnNicknameTextField(text: String?) {
     self.nicknameTextField.text = text
-
   }
   
   

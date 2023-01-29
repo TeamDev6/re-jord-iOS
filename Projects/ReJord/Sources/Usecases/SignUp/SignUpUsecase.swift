@@ -26,11 +26,13 @@ final class SignUpUsecase {
   }
   
   func validateNickname(nickname: String?) -> Observable<Bool> {
-    // TODO: 영문 대/소문자, 한글, 숫자 2~10 글자
     guard let nickname = nickname,
           (nickname.count >= 2 && nickname.count <= 10) else { return .just(false) }
-    
-    return .just(false)
+    let hasSpecialCharacters = nickname.range(
+      of: ".*[^A-Za-z0-9].*",
+      options: .regularExpression
+    ) != nil
+    return .just(!hasSpecialCharacters)
   }
   
   func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {

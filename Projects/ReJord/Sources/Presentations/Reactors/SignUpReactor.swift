@@ -45,6 +45,7 @@ final class SignUpReactor: Reactor, Stepper {
     case signUpAction
     case nicknameInputed(text: String?)
     case needNicknameValidation(nickname: String?)
+    case updateUserInformation(signUpResult: SignUpResult?)
     
   }
   
@@ -132,27 +133,24 @@ final class SignUpReactor: Reactor, Stepper {
       return .empty()
     case .nicknameInputed(let nickname):
       return .just(.setDefaultNickname(text: nickname))
-//      guard let text = text,
-//            let uid = signUpResult?.uid,
-//            !text.isEmpty else { return .empty() }
-//      guard text.count >= 2 || text.count < 10 else {
-//        return .just(.setNicknameStatus(status: .invalidCount))
-//      }
-//      return self.modifyUserInformation(nickname: text, uid: uid)
-//        .map { result in
-//          switch result {
-//          case .success(_):
-//            return .setNicknameStatus(status: .valid)
-//          case .failure(let error):
-//            return .setNicknameStatus(status: .duplicated)
-//          }
-//        }
+      
     case .needNicknameValidation(nickname: let nickname):
       return self.signUpUsecase.validateNickname(nickname: nickname)
         .map { isValid in
+          print(isValid)
           return .setUserInformationUpdatable(isValid)
         }
-      return .empty()
+    case .updateUserInformation(signUpResult: let signUpResult):
+      guard let uid = signUpResult?.uid else { return .empty() }
+      return self.modifyUserInformation(nickname: "", uid: uid)
+        .map { result in
+          switch result {
+          case .success(_):
+            return .setNicknameStatus(status: .valid)
+          case .failure(let error):
+            return .setNicknameStatus(status: .duplicated)
+          }
+        }
     }
   }
   

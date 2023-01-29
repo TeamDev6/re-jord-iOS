@@ -221,6 +221,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     
     self.reactor?.state
       .map { $0.defaultNickname }
+      .distinctUntilChanged()
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] defaultNickname in
         self?.nicknameFieldView.setTextOnNicknameTextField(text: defaultNickname)
@@ -234,19 +235,14 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
     self.nicknameFieldView.rx.textInput
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] text in
-        // TODO: text validation
-        print(text)
+        self?.reactor?.action.onNext(.needNicknameValidation(nickname: text))
       })
       .disposed(by: self.disposeBag)
    
     self.confirmButton.rx.tap
       .asDriver(onErrorJustReturn: ())
-      .drive(onNext: { [weak self] text in
+      .drive(onNext: { [weak self] _ in
         
-//        self?.reactor?.action.onNext(.nickNameValueInserted(
-//          text: text,
-//          signUpResult: signUpResult)
-//        )
       })
       .disposed(by: self.disposeBag)
     
