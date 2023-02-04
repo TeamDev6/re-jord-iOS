@@ -12,7 +12,15 @@ import XCTest
 
 final class TestTest: XCTestCase {
   
-  func plusTest() {
+  override func setUpWithError() throws {
     
+  }
+  
+  override func tearDownWithError() throws {
+    
+  }
+  
+  func testPlusTest() {
+    XCTAssertTrue("1" == "1")
   }
 }

@@ -1,8 +1,8 @@
 //
-//  HomeViewController.swift
+//  ChallengeViewController.swift
 //  ReJord
 //
-//  Created by 송하민 on 2023/01/01.
+//  Created by 송하민 on 2023/02/04.
 //  Copyright © 2023 team.reJord. All rights reserved.
 //
 
@@ -14,8 +14,8 @@ import SnapKit
 import Then
 import ReJordUI
 
-final class HomeViewController: UIViewController, Layoutable, View {
-
+final class ChallengeViewController: UIViewController, Layoutable, View {
+  
   
   
   // MARK: - components
@@ -48,21 +48,16 @@ final class HomeViewController: UIViewController, Layoutable, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = .gray
     self.setLayout()
   }
   
   
   // MARK: - layout
   
-  func setLayout() {
-    
-  }
-  
   
   // MARK: - bind reactor
   
-  func bind(reactor: HomeReactor) {
+  func bind(reactor: <#Reactor#>) {
     
   }
   

@@ -15,7 +15,7 @@ class LoginFlow: Flow {
     case pushToSignInViewController
     case pushToSignUpViewController
     case pushToSignUpCompleteViewControllor(signUpResult: SignUpResult)
-    case pushToHomeViewController
+    case pushToMainViewController
   }
   
   // MARK: - Private Properties
@@ -56,7 +56,7 @@ class LoginFlow: Flow {
     case .signUpCompleteSceneIsRequired(let signUpResult):
       return self.push(to: .pushToSignUpCompleteViewControllor(signUpResult: signUpResult))
     case .homeSceneIsRequired:
-      return self.push(to: .pushToHomeViewController)
+      return self.push(to: .pushToMainViewController)
     }
   }
   
@@ -79,10 +79,19 @@ class LoginFlow: Flow {
       let signUpCompleteViewController = SignUpCompleteViewController(reactor: signUpReactor)
       self.rootViewController.pushViewController(signUpCompleteViewController, animated: true)
       return .one(flowContributor: .contribute(withNextPresentable: signUpCompleteViewController, withNextStepper: signUpReactor))
-    case .pushToHomeViewController:
-      let homeViewController = HomeViewController(reactor: self.homeReactor)
-      self.rootViewController.pushViewController(homeViewController, animated: true)
-      return .one(flowContributor: .contribute(withNextPresentable: homeViewController, withNextStepper: self.homeReactor))
+    case .pushToMainViewController:
+      
+      let homeFlow = HomeFlow()
+      let settingFlow = SettingFlow()
+      let challengeFlow = ChallengeFlow()
+      
+      Flows.use([homeFlow, settingFlow, challengeFlow], when: .ready) { _ in
+        <#code#>
+      }
+      
+      let mainViewController = MainViewController(reactor: self.homeReactor)
+      self.rootViewController.pushViewController(mainViewController, animated: true)
+      return .one(flowContributor: .contribute(withNextPresentable: mainViewController, withNextStepper: self.homeReactor))
     }
   }
   
