@@ -33,24 +33,24 @@ extension Project {
       settings: .settings(
         base: baseSettings,
         configurations: [
-          .debug(name: "Debug", xcconfig: .relativeToRoot("Configurations/XCConfig/Debug.xcconfig")),
+          .debug(name: "Development", xcconfig: .relativeToRoot("Configurations/XCConfig/Development.xcconfig")),
           .debug(name: "Alpha", xcconfig: .relativeToRoot("Configurations/XCConfig/Alpha.xcconfig")),
-          .debug(name: "Release", xcconfig: .relativeToRoot("Configurations/XCConfig/Release.xcconfig"))
+          .release(name: "Release", xcconfig: .relativeToRoot("Configurations/XCConfig/Release.xcconfig"))
         ]
       ),
       targets: targets,
       schemes: [
-        Scheme(name: "\(name)-Debug",
+        Scheme(name: "\(name)-Development",
                shared: true,
                buildAction: BuildAction(targets: ["ReJord"]),
                testAction: TestAction.targets(
                 ["\(name)Tests"],
-                configuration: "Debug",
+                configuration: "Development",
                 diagnosticsOptions: [.mainThreadChecker]
                ),
-               runAction: RunAction.runAction(configuration: "Debug"),
-               archiveAction: ArchiveAction.archiveAction(configuration: "Debug"),
-               analyzeAction: AnalyzeAction.analyzeAction(configuration: "Debug")
+               runAction: RunAction.runAction(configuration: "Development"),
+               archiveAction: ArchiveAction.archiveAction(configuration: "Development"),
+               analyzeAction: AnalyzeAction.analyzeAction(configuration: "Development")
               ),
         Scheme(name: "\(name)-Alpha",
                shared: true,
@@ -106,14 +106,18 @@ extension Project {
         )
       )
       
-      let baseSettings: [String: SettingValue] = [
-        "SWIFT_OBJC_BRIDGING_HEADER": "./Sources/\(name)DemoApp-Bridging-Header.h"
-      ]
+//      let baseSettings: [String: SettingValue] = [
+//        "SWIFT_OBJC_BRIDGING_HEADER": "./Sources/\(name)DemoApp-Bridging-Header.h"
+//      ]
 
       return Project(
         name: name,
         organizationName: organizationName,
-        settings: .settings(base: baseSettings),
+        settings: Settings.settings(configurations: [
+          .debug(name: "Development", xcconfig: .relativeToRoot("Configurations/XCConfig/Development.xcconfig")),
+          .debug(name: "Alpha", xcconfig: .relativeToRoot("Configurations/XCConfig/Alpha.xcconfig")),
+          .release(name: "Release", xcconfig: .relativeToRoot("Configurations/XCConfig/Release.xcconfig"))
+        ]),
         targets: targets
       )
     }
@@ -151,19 +155,19 @@ private extension Project {
                          resources: ["Resources/**"],
                          headers: Headers.headers(public: FileList(arrayLiteral: "RxCocoa-Swift.h")),
                          dependencies: dependencies)
-    // TEST 필요 시 주석해제
-//    let tests = Target(name: "\(name)Tests",
-//                       platform: platform,
-//                       product: .unitTests,
-//                       bundleId: "team.dev6.\(name)Tests",
-//                       infoPlist: .default,
-//                       sources: ["Tests/**"],
-//                       resources: [],
-//                       dependencies: [
-//                        .target(name: name),
-//                        .external(name: "RxTest")
-//                       ])
-    return [sources, /* tests */ ]
+     
+    let tests = Target(name: "\(name)Tests",
+                       platform: platform,
+                       product: .unitTests,
+                       bundleId: "team.dev6.\(name)Tests",
+                       infoPlist: .default,
+                       sources: ["Tests/**"],
+                       resources: [],
+                       dependencies: [
+                        .target(name: name),
+                        .external(name: "RxTest")
+                       ])
+    return [sources, tests ]
     
   }
   
@@ -190,20 +194,19 @@ private extension Project {
       dependencies: dependencies
     )
     
-    // TODO: Test 필요 시 주석해제
-//    let testTarget = Target(
-//      name: "\(name)Tests",
-//      platform: platform,
-//      product: .unitTests,
-//      bundleId: "team.dev6.Tests",
-//      infoPlist: .default,
-//      sources: ["Tests/**"],
-//      dependencies: [
-//        .target(name: "\(name)"),
-//        .external(name: "RxTest")
-//      ])
+    let testTarget = Target(
+      name: "\(name)Tests",
+      platform: platform,
+      product: .unitTests,
+      bundleId: "team.dev6.Tests",
+      infoPlist: .default,
+      sources: ["Tests/**"],
+      dependencies: [
+        .target(name: "\(name)"),
+        .external(name: "RxTest")
+      ])
     
-    return [mainTarget, /* testTarget */]
+    return [mainTarget, testTarget]
   }
   
 }

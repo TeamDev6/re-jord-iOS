@@ -18,4 +18,21 @@ extension TargetDependency.Project {
   )
 }
 
+// MARK: TargetDependency
+
+public extension TargetDependency {
+  static let rxSwift: TargetDependency = .external(name: "RxSwift")
+  static let rxFlow: TargetDependency = .external(name: "RxFlow")
+  static let rxDataSources: TargetDependency = .external(name: "RxDataSources")
+  static let reactorKit: TargetDependency = .external(name: "ReactorKit")
+  static let kingFisher: TargetDependency = .external(name: "Kingfisher")
+  static let moya: TargetDependency = .external(name: "Moya")
+  static let rxMoya: TargetDependency = .external(name: "RxMoya")
+  static let alamofire: TargetDependency = .external(name: "Alamofire")
+  static let snapKit: TargetDependency = .external(name: "SnapKit")
+  static let swiftyJSON: TargetDependency = .external(name: "SwiftyJSON")
+  static let Then: TargetDependency = .external(name: "Then")
+}
+
+
 

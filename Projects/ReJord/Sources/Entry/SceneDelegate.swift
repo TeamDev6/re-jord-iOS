@@ -9,7 +9,6 @@
 import RxFlow
 import RxSwift
 import UIKit
-import FirebaseCore
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   

@@ -11,21 +11,15 @@ let project = Project.app(
   platform: .iOS,
   iOSTargetVersion: targetVersion,
   dependencies: [
-    .external(name: "RxSwift"),
-    .external(name: "RxFlow"),
-    .external(name: "RxDataSources"),
-    .external(name: "ReactorKit"),
-    .external(name: "Kingfisher"),
-    .external(name: "NeedleFoundation"),
-    .external(name: "Moya"),
-    .external(name: "RxMoya"),
-    .external(name: "Alamofire"),
-    .external(name: "SnapKit"),
-    .external(name: "SwiftyJSON"),
-    .external(name: "Then"),
-    .external(name: "FirebaseAnalytics"),
-    .external(name: "FirebaseCrashlytics"),
-    TargetDependency.Project.ReJordUI
+    .rxSwift,
+    .rxFlow,
+    .reactorKit,
+    .kingFisher,
+    .moya,
+    .rxMoya,
+    .alamofire,
+    .snapKit,
+    .Then,
+    TargetDependency.Project.ReJordUI,
   ]
 )
-
