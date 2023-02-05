@@ -13,7 +13,7 @@ import UIKit
 class SettingsFlows: Flow {
   
   enum PushTransition {
-    
+    case showSettings
   }
   
   enum PresentTransition {
@@ -48,6 +48,8 @@ class SettingsFlows: Flow {
       return .none
     }
     switch step {
+    case .settingsTabIsRequired:
+      return push(to: .showSettings)
     default:
       return .none
     }
@@ -56,7 +58,11 @@ class SettingsFlows: Flow {
   
   private func push(to step: PushTransition) -> FlowContributors {
     switch step {
-      
+    case .showSettings:
+      guard let settingsReactor else { return .none }
+      let settingsVC = SettingsViewController(reactor: settingsReactor)
+      self.rootViewController.pushViewController(settingsVC, animated: false)
+      return .one(flowContributor: .contribute(withNextPresentable: settingsVC, withNextStepper: settingsReactor))
     }
   }
   

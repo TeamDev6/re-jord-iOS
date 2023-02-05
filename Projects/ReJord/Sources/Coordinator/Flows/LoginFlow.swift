@@ -93,9 +93,12 @@ class LoginFlow: Flow {
       let challengeFlow = ChallengeFlow(reactor: challengeReactor)
       let settingsFlow = SettingsFlows(reactor: settingsReactor)
       
+      let mainTabbarViewController = UITabBarController()
+      mainTabbarViewController.tabBar.backgroundColor = .white
+      
       Flows.use(homeFlow, challengeFlow, settingsFlow, when: .ready) { [weak self] (home, challenge, settings) in
         
-        let mainTabbarViewController = UITabBarController()
+        
         let homeItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), selectedImage: nil)
         let challengeItem = UITabBarItem(title: "Challenge", image: UIImage(systemName: "person.fill"), selectedImage: nil)
         let settingsItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "person.fill"), selectedImage: nil)
@@ -113,33 +116,6 @@ class LoginFlow: Flow {
         .contribute(withNextPresentable: challengeFlow, withNextStepper: OneStepper(withSingleStep: ReJordSteps.challengeTabIsRequired)),
         .contribute(withNextPresentable: settingsFlow, withNextStepper: OneStepper(withSingleStep: ReJordSteps.settingsTabIsRequired)),
       ])
-      
-      
-//      Flows.use(homeFlow, challengeFlow, settingsFlow, when: .ready) { [weak self] home, challenge, settings in
-//        let mainTabbarViewController = UITabBarController()
-//        let homeItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), selectedImage: nil)
-//        let challengeItem = UITabBarItem(title: "Challenge", image: UIImage(systemName: "person.fill"), selectedImage: nil)
-//        let settingsItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "person.fill"), selectedImage: nil)
-//
-//        home.tabBarItem = homeItem
-//        home.title = "HOME"
-//        challenge.tabBarItem = challengeItem
-//        challenge.title = "CHALLENGE"
-//        settings.tabBarItem = settingsItem
-//        settings.title = "SETTINGS"
-//
-//        mainTabbarViewController.setViewControllers(
-//          [home, challenge, settings],
-//          animated: false
-//        )
-//        self?.rootViewController.pushViewController(mainTabbarViewController, animated: false)
-//      }
-//
-//      return .multiple(flowContributors: [
-//        .contribute(withNextPresentable: homeFlow, withNextStepper: homeReactor),
-//        .contribute(withNextPresentable: challengeFlow, withNextStepper: challengeReactor),
-//        .contribute(withNextPresentable: settingsFlow, withNextStepper: settingsReactor),
-//      ])
       
     }
   }

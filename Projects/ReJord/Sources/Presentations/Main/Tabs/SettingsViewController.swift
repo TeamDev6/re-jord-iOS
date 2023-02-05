@@ -48,6 +48,7 @@ final class SettingsViewController: UIViewController, Layoutable, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = .blue
     self.setLayout()
   }
   

@@ -50,6 +50,7 @@ final class ChallengeViewController: UIViewController, Layoutable, View {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = .red
     self.setLayout()
   }
   

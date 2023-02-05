@@ -13,7 +13,7 @@ import UIKit
 class ChallengeFlow: Flow {
   
   enum PushTransition {
-    
+    case showChallenge
   }
   
   enum PresentTransition {
@@ -49,6 +49,8 @@ class ChallengeFlow: Flow {
       return .none
     }
     switch step {
+    case .challengeTabIsRequired:
+      return push(to: .showChallenge)
     default:
       return .none
     }
@@ -57,7 +59,11 @@ class ChallengeFlow: Flow {
   
   private func push(to step: PushTransition) -> FlowContributors {
     switch step {
-      
+    case .showChallenge:
+      guard let challengeReactor else { return .none }
+      let challengeVC = ChallengeViewController(reactor: challengeReactor)
+      self.rootViewController.pushViewController(challengeVC, animated: false)
+      return .one(flowContributor: .contribute(withNextPresentable: challengeVC, withNextStepper: challengeReactor))
     }
   }
   

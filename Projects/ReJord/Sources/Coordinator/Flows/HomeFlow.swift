@@ -50,7 +50,6 @@ class HomeFlow: Flow {
     }
     switch step {
     case .homeTabIsRequired:
-//      return .none
       return push(to: .showHome)
     default:
       return .none
@@ -61,9 +60,10 @@ class HomeFlow: Flow {
   private func push(to step: PushTransition) -> FlowContributors {
     switch step {
     case .showHome:
-      let homeVC = HomeViewController(reactor: self.homeReactor!)
+      guard let homeReactor else { return .none }
+      let homeVC = HomeViewController(reactor: homeReactor)
       self.rootViewController.pushViewController(homeVC, animated: false)
-      return .one(flowContributor: .contribute(withNextPresentable: homeVC, withNextStepper: self.homeReactor!))
+      return .one(flowContributor: .contribute(withNextPresentable: homeVC, withNextStepper: homeReactor))
     }
   }
   
