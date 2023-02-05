@@ -48,6 +48,7 @@ final class HomeViewController: UIViewController, Layoutable, View {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setLayout()
+    self.view.backgroundColor = .white
   }
   
   

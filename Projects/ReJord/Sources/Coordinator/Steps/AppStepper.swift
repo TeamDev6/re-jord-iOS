@@ -15,6 +15,6 @@ class AppStepper: Stepper {
     PublishRelay<Step>()
   }
   var initialStep: Step {
-    return ReJordSteps.signInIsRequired
+    return ReJordSteps.mainTabsSceneIsRequired
   }
 }

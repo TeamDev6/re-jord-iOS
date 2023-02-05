@@ -37,9 +37,8 @@ final class MainViewController: UIViewController, Layoutable {
   
   // MARK: - life cycles
   
-  init(reactor: HomeReactor) {
+  init() {
     super.init(nibName: nil, bundle: nil)
-    self.reactor = reactor
   }
   
   required init?(coder: NSCoder) {

@@ -81,7 +81,7 @@ final class LoginReactor: Reactor, Stepper {
           switch result {
           case .success(_):
             defer {
-              self.steps.accept(ReJordSteps.homeSceneIsRequired)
+              self.steps.accept(ReJordSteps.mainTabsSceneIsRequired)
             }
             return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: false))
           case .failure(_):

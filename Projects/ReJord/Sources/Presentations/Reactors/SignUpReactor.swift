@@ -151,7 +151,7 @@ final class SignUpReactor: Reactor, Stepper {
         .map { result in
           switch result {
           case .success(_):
-            self.steps.accept(ReJordSteps.homeSceneIsRequired)
+            self.steps.accept(ReJordSteps.mainTabsSceneIsRequired)
             return .empty
           case .failure(_):
             return .setNicknameStatus(status: .duplicated)

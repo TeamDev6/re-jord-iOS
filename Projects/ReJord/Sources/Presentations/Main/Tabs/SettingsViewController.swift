@@ -37,7 +37,7 @@ final class SettingsViewController: UIViewController, Layoutable, View {
   
   // MARK: - life cycles
   
-  init(reactor: HomeReactor) {
+  init(reactor: SettingsReactor) {
     super.init(nibName: nil, bundle: nil)
     self.reactor = reactor
   }
@@ -54,10 +54,13 @@ final class SettingsViewController: UIViewController, Layoutable, View {
   
   // MARK: - layout
   
+  func setLayout() {
+    
+  }
   
   // MARK: - bind reactor
   
-  func bind(reactor: <#Reactor#>) {
+  func bind(reactor: SettingsReactor) {
     
   }
   

@@ -10,7 +10,7 @@ import Foundation
 import RxFlow
 import UIKit
 
-class SettingFlow: Flow {
+class SettingsFlows: Flow {
   
   enum PushTransition {
     
@@ -22,11 +22,12 @@ class SettingFlow: Flow {
   
   // MARK: - Private Properties
   
+  private var settingsReactor: SettingsReactor?
   
   // MARK: - Life Cycle
   
-  init() {
-    
+  init(reactor: SettingsReactor) {
+    self.settingsReactor = reactor
   }
   
   // MARK: - Root ViewController

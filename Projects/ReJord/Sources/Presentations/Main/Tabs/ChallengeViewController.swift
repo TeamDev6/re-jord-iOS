@@ -18,6 +18,8 @@ final class ChallengeViewController: UIViewController, Layoutable, View {
   
   
   
+  
+  
   // MARK: - components
   
   
@@ -37,7 +39,7 @@ final class ChallengeViewController: UIViewController, Layoutable, View {
   
   // MARK: - life cycles
   
-  init(reactor: HomeReactor) {
+  init(reactor: ChallengeReactor) {
     super.init(nibName: nil, bundle: nil)
     self.reactor = reactor
   }
@@ -54,10 +56,13 @@ final class ChallengeViewController: UIViewController, Layoutable, View {
   
   // MARK: - layout
   
+  func setLayout() {
+    
+  }
   
   // MARK: - bind reactor
   
-  func bind(reactor: <#Reactor#>) {
+  func bind(reactor: ChallengeReactor) {
     
   }
   

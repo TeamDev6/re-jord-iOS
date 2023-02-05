@@ -22,11 +22,13 @@ class ChallengeFlow: Flow {
   
   // MARK: - Private Properties
   
+  private var challengeReactor: ChallengeReactor?
+  
   
   // MARK: - Life Cycle
   
-  init() {
-    
+  init(reactor: ChallengeReactor) {
+    self.challengeReactor = reactor
   }
   
   // MARK: - Root ViewController

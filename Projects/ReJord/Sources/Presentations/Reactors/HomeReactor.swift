@@ -32,10 +32,15 @@ final class HomeReactor: Reactor, Stepper {
   
   var initialState: State = State()
   var steps: PublishRelay<Step> = PublishRelay()
+//  var initialStep: ReJordSteps = .homeTabIsRequired
   
   private var errorListener: PublishRelay = PublishRelay<ReJordError>()
   private let usecase: HomeUsecase
   
+  func readyToEmitSteps() {
+    self.steps.accept(ReJordSteps.homeTabIsRequired)
+  }
+
   
   // MARK: - DisposeBag
   

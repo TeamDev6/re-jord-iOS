@@ -139,7 +139,7 @@ final class SignUpCompleteViewController: UIViewController, Layoutable, View, UI
   }
   
   @objc func rightNavigationAction() {
-    self.reactor?.steps.accept(ReJordSteps.homeSceneIsRequired)
+    self.reactor?.steps.accept(ReJordSteps.mainTabsSceneIsRequired)
   }
   
   

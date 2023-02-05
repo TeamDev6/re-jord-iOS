@@ -13,7 +13,7 @@ import UIKit
 class HomeFlow: Flow {
   
   enum PushTransition {
-    
+    case showHome
   }
   
   enum PresentTransition {
@@ -21,12 +21,14 @@ class HomeFlow: Flow {
   }
   
   // MARK: - Private Properties
+
+  private var homeReactor: HomeReactor?
   
   
   // MARK: - Life Cycle
   
-  init() {
-    
+  init(reactor: HomeReactor) {
+    self.homeReactor = reactor
   }
   
   // MARK: - Root ViewController
@@ -47,6 +49,9 @@ class HomeFlow: Flow {
       return .none
     }
     switch step {
+    case .homeTabIsRequired:
+//      return .none
+      return push(to: .showHome)
     default:
       return .none
     }
@@ -55,7 +60,10 @@ class HomeFlow: Flow {
   
   private func push(to step: PushTransition) -> FlowContributors {
     switch step {
-      
+    case .showHome:
+      let homeVC = HomeViewController(reactor: self.homeReactor!)
+      self.rootViewController.pushViewController(homeVC, animated: false)
+      return .one(flowContributor: .contribute(withNextPresentable: homeVC, withNextStepper: self.homeReactor!))
     }
   }
   

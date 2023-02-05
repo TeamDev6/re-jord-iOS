@@ -42,14 +42,12 @@ class SignUpFlow: Flow {
       return .none
     }
     switch step {
-    case .signInIsRequired:
-      return .none
-    case .signUpIsRequired:
-      return .none
     case .signUpCompleteSceneIsRequired(let signUpResult):
       return self.push(to: .pushToSignUpCompletViewController(signUpResult: signUpResult))
-    case .homeSceneIsRequired:
-      return .one(flowContributor: .forwardToParentFlow(withStep: ReJordSteps.homeSceneIsRequired))
+    case .mainTabsSceneIsRequired:
+      return .one(flowContributor: .forwardToParentFlow(withStep: ReJordSteps.mainTabsSceneIsRequired))
+    default:
+      return .none
     }
   }
   

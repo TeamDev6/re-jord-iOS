@@ -19,8 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     
-//    FirebaseApp.configure()
-    
     coordinator.rx.willNavigate
       .subscribe { flow, step in
         print("will navigate flow ~> \(flow), with step ~> \(step)")
@@ -28,14 +26,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(windowScene: windowScene)
     
-    let signInFlow = LoginFlow()
+    let loginFlow = LoginFlow()
     
     self.coordinator.coordinate(
-      flow: signInFlow,
+      flow: loginFlow,
       with: AppStepper()
     )
     
-    Flows.use(signInFlow, when: .created) { root in
+    Flows.use(loginFlow, when: .created) { root in
       self.window?.rootViewController = root
       self.window?.makeKeyAndVisible()
     }
