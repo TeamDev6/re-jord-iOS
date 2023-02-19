@@ -11,11 +11,19 @@ import RxSwift
 
 final class SignUpUsecase {
   
-  let repository: SignUpRepository
+	// MARK: - private properties
   
+	private let repository: SignUpRepository
+	private let nicknameValidator = NicknameValidator()
+  
+	
+	// MARK: - life cycle
+	
   init(repository: SignUpRepository) {
     self.repository = repository
   }
+	
+	// MARK: - internal func
   
   func signUp(userId id: String, userPassword password: String) -> Observable<Result<SignUpResult, ReJordError>> {
     return self.repository.signUp(userId: id, userPassword: password)

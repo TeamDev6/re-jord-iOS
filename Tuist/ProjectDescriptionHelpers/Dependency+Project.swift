@@ -31,7 +31,11 @@ public extension TargetDependency {
   static let alamofire: TargetDependency = .external(name: "Alamofire")
   static let snapKit: TargetDependency = .external(name: "SnapKit")
   static let swiftyJSON: TargetDependency = .external(name: "SwiftyJSON")
-  static let Then: TargetDependency = .external(name: "Then")
+  static let then: TargetDependency = .external(name: "Then")
+  static let parchment: TargetDependency = .external(name: "Parchment")
+  static let quick: TargetDependency = .external(name: "Quick")
+  static let nimble: TargetDependency = .external(name: "Nimble")
+  
 }
 
 

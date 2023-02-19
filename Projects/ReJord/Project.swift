@@ -19,7 +19,8 @@ let project = Project.app(
     .rxMoya,
     .alamofire,
     .snapKit,
-    .Then,
-    TargetDependency.Project.ReJordUI,
+    .then,
+    .parchment,
+    TargetDependency.Project.ReJordUI
   ]
 )

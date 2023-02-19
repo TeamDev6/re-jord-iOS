@@ -166,9 +166,10 @@ private extension Project {
                        resources: [],
                        dependencies: [
                         .target(name: name),
-                        .external(name: "RxTest")
+                        .external(name: "Quick"),
+                        .external(name: "Nimble")
                        ])
-    return [sources, tests ]
+    return [sources, tests]
     
   }
   
@@ -204,7 +205,8 @@ private extension Project {
       sources: ["Tests/**"],
       dependencies: [
         .target(name: "\(name)"),
-        .external(name: "RxTest")
+        .external(name: "Quick"),
+        .external(name: "Nimble")
       ])
     
     return [mainTarget, testTarget]
