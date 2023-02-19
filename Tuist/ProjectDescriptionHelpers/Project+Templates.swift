@@ -29,6 +29,7 @@ extension Project {
     return Project(
       name: name,
       organizationName: organizationName,
+      options: .options(textSettings: .textSettings(usesTabs: true, indentWidth: 2, tabWidth: 2)),
       packages: [],
       settings: .settings(
         base: baseSettings,

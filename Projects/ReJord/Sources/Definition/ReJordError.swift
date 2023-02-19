@@ -9,12 +9,12 @@
 import Foundation
 
 enum ErrorFrom {
-  case server
+	case server
 }
 
 enum ReJordError: Error {
-  case serverError(description: String)
-  case cantBindReactor
-  case jsonDecodingFail
+	case serverError(description: String)
+	case cantBindReactor
+	case jsonDecodingFail
 }
 
