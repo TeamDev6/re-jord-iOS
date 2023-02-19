@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 final class SignUpUsecase {
   
@@ -34,13 +35,18 @@ final class SignUpUsecase {
   }
   
   func validateNickname(nickname: String?) -> Observable<Bool> {
-    guard let nickname = nickname,
-          (nickname.count >= 2 && nickname.count <= 10) else { return .just(false) }
-    let hasSpecialCharacters = nickname.range(
-      of: ".*[^A-Z가-힣ㄱ-ㅎㅏ-ㅣa-z0-9].*",
-      options: .regularExpression
-    ) != nil
-    return .just(!hasSpecialCharacters)
+		return self.nicknameValidator.checkNicknameLength(nickname: nickname)
+			.flatMap { isLengthValidated -> Observable<Bool> in
+				if isLengthValidated {
+					return self.nicknameValidator.checkNicknameRegex(nickname: nickname)
+				} else {
+					return .just(false)
+				}
+			}
+			.flatMap { isRegexValidated -> Observable<Bool> in
+				return .just(isRegexValidated)
+			}
+			
   }
   
   func modifyUserInformation(nickname: String, uid: String) -> Observable<Result<Data, ReJordError>> {

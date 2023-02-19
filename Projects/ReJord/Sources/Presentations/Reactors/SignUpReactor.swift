@@ -106,7 +106,7 @@ final class SignUpReactor: Reactor, Stepper {
       return .just(.passwordConfirmSet(password: value))
     case .checkIdDuplication:
       guard let id = self.currentState.idValue else { return .empty() }
-      return self.checkIDDuplicated(id: id)
+      return self.checkIdDuplicated(id: id)
         .map { result in
           switch result {
           case .success(_):
@@ -196,7 +196,7 @@ final class SignUpReactor: Reactor, Stepper {
     return self.signUpUsecase.signUp(userId: userId, userPassword: userPassword)
   }
   
-  private func checkIDDuplicated(id: String) -> Observable<Result<Data, ReJordError>> {
+  private func checkIdDuplicated(id: String) -> Observable<Result<Data, ReJordError>> {
     return self.signUpUsecase.checkIdDuplication(id: id)
   }
   

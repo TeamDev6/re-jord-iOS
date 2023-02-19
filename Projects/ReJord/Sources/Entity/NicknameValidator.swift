@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 final class NicknameValidator {
 	
@@ -19,14 +20,17 @@ final class NicknameValidator {
 	
 	// MARK: - internal func
 	
-	func checkNicknameLength(nickname: String?) -> Bool {
-		guard let nickname, nickname.count >= self.minimumNicknameLength, nickname.count <= self.maximumNicknameLength else { return false }
-		return true
+	func checkNicknameLength(nickname: String?) -> Observable<Bool> {
+		guard let nickname, nickname.count >= self.minimumNicknameLength, nickname.count <= self.maximumNicknameLength else { return Observable.just(false) }
+		return Observable.just(true)
 	}
 	
-	func checkNicknameRegex(nickname: String?) -> Bool {
-		
-		return true
+	func checkNicknameRegex(nickname: String?) -> Observable<Bool> {
+		guard let nickname,
+					let _ = nickname.range(of: ".*[^A-Z가-힣ㄱ-ㅎㅏ-ㅣa-z0-9].*", options: .regularExpression) else {
+			return Observable.just(false)
+		}
+		return Observable.just(true)
 	}
 	
 	
