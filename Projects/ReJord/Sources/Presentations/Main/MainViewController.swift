@@ -17,7 +17,6 @@ import ReJordUI
 final class MainViewController: UIViewController, Layoutable {
 
   
-  
   // MARK: - components
   
   
@@ -47,7 +46,6 @@ final class MainViewController: UIViewController, Layoutable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = .gray
     self.setLayout()
   }
   
