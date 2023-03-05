@@ -51,7 +51,11 @@ extension ReJordAPI: TargetType {
 	var task: Moya.Task {
 		switch self {
 		case .userSignUp(let id, let pwd):
-			let params: [String: Any] = ["userId": id, "password": pwd, "userType": "BASIC"]
+			let params: [String: Any] = [
+				"userId": id,
+				"password": pwd,
+				"roles": ["ROLE_USER"]
+			]
 			return .requestParameters(parameters: params, encoding: JSONEncoding.default)
 		case .idValidate:
 			return .requestPlain
@@ -61,6 +65,7 @@ extension ReJordAPI: TargetType {
 			return .requestParameters(parameters: ["userId": id, "password": password], encoding: JSONEncoding.default)
 		}
 	}
+	
 	var validationType: ValidationType {
 		return .successAndRedirectCodes
 	}

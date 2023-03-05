@@ -21,6 +21,7 @@ let project = Project.app(
     .snapKit,
     .then,
     .parchment,
+    .swiftyJSON,
     TargetDependency.Project.ReJordUI
   ]
 )

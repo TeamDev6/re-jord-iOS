@@ -70,7 +70,7 @@ final class SignUpReactor: Reactor, Stepper {
     var isUpdatable: Pulse<Bool> = Pulse(wrappedValue: true)
   }
   
-  // MARK: - Properties
+  // MARK: - internal properties
   
   var initialState: State = State()
   var steps: PublishRelay<Step> = PublishRelay()
@@ -100,10 +100,13 @@ final class SignUpReactor: Reactor, Stepper {
     switch action {
     case .idValueInserted(value: let value):
       return .just(.idSet(id: value))
+				
     case .passwordValueInserted(value: let value):
       return .just(.passwordSet(password: value))
+				
     case .passwordConfirmValueInserted(value: let value):
       return .just(.passwordConfirmSet(password: value))
+				
     case .checkIdDuplication:
       guard let id = self.currentState.idValue else { return .empty() }
       return self.checkIdDuplicated(id: id)
@@ -116,22 +119,28 @@ final class SignUpReactor: Reactor, Stepper {
             return .setIdValidationResult(availbale: false)
           }
         }
+				
     case .signUpAction:
-      return self.userSignUp(userId: currentState.idValue ?? "", userPassword: currentState.passwordValue ?? "")
-        .map { result in
-          switch result {
-          case .success(let signUpResult):
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(signUpResult), forKey: "signUpResult")
-            self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired(signUpResult: signUpResult))
-            return .empty
-          case .failure(let error):
-            self.errorListener.accept(error)
-            return .empty
-          }
-        }
+      return self.userSignUp(
+				userId: currentState.idValue ?? "",
+				userPassword: currentState.passwordValue ?? ""
+			)
+			.map { result in
+				switch result {
+					case .success(let signUpResult):
+						UserDefaults.standard.set(try? PropertyListEncoder().encode(signUpResult), forKey: "signUpResult")
+						self.steps.accept(ReJordSteps.signUpCompleteSceneIsRequired(signUpResult: signUpResult))
+						return .empty
+					case .failure(let error):
+						self.errorListener.accept(error)
+						return .empty
+				}
+			}
+				
     case .errorOccured:
       self.errorListener.accept(ReJordError.cantBindReactor)
       return .empty()
+				
     case .nicknameInputed(let nickname):
       return .just(.setDefaultNickname(text: nickname))
       
@@ -144,6 +153,7 @@ final class SignUpReactor: Reactor, Stepper {
           }
           return .setUserInformationUpdatable(isValid)
         }
+				
     case .updateUserInformation:
       guard let nickname = signUpResult?.nickname,
             let uid = signUpResult?.uid else { return .empty() }

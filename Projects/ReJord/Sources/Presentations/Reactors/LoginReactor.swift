@@ -13,6 +13,10 @@ import ReactorKit
 import RxFlow
 
 final class LoginReactor: Reactor, Stepper {
+	
+	enum UserDefaultKeys: String {
+		case UserTokens
+	}
   
   // MARK: - Reactor
   
@@ -77,18 +81,24 @@ final class LoginReactor: Reactor, Stepper {
       return .just(.setPassword(password: password))
     case .loginAction:
       return self.login(id: currentState.idValue, password: currentState.passwordValue)
-        .map { result in
-          switch result {
-          case .success(_):
-            defer {
-              self.steps.accept(ReJordSteps.mainTabsSceneIsRequired)
-            }
-            return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: false))
-          case .failure(_):
-            self.action.onNext(.errorOccured)
-            return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: true))
-          }
-        }
+					.map { result in
+						switch result {
+							case .success(let data):
+								let token = data.tokens
+								do {
+									let data = try JSONEncoder().encode(token)
+									UserDefaults.standard.set(data, forKey: UserDefaultKeys.UserTokens.rawValue)
+								} catch {
+									print("json encoder has a error")
+									return .empty
+								}
+								self.steps.accept(ReJordSteps.mainTabsSceneIsRequired)
+								return .empty
+							case .failure(_):
+								self.action.onNext(.errorOccured)
+								return .setLoginFailure(isFail: Pulse<Bool>(wrappedValue: true))
+						}
+					}
     }
   }
   
@@ -111,7 +121,7 @@ final class LoginReactor: Reactor, Stepper {
   
   // MARK: - Private Functions
   
-  private func login(id: String, password: String) -> Observable<Result<Data, ReJordError>> {
+  private func login(id: String, password: String) -> Observable<Result<LoginResult, ReJordError>> {
     return self.loginUsecase.login(id: id, password: password)
   }
   
