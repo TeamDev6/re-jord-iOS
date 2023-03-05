@@ -8,6 +8,7 @@
 
 import RxFlow
 import UIKit
+import ReJordUI
 
 class LoginFlow: Flow {
 	
@@ -98,10 +99,9 @@ class LoginFlow: Flow {
 			
 			Flows.use(homeFlow, challengeFlow, settingsFlow, when: .ready) { [weak self] (home, challenge, settings) in
 				
-				
-				let homeItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), selectedImage: nil)
-				let challengeItem = UITabBarItem(title: "Challenge", image: UIImage(systemName: "person.fill"), selectedImage: nil)
-				let settingsItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "person.fill"), selectedImage: nil)
+				let homeItem = UITabBarItem(title: "Home", image: ReJordUIAsset.home.image, selectedImage: nil)
+				let challengeItem = UITabBarItem(title: "", image: ReJordUIAsset.plus.image, selectedImage: nil)
+				let settingsItem = UITabBarItem(title: "testset", image: ReJordUIAsset.home.image, selectedImage: nil)
 				
 				home.tabBarItem = homeItem
 				challenge.tabBarItem = challengeItem

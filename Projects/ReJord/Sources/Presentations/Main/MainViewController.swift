@@ -14,28 +14,8 @@ import SnapKit
 import Then
 import ReJordUI
 
-final class MainViewController: UIViewController, Layoutable {
+final class MainViewController: UIViewController {
 
-  
-  // MARK: - components
-  
-  
-  // MARK: - component options
-  
-  
-  // MARK: - private properties
-  
-  
-  // MARK: - private functions
-  
-  
-  // MARK: - disposebag
-  
-  var disposeBag = DisposeBag()
-  
-  
-  // MARK: - life cycles
-  
   init() {
     super.init(nibName: nil, bundle: nil)
   }
@@ -46,17 +26,6 @@ final class MainViewController: UIViewController, Layoutable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.setLayout()
   }
-  
-  
-  // MARK: - layout
-  
-  func setLayout() {
-    
-  }
-  
-  
-  
   
 }
